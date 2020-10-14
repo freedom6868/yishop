@@ -1,6 +1,6 @@
 <template>
 	<view>
-		home
+		专题
 	</view>
 </template>
 

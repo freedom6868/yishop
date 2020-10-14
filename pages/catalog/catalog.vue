@@ -1,6 +1,6 @@
 <template>
 	<view>
-		home
+		分类
 	</view>
 </template>
 
