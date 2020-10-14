@@ -16,7 +16,8 @@ function request(option){
 			},
 			success(res){
 				if(res.statusCode == 200){
-					resolve(res);
+					// console.log(res)
+					resolve(res.data);
 				}else{
 					reject(res.errMsg);
 				}
@@ -24,7 +25,7 @@ function request(option){
 			fail(err){
 				reject(err)
 			},
-			complate(){
+			complete(){
 				// 关闭loading效果
 				// 关闭loading效果
 				setTimeout(()=>{
@@ -35,3 +36,5 @@ function request(option){
 		})
 	})
 }
+
+export default request;
