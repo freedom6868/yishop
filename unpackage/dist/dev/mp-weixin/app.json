@@ -5,7 +5,6 @@
     "pages/catalog/catalog",
     "pages/cart/cart",
     "pages/ucenter/index/index",
-    "pages/topicDetail/topicDetail",
     "pages/goods/goods"
   ],
   "subPackages": [],

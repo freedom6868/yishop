@@ -32,12 +32,6 @@
         }
         
         ,{
-            "path" : "pages/topicDetail/topicDetail",
-            "style" : {
-				"navigationBarTitleText": "专题详情"
-			}
-		},
-		{
             "path" : "pages/goods/goods",
             "style" : {
 				"navigationBarTitleText": "商品详情"

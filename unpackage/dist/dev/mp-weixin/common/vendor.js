@@ -8894,16 +8894,9 @@ request;exports.default = _default;
   !*** C:/Users/Freedom/Desktop/shop/wangyishop/api/topicApi.js ***!
   \****************************************************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.getTopicList = getTopicList;var _request = _interopRequireDefault(__webpack_require__(/*! ./request.js */ 21));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
-
-function getTopicList(page, pageSize) {
-  return (0, _request.default)({
-    url: "topic/list?page=".concat(page, "&size=").concat(pageSize) });
-
-}
+throw new Error("Module build failed (from ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader/index.js):\nError: ENOENT: no such file or directory, open 'C:\\Users\\Freedom\\Desktop\\shop\\wangyishop\\api\\topicApi.js'");
 
 /***/ })
 ]]);
