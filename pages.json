@@ -31,6 +31,12 @@
 			}
         }
         
+        ,{
+            "path" : "pages/topicDetail/topicDetail",
+            "style" : {
+				"navigationBarTitleText": "专题详情"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

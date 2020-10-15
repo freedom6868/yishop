@@ -1,10 +1,11 @@
 {
   "pages": [
-    "pages/home/home",
-    "pages/special/special",
-    "pages/classify/classify",
-    "pages/car/car",
-    "pages/user/user"
+    "pages/index/index",
+    "pages/topic/topic",
+    "pages/catalog/catalog",
+    "pages/cart/cart",
+    "pages/ucenter/index/index",
+    "pages/topicDetail/topicDetail"
   ],
   "subPackages": [],
   "window": {
@@ -20,37 +21,36 @@
     "borderStyle": "white",
     "list": [
       {
-        "pagePath": "pages/home/home",
+        "pagePath": "pages/index/index",
         "iconPath": "static/images/ic_menu_choice_nor.png",
         "selectedIconPath": "static/images/ic_menu_choice_pressed.png",
         "text": "首页"
       },
       {
-        "pagePath": "pages/special/special",
+        "pagePath": "pages/topic/topic",
         "iconPath": "static/images/ic_menu_topic_nor.png",
         "selectedIconPath": "static/images/ic_menu_topic_pressed.png",
         "text": "专题"
       },
       {
-        "pagePath": "pages/classify/classify",
+        "pagePath": "pages/catalog/catalog",
         "iconPath": "static/images/ic_menu_sort_nor.png",
         "selectedIconPath": "static/images/ic_menu_sort_pressed.png",
         "text": "分类"
       },
       {
-        "pagePath": "pages/car/car",
+        "pagePath": "pages/cart/cart",
         "iconPath": "static/images/ic_menu_shoping_nor.png",
         "selectedIconPath": "static/images/ic_menu_shoping_pressed.png",
         "text": "购物车"
       },
       {
-        "pagePath": "pages/user/user",
+        "pagePath": "pages/ucenter/index/index",
         "iconPath": "static/images/ic_menu_me_nor.png",
         "selectedIconPath": "static/images/ic_menu_me_pressed.png",
         "text": "我的"
       }
     ]
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap.json"
+  "usingComponents": {}
 }
