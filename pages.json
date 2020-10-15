@@ -45,9 +45,9 @@
         }
     ],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#FFFFFF",
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "网易严选",
+		"navigationBarBackgroundColor": "#b90000",
 		"backgroundColor": "#FFFFFF"
 	},
 	
