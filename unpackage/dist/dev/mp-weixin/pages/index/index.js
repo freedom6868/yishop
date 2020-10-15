@@ -11,15 +11,9 @@
 /* 9 */,
 /* 10 */,
 /* 11 */
-<<<<<<< HEAD
 /*!*****************************************************************************************!*\
   !*** C:/Users/Freedom/Desktop/shop/wangyishop/main.js?{"page":"pages%2Findex%2Findex"} ***!
   \*****************************************************************************************/
-=======
-/*!***************************************************************************!*\
-  !*** E:/item/hioshop/wangyishop/main.js?{"page":"pages%2Findex%2Findex"} ***!
-  \***************************************************************************/
->>>>>>> 56218833b614734fcc3a37b6812633b84273a05b
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -32,16 +26,9 @@ createPage(_index.default);
 
 /***/ }),
 /* 12 */
-<<<<<<< HEAD
 /*!**********************************************************************!*\
   !*** C:/Users/Freedom/Desktop/shop/wangyishop/pages/index/index.vue ***!
   \**********************************************************************/
-=======
-/*!********************************************************!*\
-  !*** E:/item/hioshop/wangyishop/pages/index/index.vue ***!
-  \********************************************************/
->>>>>>> 56218833b614734fcc3a37b6812633b84273a05b
-/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -49,11 +36,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _index_vue_vue_type_template_id_57280228___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.vue?vue&type=template&id=57280228& */ 13);
 /* harmony import */ var _index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./index.vue?vue&type=script&lang=js& */ 15);
 /* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-<<<<<<< HEAD
 /* harmony import */ var _D_Program_Folder_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/runtime/componentNormalizer.js */ 10);
-=======
-/* harmony import */ var _D_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/runtime/componentNormalizer.js */ 10);
->>>>>>> 56218833b614734fcc3a37b6812633b84273a05b
 
 var renderjs
 

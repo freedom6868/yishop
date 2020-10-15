@@ -180,7 +180,7 @@ var _topicApi = __webpack_require__(/*! @/api/topicApi.js */ 28);function _inter
     toTopicDetail: function toTopicDetail(id) {
       console.log("topic", id);
       uni.navigateTo({
-        url: "" });
+        url: "../topicDetail/topicDetail?id=" + id });
 
     },
     //切换上一页

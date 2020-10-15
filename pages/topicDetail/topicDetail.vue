@@ -13,6 +13,9 @@
 		},
 		methods: {
 			
+		},
+		onLoad(options) {
+			console.log("专题详情页获取的id",options.id);
 		}
 	}
 </script>
