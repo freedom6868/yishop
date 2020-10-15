@@ -7879,9 +7879,9 @@ module.exports = g;
 
 /***/ }),
 /* 4 */
-/*!***********************************************************!*\
-  !*** C:/Users/Freedom/Desktop/shop/wangyishop/pages.json ***!
-  \***********************************************************/
+/*!*********************************************!*\
+  !*** E:/item/hioshop/wangyishop/pages.json ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8816,9 +8816,9 @@ if (hadRuntime) {
 
 /***/ }),
 /* 20 */
-/*!***************************************************************!*\
-  !*** C:/Users/Freedom/Desktop/shop/wangyishop/api/homeApi.js ***!
-  \***************************************************************/
+/*!*************************************************!*\
+  !*** E:/item/hioshop/wangyishop/api/homeApi.js ***!
+  \*************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8833,9 +8833,9 @@ function getHomeLunbo() {
 
 /***/ }),
 /* 21 */
-/*!***************************************************************!*\
-  !*** C:/Users/Freedom/Desktop/shop/wangyishop/api/request.js ***!
-  \***************************************************************/
+/*!*************************************************!*\
+  !*** E:/item/hioshop/wangyishop/api/request.js ***!
+  \*************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8881,29 +8881,6 @@ function request(option) {
 
 request;exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */
-/*!****************************************************************!*\
-  !*** C:/Users/Freedom/Desktop/shop/wangyishop/api/topicApi.js ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.getTopicList = getTopicList;var _request = _interopRequireDefault(__webpack_require__(/*! ./request.js */ 21));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
-
-function getTopicList(page, pageSize) {
-  return (0, _request.default)({
-    url: "topic/list?page=".concat(page, "&size=").concat(pageSize) });
-
-}
 
 /***/ })
 ]]);
