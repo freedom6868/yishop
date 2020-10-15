@@ -1,0 +1,98 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.topic-container.data-v-1fb07e34 {
+  background-color: #F4F4F4;
+}
+.topic-container .topic-content.data-v-1fb07e34 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+}
+.topic-container .topic-content .img.data-v-1fb07e34 {
+  width: 100%;
+  height: 350rpx;
+}
+.topic-container .topic-content .content.data-v-1fb07e34 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  text-align: center;
+  background-color: #fff;
+  margin-bottom: 18rpx;
+}
+.topic-container .topic-content .content .title.data-v-1fb07e34 {
+  font-size: 35rpx;
+  color: #333;
+  margin-top: 30rpx;
+}
+.topic-container .topic-content .content .desc.data-v-1fb07e34 {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 16rpx;
+  margin-bottom: 30rpx;
+}
+.topic-container .topic-content .content .price.data-v-1fb07e34 {
+  font-size: 27rpx;
+  color: #b4282d;
+  margin-bottom: 16rpx;
+}
+.topic-container .check-page.data-v-1fb07e34 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  -webkit-box-align: space-between;
+  -webkit-align-items: space-between;
+          align-items: space-between;
+}
+.topic-container .check-page .common.data-v-1fb07e34 {
+  width: 50%;
+  height: 110rpx;
+  line-height: 110rpx;
+  text-align: center;
+  font-weight: 100;
+  font-size: 30rpx;
+  color: #333;
+  background-color: #fff;
+}
+.topic-container .check-page .pre-page.data-v-1fb07e34 {
+  border-right: 1rpx solid #d9d9d9;
+}
+.topic-container .check-page .next-page.data-v-1fb07e34 {
+  border-left: 1rpx solid #d9d9d9;
+}
+
