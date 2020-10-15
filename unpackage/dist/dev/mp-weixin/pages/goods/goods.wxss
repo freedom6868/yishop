@@ -123,7 +123,8 @@ view.data-v-5566b618 {
   border: 1px solid #f48f18;
   font-size: 25rpx;
   color: #f48f18;
-  border-radius: 4px;
+  -webkit-border-radius: 4px;
+          border-radius: 4px;
   background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/detailTagArrow-18bee52dab.png) 95% center no-repeat;
   background-size: 10.75rpx 18.75rpx;
 }

@@ -37,6 +37,12 @@
 				"navigationBarTitleText": "商品详情"
 			}
         }
+        ,{
+            "path" : "pages/cearch/cearch",
+            "style" : {
+				"navigationBarTitleText": "搜索"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

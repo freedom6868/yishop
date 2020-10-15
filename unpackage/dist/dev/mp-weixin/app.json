@@ -5,7 +5,8 @@
     "pages/catalog/catalog",
     "pages/cart/cart",
     "pages/ucenter/index/index",
-    "pages/goods/goods"
+    "pages/goods/goods",
+    "pages/cearch/cearch"
   ],
   "subPackages": [],
   "window": {
@@ -52,5 +53,6 @@
       }
     ]
   },
-  "usingComponents": {}
+  "usingComponents": {},
+  "sitemapLocation": "sitemap54.json"
 }
