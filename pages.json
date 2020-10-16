@@ -56,10 +56,10 @@
 			}
         },
 		{
-		 //    "path" : "pages/catalog/category",
-		 //    "style" : {
-			// 	"navigationBarTitleText": "分类"
-			// }
+		    "path" : "pages/catalog/category",
+		    "style" : {
+				"navigationBarTitleText": "分类"
+			}
 		}
     ],
 	"globalStyle": {
