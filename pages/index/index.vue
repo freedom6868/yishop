@@ -7,7 +7,7 @@
 					<image class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/search2-2fb94833aa.png"
 					 mode=""></image>
 					<!-- 动态数量 -->
-					<text class="text">商品搜索，共300款好物</text>
+					<text class="text">商品搜索，共 {{ goodCount }} 款好物</text>
 				</view>
 			</navigator>
 		</view>
@@ -42,7 +42,7 @@
 
 		<!-- 制造商直供图片 -->
 		<view class="manufacturer">
-			<navigator url="" v-for="item in BrandList" :key="id" class="manubox">
+			<view url="" v-for="item in BrandList" :key="item.id" @click="ckGoods(item.id)" class="manubox">
 				<view class="manuImg">
 					<image :src="item.new_pic_url" mode=""></image>
 				</view>
@@ -51,7 +51,7 @@
 					<text class="price">{{item.floor_price}}</text>
 					<text class="unit">元起</text>
 				</view>
-			</navigator>
+			</view>
 		</view>
 
 		<!-- 新品首发 -->
@@ -66,7 +66,7 @@
 				<view @click="sunnewGood(item.id)">
 					<image :src="item.list_pic_url" mode=""></image>
 					<text class="name">{{item.name}}</text>
-					<text class="price">${{item.retail_price}}</text>
+					<text class="price">￥{{item.retail_price}}</text>
 				</view>
 			</view>
 		</view>
@@ -97,19 +97,42 @@
 		</view>
 
 		<!-- swiper -->
-		<special-banner :banner-list="bannerList" :swiper-config="swiperConfig"></special-banner>
+		<special-banner :banner-list="bannerList" :swiper-config="swiperConfig" ></special-banner>
+
+
+		<!-- 居家 -->
+		<view class="categoryList" v-for="item in categoryList" :key='item.id'>
+			<!-- 居家标题 -->
+			<view class="supply">
+				<text class="supplyText">{{item.name}}</text>
+			</view>
+			<!-- 居家商品 -->
+			<view class="newpro">
+				<view class="sunNewPro" v-for="sumItem in item.goodsList" :key='sumItem.id'>
+					<view @click="sunnewGood(sumItem.id)">
+						<image :src="sumItem.list_pic_url" mode=""></image>
+						<text class="name">{{sumItem.name}}</text>
+						<text class="price">￥{{sumItem.retail_price}}</text>
+					</view>
+				</view>
+			</view>
+		</view>
+
 
 	</view>
 </template>
 
 <script>
 	import {
-		getHomeLunbo
+		getHome,
+		getGoodsCounts
 	} from '@/api/homeApi.js';
 	import specialBanner from '../../components/EtherealWheat-banner/specialBanner.vue'
 	export default {
 		data() {
 			return {
+				// 商品数量
+				goodCount:[],
 				// 轮播图
 				Lunbo: [],
 				// 五宫格
@@ -120,31 +143,18 @@
 				newGoods: [],
 				// 人气推荐
 				hotGoodsList: [],
+				// 商品lunbo
+				topicList: [],
+				// 居家
+				categoryList: [],
+				// 进入专题轮播list
+				bannerList: [],
+				
 				indicatorDots: true,
 				autoplay: true,
 				interval: 2000,
 				duration: 500,
-				bannerList: [{
-					picture: 'http://image.mishi.cn/r/yry_h5_test/detail/3_1535359279285.png',
-					title: '七夕将至：时光足够久，韧性也能炖出味',
-					description: '一万年太久，就现在，给你爱',
-					path: ''
-				}, {
-					picture: 'http://image.mishi.cn/r/yry_h5_test/detail/2_1535359240426.png',
-					title: '新菜上架：无边海洋，找到顺眼的那尾鱼',
-					description: '花中樱，鱼乃鲷花中樱，鱼乃鲷',
-					path: ''
-				}, {
-					picture: 'http://image.mishi.cn/r/yry_h5_test/detail/1_1535359204228.png',
-					title: '在湘西的烟火气里，发现苗族少女的神明',
-					description: '取材自湘西苗族传统的烟熏文化',
-					path: ''
-				}, {
-					picture: 'http://image.mishi.cn/r/yry_h5_test/detail/4_1535359327213.png',
-					title: '福利降临，陪伴独自行走的丰盛旅程',
-					description: '在自己的小世界里，日日好日，夜夜好清宵',
-					path: ''
-				}],
+				
 				swiperConfig: {
 					indicatorDots: true,
 					indicatorColor: 'rgba(255, 255, 255, .4)',
@@ -159,11 +169,11 @@
 			}
 		},
 		methods: {
-			// 轮播图
-			async getLunboDate() {
+			// 获取所有home数据
+			async getHomeData() {
 				var {
 					data
-				} = await getHomeLunbo();
+				} = await getHome();
 				// 轮播图list
 				this.Lunbo = data.banner;
 				// 宫格list
@@ -175,7 +185,27 @@
 				// 人气推荐
 				this.hotGoodsList = data.hotGoodsList;
 				// 专题精选
-				this.topicList = data.topicList
+				let newArr = [];
+				data.topicList.map(v=>{
+					let obj ={};
+					obj.picture = v.item_pic_url;
+					obj.title = v.title;
+					obj.description = v.subtitle;
+					obj.id = v.id;
+					newArr.push(obj);
+					
+					
+				})
+				this.bannerList = newArr;
+				
+				// 居家
+				this.categoryList = data.categoryList
+			},
+			// 商品数量
+			async getGoodsCountsData(){
+				var data =await getGoodsCounts();
+				this.goodCount = data.data.goodsCount;
+				
 			},
 			//商品详情
 			sunnewGood(id) {
@@ -184,23 +214,31 @@
 					url: "../goods/goods?id=" + id
 
 				})
-
 			},
+			// 跳转到ck制造商
+			ckGoods(id){
+				console.log(id);
+				uni.navigateTo({
+					url:"../brandDetail/brandDetail?id=" + id
+				})
+			}
 		},
 		created() {
-			this.getLunboDate();
-		},
-		components:{
-			"special-banner" :specialBanner 
-		}
+			this.getHomeData();
+			this.getGoodsCountsData();
 		
+		},
+		components: {
+			"special-banner": specialBanner
+		}
+
 	}
 </script>
 
 <style lang="scss" scoped>
 	.indexBox {
 		background-color: #F4F4F4;
-		height: 20000rpx;
+		// height: 20000rpx;
 
 		.search {
 			display: flex;
@@ -382,6 +420,16 @@
 					font-size: 30rpx;
 					color: #333;
 					margin-bottom: 14rpx;
+
+					display: -webkit-box;
+					/*设置为弹性盒子*/
+					-webkit-line-clamp: 2;
+					/*最多显示x行*/
+					overflow: hidden;
+					/*超出隐藏*/
+					text-overflow: ellipsis;
+					/*超出显示为省略号*/
+					-webkit-box-orient: vertical;
 				}
 
 				.price {
@@ -390,10 +438,6 @@
 					line-height: 30rpx;
 					font-size: 30rpx;
 					color: red;
-
-					overflow: hidden;
-					text-overflow: ellipsis;
-					white-space: nowrap;
 				}
 			}
 		}
