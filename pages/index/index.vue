@@ -401,7 +401,8 @@
 		}
 
 		.newpro {
-			width: 690rpx;
+			text-align: center;
+			width: 100%;
 			background-color: #FFFFFF;
 			overflow: hidden;
 			padding: 0 31rpx 45rpx 31rpx;
