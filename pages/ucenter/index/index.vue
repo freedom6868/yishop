@@ -99,7 +99,7 @@
 					app.globalData.userInfo = res2.data.userInfo;
 					app.globalData.token = res2.data.token;
 					uni.setStorageSync('userInfo',JSON.stringify(res2.data.userInfo));
-					uni.setStorageSync(res2.data.token)
+					uni.setStorageSync('token',res2.data.token)
 				}
 			},
 			click(index){
