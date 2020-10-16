@@ -64,6 +64,22 @@
 				"navigationBarTitleText": "分类"
 			}
 		}
+        ,{
+            "path" : "pages/ucenter/order/order",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/ucenter/collect/collect",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/ucenter/footprint/footprint",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/ucenter/address/address",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

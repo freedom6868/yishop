@@ -11,27 +11,12 @@
 		</view>
 		
 		<view class="user-menu">
-			<!-- <view class="item" v-for="item in itemList" :key='item.txt'>
-				<navigator :url="item.url" class="a"></navigator>
-				<text class="icon" :class="item.class" ></text>
-				<text class="txt">{{item.txt}}</text>
-			</view> -->
-			<!-- <u-grid :col="3">
-				<u-grid-item>
-					<u-icon :name="'photo'" :size="46"></u-icon>
-					<view class="grid-text">图片</view>
+			<u-grid :col="3"  >
+				<u-grid-item @click="click" :index='index' v-for="(item,index) in itemList" :key='item.txt'>
+					<u-icon :name="item.name" :size="58"></u-icon>
+					<view class="grid-text">{{item.txt}}</view>
 				</u-grid-item>
-				<u-grid-item>
-					<u-icon :name="'lock'" :size="46"></u-icon>
-					<view class="grid-text">锁头</view>
-				</u-grid-item>
-				<u-grid-item>
-					<u-icon :name="'hourglass'" :size="46"></u-icon>
-					<view class="grid-text">沙漏</view>
-				</u-grid-item>
-			</u-grid> -->
-			<u-picker v-model="show" mode="time"></u-picker>
-					<u-button @click="show = true">打开</u-button>
+			</u-grid>
 		</view>
 		<view class="dialog-login" @click="onCloseLoginDialog" v-if="showLoginDialog" >
 			<view class="dialog-body">
@@ -57,17 +42,17 @@
 				userInfo:{},
 				showLoginDialog:false,
 				itemList:[
-					{'url':'/pages/ucenter/order/order','class':'order','txt':'我的订单'},
-					{'url':'/pages/ucenter/coupon/coupon','class':'coupon','txt':'优惠券'},
-					{'url':'','class':'gift','txt':'礼品卡'},
-					{'url':'/pages/ucenter/collect/collect','class':'address','txt':'我的收藏'},
-					{'url':'/pages/ucenter/footprint/footprint','class':'security','txt':'我的足迹'},
-					{'url':'','class':'kefu','txt':'会员福利'},
-					{'url':'/pages/ucenter/address/address','class':'address','txt':'地址管理'},
-					{'url':'','class':'security','txt':'账号安全'},
-					{'url':'','class':'kefu','txt':'联系客服'},
-					{'url':'','class':'help','txt':'帮助中心'},
-					{'url':'/pages/ucenter/feedback/feedback','class':'feedback','txt':'意见反馈'},
+					{name:'order','txt':'我的订单',url:'/pages/ucenter/order/order'},
+					{name:'star','txt':'我的收藏',url:'/pages/ucenter/collect/collect'},
+					{name:'map','txt':'地址管理',url:'/pages/ucenter/address/address'},
+					{name:'list-dot','txt':'我的足迹',url:'/pages/ucenter/footprint/footprint'},
+					{name:'coupon','txt':'优惠券',url:''},
+					{name:'gift','txt':'礼品卡',url:''},
+					{name:'integral','txt':'会员福利',url:''},
+					{name:'lock','txt':'账号安全',url:''},
+					{name:'kefu-ermai','txt':'联系客服',url:''},
+					{name:'question-circle','txt':'帮助中心',url:''},
+					{name:'chat','txt':'意见反馈',url:''},
 				],
 				show: false
 			}
@@ -116,6 +101,20 @@
 					uni.setStorageSync('userInfo',JSON.stringify(res2.data.userInfo));
 					uni.setStorageSync(res2.data.token)
 				}
+			},
+			click(index){
+				let currentItem = this.itemList[index];
+				if(currentItem.url.length != 0){
+					console.log(currentItem.url)
+					uni.navigateTo({
+						url:currentItem.url
+					})
+				}else{
+					uni.showToast({
+						title:currentItem.txt,
+						icon:'none'
+					})
+				}
 			}
 		},
 		onLoad() {
@@ -157,7 +156,12 @@
 				border-radius: 50%;
 			}
 		}
-	
+		
+		.user-menu{
+			height: auto;
+			background-color: #fff;
+		}
+		
 		.dialog-login{
 			width: 100%;
 			height: 100%;
