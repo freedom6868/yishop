@@ -69,6 +69,7 @@
 			// 获取父组件的参数
 			updateParentData() {
 				// 此方法写在mixin中
+				// console.log(this)
 				this.getParentData('u-grid');
 			},
 			click() {
