@@ -20,8 +20,8 @@
 			</swiper-item>
 		</swiper>
 		<div class="desc-wrap" :class="[isDescAnimating?'hideAndShowDesc':'']">
-			<div class="title">{{bannerList[descIndex].title}}</div>
-			<div class="desc">{{bannerList[descIndex].description}}</div>
+			<div class="title" v-if='bannerList.title'>{{bannerList[descIndex].title}}</div>
+			<div class="desc" v-if='bannerList.description'>{{bannerList[descIndex].description}}</div>
 		</div>
 	</div>
 </template>

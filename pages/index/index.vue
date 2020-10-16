@@ -15,7 +15,7 @@
 		<!-- 轮播图 -->
 		<view class="lunbo">
 			<swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
-				<swiper-item v-for="(item) in Lunbo" :key='id'>
+				<swiper-item v-for="(item) in Lunbo" :key='item.id'>
 					<view class="swiper-item">
 						<image class="lunboImg" :src="item.image_url"></image>
 					</view>
@@ -27,24 +27,24 @@
 		<view class="m-menu">
 			<!-- 路径 -->
 			<!-- <navigator class="item" v-for="(item) in Channel" url="详情?id={{item.id}}" :key='id'> -->
-			<navigator class="item" v-for="(item) in Channel" :key='id'>
+			<view class="item" v-for="(item) in Channel" :key='item.id'>
 				<image :src="item.icon_url"></image>
 				<text>{{item.name}}</text>
-			</navigator>
+			</view>
 		</view>
 
 		<!-- 商品直供 -->
 		<view class="supply">
-			<navigator url="">
+			<!-- <navigator url=""> -->
 				<text class="supplyText">品牌制造商直供</text>
-			</navigator>
+			<!-- </navigator> -->
 		</view>
 
 		<!-- 制造商直供图片 -->
 		<view class="manufacturer">
 			<view url="" v-for="item in BrandList" :key="item.id" @click="ckGoods(item.id)" class="manubox">
 				<view class="manuImg">
-					<image :src="item.new_pic_url" mode=""></image>
+					<image :src="item.new_pic_url" ></image>
 				</view>
 				<view class="manuText">
 					<text class="brand">{{item.name}}</text><br>
@@ -56,15 +56,15 @@
 
 		<!-- 新品首发 -->
 		<view class="supply">
-			<navigator url="">
+			<!-- <navigator url=""> -->
 				<text class="supplyText">周一周四 · 新品首发</text>
-			</navigator>
+			<!-- </navigator> -->
 		</view>
 
 		<view class="newpro">
 			<view class="sunNewPro" v-for="item in newGoods" :key='item.id'>
 				<view @click="sunnewGood(item.id)">
-					<image :src="item.list_pic_url" mode=""></image>
+					<image :src="item.list_pic_url" ></image>
 					<text class="name">{{item.name}}</text>
 					<text class="price">￥{{item.retail_price}}</text>
 				</view>
@@ -72,17 +72,17 @@
 		</view>
 		<!-- 人气推荐 -->
 		<view class="supply">
-			<navigator url="">
+			<!-- <navigator url=""> -->
 				<text class="supplyText">人气推荐</text>
-			</navigator>
+			<!-- </navigator> -->
 		</view>
 
 		<!-- 人气推荐商品信息 -->
 		<view class="top">
 			<view class="topGood" v-for="item in hotGoodsList" :key='item.id' @click="sunnewGood(item.id)">
-				<image :src="item.list_pic_url" mode=""></image>
+				<image :src="item.list_pic_url" ></image>
 				<view class="topText">
-					<text class="title">{{item.name}}</text><br>
+					<text class="titlename">{{item.name}}</text><br>
 					<text class="detail">{{item.goods_brief}}</text><br>
 					<text class="top-price">￥{{item.retail_price}}</text>
 				</view>
@@ -186,16 +186,20 @@
 				this.hotGoodsList = data.hotGoodsList;
 				// 专题精选
 				let newArr = [];
+				// console.log('dat	a.topic',data.topicList)
 				data.topicList.map(v=>{
 					let obj ={};
 					obj.picture = v.item_pic_url;
 					obj.title = v.title;
 					obj.description = v.subtitle;
 					obj.id = v.id;
+					// console.log(obj)
 					newArr.push(obj);
 					
 					
+					
 				})
+				// console.log(newArr)
 				this.bannerList = newArr;
 				
 				// 居家
@@ -415,7 +419,7 @@
 				.name {
 					text-align: center;
 					display: block;
-					width: 320rpx;
+					width: 300rpx;
 					height: 35rpx;
 					font-size: 30rpx;
 					color: #333;
@@ -472,7 +476,7 @@
 					height: 264rpx;
 					width: 456rpx;
 
-					.title {
+					.titlename {
 						width: 456rpx;
 						display: block;
 						line-height: 50rpx;
