@@ -84,6 +84,10 @@
             "path" : "pages/commentPost/commentPost",
             "style" : {}
         }
+        ,{
+            "path" : "pages/topicComment/topicComment",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
