@@ -16,20 +16,22 @@
 				<text class="icon" :class="item.class" ></text>
 				<text class="txt">{{item.txt}}</text>
 			</view> -->
-			<u-grid :col="3">
+			<!-- <u-grid :col="3">
 				<u-grid-item>
-					<u-icon name="photo" :size="46"></u-icon>
+					<u-icon :name="'photo'" :size="46"></u-icon>
 					<view class="grid-text">图片</view>
 				</u-grid-item>
 				<u-grid-item>
-					<u-icon name="lock" :size="46"></u-icon>
+					<u-icon :name="'lock'" :size="46"></u-icon>
 					<view class="grid-text">锁头</view>
 				</u-grid-item>
 				<u-grid-item>
-					<u-icon name="hourglass" :size="46"></u-icon>
+					<u-icon :name="'hourglass'" :size="46"></u-icon>
 					<view class="grid-text">沙漏</view>
 				</u-grid-item>
-			</u-grid>
+			</u-grid> -->
+			<u-picker v-model="show" mode="time"></u-picker>
+					<u-button @click="show = true">打开</u-button>
 		</view>
 		<view class="dialog-login" @click="onCloseLoginDialog" v-if="showLoginDialog" >
 			<view class="dialog-body">
@@ -66,7 +68,8 @@
 					{'url':'','class':'kefu','txt':'联系客服'},
 					{'url':'','class':'help','txt':'帮助中心'},
 					{'url':'/pages/ucenter/feedback/feedback','class':'feedback','txt':'意见反馈'},
-				]
+				],
+				show: false
 			}
 		},
 		methods: {
