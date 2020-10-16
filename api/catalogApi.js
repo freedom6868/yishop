@@ -10,3 +10,8 @@ export function getClassifyData(id){
 		url:`catalog/current?id=${id}`
 	})
 }
+export function getCategory(id){
+	return requert({
+		url:'goods/category'
+	})
+}

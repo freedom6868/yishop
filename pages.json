@@ -54,7 +54,13 @@
             "style" : {
 				"navigationBarTitleText":"CK制造商"
 			}
-        }
+        },
+		{
+		    "path" : "pages/catalog/category",
+		    "style" : {
+				"navigationBarTitleText": "分类"
+			}
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
