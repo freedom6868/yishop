@@ -8,3 +8,21 @@ export function getGoodsDeatil(data){
 		method: 'get'
 	})
 }
+
+// 获取大家都在看
+export function getGoodsRelated(data){
+	return requert({
+		url:'goods/related',
+		data: data,
+		method: 'get'
+	})
+}
+
+// 收藏或取消收藏
+export function addOrCannelCollect(data){
+	return requert({
+		url:'collect/addordelete',
+		data: data,
+		method: 'post'
+	})
+}
