@@ -80,6 +80,10 @@
             "path" : "pages/ucenter/address/address",
             "style" : {}
         }
+        ,{
+            "path" : "pages/commentPost/commentPost",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
