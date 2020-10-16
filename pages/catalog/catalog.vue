@@ -19,8 +19,7 @@
 		<view class="category-list">
 			<!-- 左侧分类导航 -->
 			<scroll-view scroll-y="true" class="left">
-				<view class="row" v-for="(item,index) in categoryList" :key="item.id" :class="[index==showCategoryIndex?'on':'']"
-				 @tap="showCategory(index,item.id)">
+				<view class="row" v-for="(item,index) in categoryList" :key="item.id" :class="[index==showCategoryIndex?'on':'']" @tap="showCategory(index,item.id)">
 					<view class="text">
 						<view class="block"></view>
 						{{item.name}}
@@ -41,7 +40,7 @@
 						<text class="line"></text>
 					</view>
 					<view class="list">
-						<view class="box" v-for="(box,i) in subCategoryList.subCategoryList" :key="i" @tap="toCategory(box)">
+						<view class="box" v-for="(box,i) in subCategoryList.subCategoryList" :key="i" @tap="toCategory(box,i)">
 							<image :src="box.wap_banner_url"></image>
 							<view class="text">{{box.name}}</view>
 						</view>
@@ -97,11 +96,11 @@
 				this.subCategoryList = data.data.currentCategory;
 				console.log(data)
 			},
-			toCategory(e) {
+			toCategory(e,index) {
 				uni.setStorageSync('catName', e.name);
-				console.log(e)
+				console.log(index)
 				uni.navigateTo({
-					url: '../../goods/goods-list?cid=' + e.id + '&name=' + e.name
+					url: './category?id=' + e.id +"&index ="+index,
 				});
 			},
 			//搜索跳转
@@ -320,6 +319,7 @@
 						width: calc(71.44vw / 3);
 						margin-bottom: 30upx;
 						display: flex;
+						flex-direction: column;
 						justify-content: center;
 						align-items: center;
 						flex-wrap: wrap;
@@ -329,10 +329,10 @@
 							height: calc(71.44vw / 3 * 0.6);
 						}
 
-						.text {
+						.txt {
 							margin-top: 5upx;
 							width: 100%;
-							display: flex;
+							// display: flex;
 							justify-content: center;
 							font-size: 26upx;
 						}
