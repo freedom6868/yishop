@@ -92,6 +92,10 @@
             "path" : "pages/ucenter/orderDetail/orderDetail",
             "style" : {}
         }
+        ,{
+            "path" : "pages/comment/comment",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

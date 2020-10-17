@@ -110,12 +110,15 @@
 		</view>
 		<view class="bottom-btn">
 			<view class="btn_left" @click="addCannelCollect">
-				<image class="icon" src="../../static/images/icon_collect.png" mode=""></image>
-				<!-- <image src="../../static/images/icon_collect_checked.png" mode=""></image> -->
+				<image v-if="userHasCollect == 0" class="icon" src="../../static/images/icon_collect.png" mode=""></image>
+				<image v-else src="../../static/images/icon_collect_checked.png" class="icon" mode=""></image>
 			</view>
-			<view class="btn_left">
-				<image class="icon" src="../../static/images/ic_menu_shoping_nor.png" mode=""></image>
+			
+			<view class="btn_left" >
+				<text class="cart-count">{{cartGoodsCount}}</text>
+				<image @click="openCartPage" class="icon" src="../../static/images/ic_menu_shoping_nor.png" mode=""></image>
 			</view>
+			
 			<view class="btn_right">
 				立即购买
 			</view>
@@ -132,7 +135,8 @@
 	import {
 		getGoodsDeatil,
 		getGoodsRelated,
-		addOrCannelCollect
+		addOrCannelCollect,
+		getCartGoodsCount
 	} from '@/api/goodsApi.js';
 	export default {
 		data() {
@@ -146,6 +150,7 @@
 				issueList: [], //常见问题
 				relatedGoods: [], //大家都在看列表
 				userHasCollect: 0, //是否为收藏
+				cartGoodsCount: 0, //购物车商品数量
 			}
 		},
 		components: {
@@ -167,7 +172,6 @@
 					this.issueList = res.data.issue; //常见问题
 					this.userHasCollect = res.data.userHasCollect; //是否为收藏0/1
 				}
-				// console.log(this.issueList)
 				this.getImage()
 			},
 			getImage() {
@@ -205,22 +209,35 @@
 
 				})
 			},
+			// 点击购物车图标跳转到购物车页面
+			openCartPage(){
+				uni.switchTab({
+					url:'../cart/cart'
+				})
+			},
 			// 收藏或取消收藏
 			async addCannelCollect() {
-				
-				const id = parseInt(this.$data.id);
-				console.log(id)
-				const res = await addOrCannelCollect({typeId: 0,valueId: id});
-				if(res.error == 0) {
-					this.userHasCollect = res.data.type === 'add' ? 0 : 1
+				const res = await addOrCannelCollect({typeId: 0,valueId: this.$data.id});
+				console.log(res)
+				if(res.errno == 0) {
+					if(res.data.type === 'delete') {
+						this.userHasCollect = 0
+					}else if(res.data.type === 'add'){
+						this.userHasCollect = 1
+					}
 				}else {
 					uni.showToast({
-						image:'/static/images/icon_error.png',
-						title:res.errmgs,
-						mask:true
+						title:res.errmsg,
+						icon:'none'
 					})
 				}
-				console.log(this.userHasCollect)
+			},
+			// 获取购物车商品件数
+			async getCartGoodsNumber() {
+				const res = await getCartGoodsCount();
+				if(res.errno == 0){
+					this.cartGoodsCount = res.data.cartTotal.goodsCount;
+				}
 			}
 
 
@@ -232,6 +249,8 @@
 			// this.$data.id = '1181000'
 			this.getGoodsInfo();
 			this.getGoodsRelatedInfo()
+			this.getCartGoodsNumber()
+			
 		}
 	}
 </script>
@@ -600,6 +619,7 @@
 			
 			
 			.btn_left {
+				position: relative;
 				display: flex;
 				justify-content: center;
 				align-items: center;
@@ -613,6 +633,21 @@
 				.icon {
 					width: 44rpx;
 					height: 44rpx;
+				}
+				
+				.cart-count {
+					position: absolute;
+					right: 40rpx;
+					top:16rpx;
+					font-size: 22rpx;
+					
+					width: 28rpx;
+					height: 28rpx;
+					line-height: 28rpx;
+					text-align: center;
+					border-radius: 50%;
+					color: #fff;
+					background: #b4282d;
 				}
 			}
 			
