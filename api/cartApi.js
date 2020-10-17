@@ -16,3 +16,16 @@ export function postChecked(id,checked){
 		}
 	})
 }
+export function postNumber(goodsId,id,number,productId){
+	var urls = "cart/update?goodsId="+goodsId+"&"+"id="+id+"&"+"number="+number+"&"+"productId="+productId;
+	return requert({
+		url:urls,
+		method:"POST",
+		data:{
+			goodsId:goodsId,
+			id:id,
+			number:number,
+			productId:productId
+		}
+	})
+}

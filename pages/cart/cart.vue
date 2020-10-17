@@ -32,9 +32,9 @@
 							<view class="b">
 								<text class="price">￥{{item.retail_price}}</text>
 								<view class="selnum" v-if="isEditCart">
-									<view class="cut">-</view>
+									<view class="cut" @click="cutNumber(index)">-</view>
 									<input type="text" class="number" :value="item.number" />
-									<view class="add">+</view>
+									<view class="add" @click="addNumber(index)">+</view>
 								</view>
 							</view>
 						</view>
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-	import {getCartApiData,postChecked} from "@/api/cartApi.js"
+	import {getCartApiData,postChecked,postNumber} from "@/api/cartApi.js"
 	export default {
 		data() {
 			return {
@@ -67,6 +67,26 @@
 			}
 		},
 		methods: {
+			async cutNumber(index){
+				var cartItem = this.cartGoods[index];
+				console.log(cartItem);
+				var number = (cartItem.number-1 > 1) ? cartItem.number-1:1;
+				console.log(number);
+				cartItem.number = number;
+				this.cartGoods = cartItem;
+				var message = await postNumber(cartItem.goods_id,cartItem.id,number,cartItem.product_id);
+				this.getCartApi();
+			},
+			async addNumber(index){
+				var cartItem = this.cartGoods[index];
+				console.log(cartItem);
+				var number = cartItem.number+1;
+				console.log(number);
+				cartItem.number = number;
+				this.cartGoods = cartItem;
+				var message = await postNumber(cartItem.goods_id,cartItem.id,number,cartItem.product_id);
+				this.getCartApi();
+			},
 			//单选按钮
 			async aloneChecked(index){
 				console.log(index)
@@ -81,14 +101,22 @@
 			},
 			//全选按钮
 			async checkAll(){
-				var productId=this.cartGoods.map(v=>{
+				var productId = this.cartGoods.map((v)=>{
+					//返回的是一个数组[198,234,456]
 					return v.product_id;
 				})
+				//将数组变为字符串198,234,456
 				var productIds = productId.join(',')
 				// console.log(productIds)
-				var isChecked = this.isCheckedAll() ? '0':'1';
-				// console.log(isChecked)
-				//修改选中状态
+				
+				var isChecked = "";
+				//编辑模式下消除全部选中状态
+				if(this.isEditCart){
+					isChecked = this.isCheckedAll() ? '0':'0';
+				}else{
+					isChecked = this.isCheckedAll() ? '0':'1';
+				}
+				//修改选中状态q
 				var message= await postChecked(productIds,isChecked);
 				this.getCartApi()
 			},
@@ -127,10 +155,7 @@
 					this.cartGoods = res.data.cartList;
 					this.cartTotal = res.data.cartTotal;
 				}
-				// console.log(this.cartGoods)
-				// console.log(this.cartTotal)
 				this.checkedAllStatus = this.isCheckedAll();
-				// console.log(this.checkedAllStatus);
 			}
 		},
 		created() {
