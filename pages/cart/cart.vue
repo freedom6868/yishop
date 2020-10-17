@@ -9,24 +9,33 @@
 		<view class="notCart" v-if="cartGoods.length<=0">
 			<view class="no">
 				<image src="../../static/images/cart.png" mode=""></image>
-				<text>去添加点什么吧</text>
+				<view class="text">
+					<navigator url="../index/index" open-type="switchTab">去添加点什么吧</navigator>
+				</view>
 			</view>
+			
 		</view>
 		<view class="CartData" v-if="cartGoods.length>0">
-			<view class="list" v-for="(item,index) in cartGoods" :key="item.id">
-				<view class="item" >
+			<view class="list" v-for="(item,index) in cartGoods" :key="index">
 					<!-- 勾选按钮 -->
-					<view class="checked"></view>
-					<view class="cart-goods" >
+					<!-- [checkbox,item.checked ? 'checked':''] -->
+					<view :class="[item.checked ? 'checked':'checkbox']" @click="aloneChecked(index)"></view>
+					<view class="cart-goods">
 						<image class="img" :src="item.list_pic_url" mode=""></image>
 						<view class="info">
-							<view class="t">
-								<text class="name">{{item.goods_name}}</text>
-								<text class="num">x{{item.number}}</text>
+							<view class="t" >
+								<text class="name">{{!isEditCart? item.goods_name:' '}}</text>
+								<text class="num" v-if="!isEditCart">x{{item.number}}</text>
+								<text class="nums" v-if="isEditCart">已选择</text>
 							</view>
-							<view class="attr"></view>
+							<view class="attr" v-if="!isEditCart"></view>
 							<view class="b">
 								<text class="price">￥{{item.retail_price}}</text>
+								<view class="selnum" v-if="isEditCart">
+									<view class="cut">-</view>
+									<input type="text" class="number" :value="item.number" />
+									<view class="add">+</view>
+								</view>
 							</view>
 						</view>
 					</view>
@@ -34,33 +43,94 @@
 			</view>
 			
 			<view class="cart-bottom">
-				<view class="checkbox">全选({{cartTotal.checkedGoodsCount}})</view>
-				<view class="total">￥{{cartTotal.checkedGoodsAmount}}</view>
-				<view class="delete">编辑</view>
-				<view class="checkout">下单</view>
-				<!-- <view class="checkout">删除所有</view> -->
+				<view :class="[checkedAllStatus ? 'checkbox':'checked']" @click="checkAll">全选({{ cartTotal.checkedGoodsCount}})</view>
+				<view class="total">{{!isEditCart ? '￥'+cartTotal.checkedGoodsAmount : ''}}</view>
+				<view class="delete" @click="editCart">{{!isEditCart ? '编辑':'完成'}}</view>
+				<view class="checkout" v-if="isEditCart">下单</view>
+				<view class="checkout" v-if="!isEditCart">删除所有</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
-	import {getCartApiData} from "@/api/cartApi.js"
+	import {getCartApiData,postChecked} from "@/api/cartApi.js"
 	export default {
 		data() {
 			return {
 				cartGoods: [],
-				cartTotal:{}
+				cartTotal:{},
+				//判断是否全选
+				checkedAllStatus:true,
+				//判断是否在编辑状态
+				isEditCart:false
 			}
 		},
 		methods: {
+			//单选按钮
+			async aloneChecked(index){
+				console.log(index)
+				
+				var id = this.cartGoods[index].product_id;
+				var checkeds = this.cartGoods[index].checked ? '0':'1';
+				console.log(id)
+				console.log(checkeds)
+				var message= await postChecked(id,checkeds);
+				this.getCartApi()
+				
+			},
+			//全选按钮
+			async checkAll(){
+				var productId=this.cartGoods.map(v=>{
+					return v.product_id;
+				})
+				var productIds = productId.join(',')
+				// console.log(productIds)
+				var isChecked = this.isCheckedAll() ? '0':'1';
+				// console.log(isChecked)
+				//修改选中状态
+				var message= await postChecked(productIds,isChecked);
+				this.getCartApi()
+			},
+			//编辑按钮修改状态
+			editCart(){
+				if(this.isEditCart){
+					this.isEditCart = !this.isEditCart;
+					this.checkAll()
+				}else{
+					this.isEditCart = !this.isEditCart;
+					this.checkAll()
+				}
+			},
+			// 判断是否全选
+			isCheckedAll(){
+				return this.cartGoods.every(function(element){
+					if(element.checked == true){
+						return true;
+					}else{
+						return false;
+					}
+				})
+			},
+			//获取所有购物车商品
 			async getCartApi() {
-				var {data} = await getCartApiData();
-				//data不是一个数组无法使用map 进行转换
-				this.cartGoods = data.cartList;
-				this.cartTotal = data.cartTotal;
-				console.log(this.cartGoods)
-				console.log(this.cartTotal)
+				var res = await getCartApiData();
+				console.log(res)
+				if(res.errno === 0){
+					res.data.cartList.map(v=>{
+						if(v.checked == 1){
+							v.checked = true;
+						}else{
+							v.checked = false;
+						}
+					})
+					this.cartGoods = res.data.cartList;
+					this.cartTotal = res.data.cartTotal;
+				}
+				// console.log(this.cartGoods)
+				// console.log(this.cartTotal)
+				this.checkedAllStatus = this.isCheckedAll();
+				// console.log(this.checkedAllStatus);
 			}
 		},
 		created() {
@@ -73,7 +143,7 @@
 .container{
 		background: #f4f4f4;
 		height: 100vh;
-		min-height: 100%;
+		// min-height: 100%;
 		width: 100%;
 		.business{
 			display: flex;
@@ -83,14 +153,14 @@
 			align-items: center;
 			background-color: #F4F4F4;
 			.item{
-				background: url(../../static/images/bot.png) 0 center no-repeat;
-				background-size: 10rpx;
-				padding-left: 15rpx;
-				display: flex;
-				align-items: center;
-				font-size: 25rpx;
-				color: #666;
-			}
+			background: url(../../static/images/bot.png) 0 center no-repeat;
+			background-size: 10rpx;
+			padding-left: 15rpx;
+			display: flex;
+			align-items: center;
+			font-size: 25rpx;
+			color: #666;
+		}
 		}
 		.notCart{
 			width: 100%;
@@ -107,7 +177,7 @@
 					width: 260rpx;
 					height: 260rpx;
 				}
-				text{
+				.text{
 					margin: 0 auto;
 					display: block;
 					width: 258rpx;
@@ -115,7 +185,6 @@
 					line-height: 29rpx;
 					text-align: center;
 					font-size: 29rpx;
-					color: #999;
 				}
 			}		
 		}
@@ -123,18 +192,27 @@
 			width: 100%;
 			background-color: #fff;
 			.list{
+				display: flex;
 				width: 100%;
 				height: 164rpx;
+				.checkbox{
+					
+					height: 34rpx;
+					width: 34rpx;
+					margin: 65rpx 18rpx 65rpx 26rpx;
+					background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-0e09baa37e.png) no-repeat;
+					background-size: 34rpx;
+				}
 				.checked{
-					float: left;
 					height: 34rpx;
 					width: 34rpx;
 					margin: 65rpx 18rpx 65rpx 26rpx;
 					background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-checked-822e54472a.png) no-repeat;
 					background-size: 34rpx;
+					
 				}
 				.cart-goods{
-					float: left;
+					
 					height: 164rpx;
 					width: 672rpx;
 					border-bottom: 1px solid #f4f4f4;
@@ -150,67 +228,124 @@
 						height:125rpx;
 						width: 503rpx;
 						margin: 19.5rpx 26rpx 19.5rpx 0;
+						
 						.t{
 							display: flex;
 							justify-content: space-between;
-							margin: 8rpx 0;
+							
+							margin: 8rpx 0rpx 20rpx 0rpx;
 							height: 28rpx;
 							font-size: 28rpx;
 							color: #333;
+							.nums{
+								background: url(http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/arrow-right1-e9828c5b35.png) right center no-repeat;
+								padding-right: 25rpx;
+								background-size: 12rpx 20rpx;
+								height: 39rpx;
+								line-height: 39rpx;
+								font-size: 24rpx;
+							}
+						}
+						
+						.data-v-0f00adf4{
+							margin-bottom: 20rpx;
 						}
 						.attr{
-							margin-bottom: 17rpx;
-							height: 24rpx;
+							margin-bottom: 10rpx;
+							height: 16rpx;
 						}
 						.b{
-							height: 28rpx;
-							line-height: 28rpx;
+							display: flex;
+							justify-content: space-between;
+							height: 52rpx;
+							line-height: 52rpx;
 							font-size: 28rpx;
 							color: #333;
+							
 							.price{
-								
+								float: left;
+							}
+							.selnum{
+								width: 235rpx;
+								height: 52rpx;
+								border: 1rpx solid #ccc;
+								display: flex;
+								.cut{
+									width: 70rpx;
+									height: 100%;
+									text-align: center;
+									line-height: 50rpx;
+								}
+								.number{
+									flex: 1;
+									height: 100%;
+									text-align: center;
+									line-height: 68.75rpx;
+									border-left: 1px solid #ccc;
+									border-right: 1px solid #ccc;
+									float: left;
+								}
+								.add{
+									width: 80rpx;
+									height: 100%;
+									text-align: center;
+									line-height: 50rpx;
+								}
 							}
 						}
 					}
 				}
+				
 			}
-			.cart-bottom{
-				width: 100%;
-				position: fixed;
-				display: flex;
-				bottom:0;
-				left:0;
+		}
+		.cart-bottom{
+			width: 100%;
+			position: fixed;
+			display: flex;
+			bottom:0;
+			left:0;
+			height: 100rpx;
+			background-color: #fff;
+			/* #ifdef H5 */
+			margin-bottom: 94rpx;
+			/* #endif */
+			.checkbox{
+				height: 34rpx;
+				padding-left: 60rpx;
+				line-height: 34rpx;
+				margin: 33rpx 18rpx 33rpx 26rpx;
+				background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-checked-822e54472a.png) no-repeat;
+				background-size: 34rpx;
+				font-size: 29rpx;
+			}
+			.checked{
+				height: 34rpx;
+				padding-left: 60rpx;
+				line-height: 34rpx;
+				margin: 33rpx 18rpx 33rpx 26rpx;
+				background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-0e09baa37e.png) no-repeat;
+				background-size: 34rpx;
+				font-size: 29rpx;
+			}
+			.total{
+				height: 34rpx;
+				flex: 1;
+				margin: 33rpx 10rpx;
+				font-size: 29rpx;
+			}
+			.delete{
+				height: 34rpx;
+				margin: 33rpx 18rpx;
+				font-size: 29rpx;
+			}
+			.checkout{
+				width: 210rpx;
 				height: 100rpx;
-				background-color: #fff;
-				.checkbox{
-					height: 34rpx;
-					padding-left: 60rpx;
-					line-height: 34rpx;
-					margin: 33rpx 18rpx 33rpx 26rpx;
-					background: url(http://nos.netease.com/mailpub/hxm/yanxuan-wap/p/20150730/style/img/icon-normal/checkbox-checked-822e54472a.png) no-repeat;
-					background-size: 34rpx;
-					font-size: 29rpx;
-				}
-				.total{
-					height: 34rpx;
-					flex: 1;
-					margin: 33rpx 10rpx;
-					font-size: 29rpx;
-				}
-				.delete{
-					height: 34rpx;
-					margin: 33rpx 18rpx;
-					font-size: 29rpx;
-				}
-				.checkout{
-					width: 210rpx;
-					height: 100rpx;
-					background-color: #B90000;
-					text-align: center;
-					line-height: 100rpx;
-					font-size: 29rpx;
-					color: #fff;
-				}
+				background-color: #B90000;
+				text-align: center;
+				line-height: 100rpx;
+				font-size: 29rpx;
+				color: #fff;
 			}
 		}
 	}
