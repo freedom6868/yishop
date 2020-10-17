@@ -1,10 +1,10 @@
 <template>
-	<div class="banner-container">
+	<div class="banner-container" v-if="bannerList.length">
 		<swiper :style="{width: '100vw', height: '410rpx'}" :indicator-dots="swiperConfig.indicatorDots" :indicator-color="swiperConfig.indicatorColor"
 		 :indicator-active-color="swiperConfig.indicatorActiveColor" :autoplay="swiperConfig.autoplay" :interval="swiperConfig.interval"
 		 :duration="swiperConfig.duration" :circular="swiperConfig.circular" :previous-margin="swiperConfig.previousMargin"
-		 :next-margin="swiperConfig.nextMargin" @change="swiperChange" @animationfinish="animationfinish">
-			<swiper-item v-for="(item, i) in bannerList" :key="i" @click='topicDetail(item.id)'>
+		 :next-margin="swiperConfig.nextMargin"  @change="swiperChange" @animationfinish="animationfinish">
+			<swiper-item v-for="(item, i) in bannerList"  :key="i" @click='topicDetail(item.id)'>
 				<!-- 1.当前展示为第1项时，bannerList最后一项和第二项的justifyContent值分别为flex-end和flex-start，其余项值为center -->
 				<!-- 2.当前展示为最后一项时，bannerList倒数第2项和第1项的justifyContent值分别为flex-end和flex-start，其余项值为center -->
 				<!-- 3.当前展示为其他项（非第1和最后1项）时，bannerList当前项的前1项和后1项的justifyContent值分别为flex-end和flex-start，其余项值为center -->
@@ -20,8 +20,8 @@
 			</swiper-item>
 		</swiper>
 		<div class="desc-wrap" :class="[isDescAnimating?'hideAndShowDesc':'']">
-			<div class="title" v-if='bannerList.title'>{{bannerList[descIndex].title}}</div>
-			<div class="desc" v-if='bannerList.description'>{{bannerList[descIndex].description}}</div>
+			<div class="title" >{{bannerList[descIndex].title}}</div>
+			<div class="desc" >{{bannerList[descIndex].description}}</div>
 		</div>
 	</div>
 </template>
