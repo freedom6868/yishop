@@ -36,7 +36,7 @@
 		<!-- 商品直供 -->
 		<view class="supply">
 			<!-- <navigator url=""> -->
-				<text class="supplyText">品牌制造商直供</text>
+			<text class="supplyText">品牌制造商直供</text>
 			<!-- </navigator> -->
 		</view>
 
@@ -44,7 +44,7 @@
 		<view class="manufacturer">
 			<view url="" v-for="item in BrandList" :key="item.id" @click="ckGoods(item.id)" class="manubox">
 				<view class="manuImg">
-					<image :src="item.new_pic_url" ></image>
+					<image :src="item.new_pic_url"></image>
 				</view>
 				<view class="manuText">
 					<text class="brand">{{item.name}}</text><br>
@@ -57,14 +57,14 @@
 		<!-- 新品首发 -->
 		<view class="supply">
 			<!-- <navigator url=""> -->
-				<text class="supplyText">周一周四 · 新品首发</text>
+			<text class="supplyText">周一周四 · 新品首发</text>
 			<!-- </navigator> -->
 		</view>
 
 		<view class="newpro">
 			<view class="sunNewPro" v-for="item in newGoods" :key='item.id'>
 				<view @click="sunnewGood(item.id)">
-					<image :src="item.list_pic_url" ></image>
+					<image :src="item.list_pic_url"></image>
 					<text class="name">{{item.name}}</text>
 					<text class="price">￥{{item.retail_price}}</text>
 				</view>
@@ -73,14 +73,14 @@
 		<!-- 人气推荐 -->
 		<view class="supply">
 			<!-- <navigator url=""> -->
-				<text class="supplyText">人气推荐</text>
+			<text class="supplyText">人气推荐</text>
 			<!-- </navigator> -->
 		</view>
 
 		<!-- 人气推荐商品信息 -->
 		<view class="top">
 			<view class="topGood" v-for="item in hotGoodsList" :key='item.id' @click="sunnewGood(item.id)">
-				<image :src="item.list_pic_url" ></image>
+				<image :src="item.list_pic_url"></image>
 				<view class="topText">
 					<text class="titlename">{{item.name}}</text><br>
 					<text class="detail">{{item.goods_brief}}</text><br>
@@ -89,7 +89,7 @@
 			</view>
 		</view>
 
-		<!-- 人气推荐 -->
+		<!-- 专题精选 -->
 		<view class="supply">
 			<navigator url="../topic/topic">
 				<text class="supplyText">专题精选</text>
@@ -97,7 +97,7 @@
 		</view>
 
 		<!-- swiper -->
-		<special-banner :banner-list="bannerList" :swiper-config="swiperConfig" ></special-banner>
+		<special-banner :banner-list="bannerList" :swiper-config="swiperConfig"></special-banner>
 
 
 		<!-- 居家 -->
@@ -132,7 +132,7 @@
 		data() {
 			return {
 				// 商品数量
-				goodCount:[],
+				goodCount: [],
 				// 轮播图
 				Lunbo: [],
 				// 五宫格
@@ -149,12 +149,12 @@
 				categoryList: [],
 				// 进入专题轮播list
 				bannerList: [],
-				
+
 				indicatorDots: true,
 				autoplay: true,
 				interval: 2000,
 				duration: 500,
-				
+
 				swiperConfig: {
 					indicatorDots: true,
 					indicatorColor: 'rgba(255, 255, 255, .4)',
@@ -187,29 +187,28 @@
 				// 专题精选
 				let newArr = [];
 				// console.log('dat	a.topic',data.topicList)
-				data.topicList.map(v=>{
-					let obj ={};
+				data.topicList.map(v => {
+					let obj = {};
 					obj.picture = v.item_pic_url;
 					obj.title = v.title;
 					obj.description = v.subtitle;
 					obj.id = v.id;
 					// console.log(obj)
 					newArr.push(obj);
-					
-					
-					
+
 				})
-				// console.log(newArr)
+				// console.log("newArr",newArr)
 				this.bannerList = newArr;
-				
+				// this.showBanner = true;
+
 				// 居家
 				this.categoryList = data.categoryList
 			},
 			// 商品数量
-			async getGoodsCountsData(){
-				var data =await getGoodsCounts();
+			async getGoodsCountsData() {
+				var data = await getGoodsCounts();
 				this.goodCount = data.data.goodsCount;
-				
+
 			},
 			//商品详情
 			sunnewGood(id) {
@@ -220,17 +219,17 @@
 				})
 			},
 			// 跳转到ck制造商
-			ckGoods(id){
+			ckGoods(id) {
 				console.log(id);
 				uni.navigateTo({
-					url:"../brandDetail/brandDetail?id=" + id
+					url: "../brandDetail/brandDetail?id=" + id
 				})
 			}
 		},
 		created() {
 			this.getHomeData();
 			this.getGoodsCountsData();
-		
+
 		},
 		components: {
 			"special-banner": specialBanner
@@ -421,20 +420,14 @@
 					text-align: center;
 					display: block;
 					width: 300rpx;
-					height: 35rpx;
+					height: 40rpx;
 					font-size: 30rpx;
 					color: #333;
 					margin-bottom: 14rpx;
 
-					display: -webkit-box;
-					/*设置为弹性盒子*/
-					-webkit-line-clamp: 2;
-					/*最多显示x行*/
 					overflow: hidden;
-					/*超出隐藏*/
+					white-space: nowrap;
 					text-overflow: ellipsis;
-					/*超出显示为省略号*/
-					-webkit-box-orient: vertical;
 				}
 
 				.price {
@@ -442,7 +435,7 @@
 					text-align: center;
 					line-height: 30rpx;
 					font-size: 30rpx;
-					color: red;
+					color: #b4282d;
 				}
 			}
 		}
