@@ -31,33 +31,45 @@
 				</view>
 			</view>
 			<!-- 加载更多按钮 -->
-			<view class="load-more">
-				<button style="background-color: #fff;" class="btn" type="default">查看更多</button>
+			<view class="load-more" v-if="isShow">
+				<button style="background-color: #fff;" class="btn" type="default" @click="loadMore">查看更多</button>
 			</view>
+			<view class="topic-rec">
+				专题推荐
+			</view>
+			<!-- 专题推荐列表 -->
 			<view class="topic-list">
-				lsjdi
+				<view class="topic-item" v-for="item in detailRecData" :key="item.id" @click="toTopicDetail(item.id)">
+					<view class="pic-box">
+						<image class="pic" :src="item.scene_pic_url" mode=""></image>
+					</view>
+					<view class="title">
+						{{ item.title }}
+					</view>
+				</view>
 			</view>
 	</view>
 	
 </template>
 
 <script>
-	import { getTopicDetailPic,getDetailComment } from "@/api/topicDetailApi.js"
+	import { getTopicDetailPic,getDetailComment,getTopicRecommend } from "@/api/topicDetailApi.js"
 	export default {
 		data() {
 			return {
 				id:"",
 				typeId:1,
 				size:5,
+				isShow:false,
 				detailPicData:[],
-				detailCommentData:[]
+				detailCommentData:[],
+				detailRecData:[]
 			}
 		},
 		methods: {
 			//获取专题详情图片
 			async getDetailPic(){
 				let { data } = await getTopicDetailPic(this.id);
-				// this.detailPicData = data.content;
 				let str = data.content;
 				//使用正则将所需要的图片获取出来并添加上 " https: "
 				//   yanxuan.nosdn.127.net/79ee021bbe97de7ecda691de6787241f.jpg
@@ -65,19 +77,45 @@
 				let reg =  /src=\"([a-zA-Z\:\/\d\.]+)/gi;
 				let r;
 				while(r = reg.exec(str)){
-					console.log("https:"+r[1]);
+					// console.log("https:"+r[1]);
 					let pic = "https:" + r[1];
 					this.detailPicData.push(pic);
 				}
-				console.log(this.detailPicData);
+				// console.log(this.detailPicData);
 			},
+			//获取评论信息
 			async getDetailCommentData(){
 				let valueId = this.id;
 				let typeId = this.typeId;
 				let size = this.size;
 				let { data } = await getDetailComment(valueId,typeId,size);
 				this.detailCommentData = data.data;
-				console.log(this.detailCommentData);
+				// console.log(this.detailCommentData);
+				if(data.count > 5){
+					this.isShow = true;
+				}else{
+					this.isShow = false;
+				}
+			},
+			//获取专题推荐信息
+			async getTopicRecommendData(){
+				let { data } = await getTopicRecommend(this.id);
+				this.detailRecData = data;
+				// console.log(this.detailRecData)
+			},
+			//点击跳转到专题详情
+			toTopicDetail(id){
+				uni.navigateTo({
+					url:"../topicDetail/topicDetail?id="+id
+				})
+			},
+			//点击加载更多
+			loadMore(){
+				console.log(this.id);
+				let id = this.id;
+				uni.navigateTo({
+					url:"../topicComment/topicComment?valueId=" + id + "&typeId=1"
+				})
 			}
 		},
 		onLoad(options) {
@@ -85,6 +123,7 @@
 			this.id = options.id;
 			this.getDetailPic();
 			this.getDetailCommentData();
+			this.getTopicRecommendData();
 		}
 	}
 </script>
@@ -100,7 +139,6 @@
 				height: 440rpx;
 			}
 		}
-		
 		.comment-box{
 			background-color: #fff;
 			padding: 0rpx 0rpx 20rpx 20rpx;
@@ -157,6 +195,36 @@
 				border-radius: 0px;
 				color: #000000;
 				box-sizing: 100;
+			}
+		}
+		.topic-rec{
+			height: 100rpx;
+			line-height: 80rpx;
+			text-align: center;
+			padding-top: 20rpx;
+		}
+		.topic-list{
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			.topic-item{
+				width: 92%;
+				height: 350rpx;
+				padding: 20rpx;
+				background-color: #fff;
+				margin-bottom: 20rpx;
+				.pic-box{
+					text-align: center;
+					.pic{
+						width: 100%;
+						height: 250rpx;
+					}
+				}
+				.title{
+					font-size: 28rpx;
+					margin: 20rpx 0 20rpx 0;
+				}
 			}
 		}
 	}
