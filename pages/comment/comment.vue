@@ -187,7 +187,8 @@
 		.body {
 			padding-top: 100rpx;
 			margin-bottom: 10rpx;
-
+			background: #fff;
+			
 			.item {
 				border-bottom: 2rpx solid #f4f4f4;
 				background: #fff;
