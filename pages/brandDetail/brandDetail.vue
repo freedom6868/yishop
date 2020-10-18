@@ -36,11 +36,6 @@
 
 <style lang="scss" scoped>
 .container {
-	width: 100%;
-	height: 100%;
-	box-sizing: border-box;
-	background-color: #f4f4f4;
-	
 	.brand-info {
 		.name {
 			position: relative;
@@ -78,6 +73,7 @@
 			font-size: 30rpx;
 			color: #666;
 			background: #FFFFFF;
+
 		}
 	}
 	

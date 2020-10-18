@@ -190,7 +190,7 @@
 
 			.item {
 				border-bottom: 2rpx solid #f4f4f4;
-
+				background: #fff;
 				.info {
 					// height: 127rpx;
 					display: flex;
