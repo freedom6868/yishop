@@ -187,7 +187,7 @@
 			},
 			// 图片预览
 			imgInfo(imgIndex) {
-				console.log(this.goodsDesc[imgIndex])
+				// console.log(this.goodsDesc[imgIndex])
 				uni.previewImage({
 					urls:this.goodsDesc,
 					current:this.goodsDesc[imgIndex],
@@ -231,7 +231,7 @@
 			// 收藏或取消收藏
 			async addCannelCollect() {
 				const res = await addOrCannelCollect({typeId: 0,valueId: this.$data.id});
-				console.log(res)
+				// console.log(res)
 				if(res.errno == 0) {
 					if(res.data.type === 'delete') {
 						this.userHasCollect = 0

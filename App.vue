@@ -35,4 +35,8 @@ export default {
 	src: url('/static/uni.ttf');
 }
 /* #endif */
+
+page {
+	background-color: #f4f4f4;
+}
 </style>
