@@ -24,20 +24,36 @@
 					</view>
 					<view class="info">
 						<view class="t">
-							<view class="name">
-								
-							</view>
-							<view class="number">
-								
-							</view>
+							<view class="name">{{item.goods_name}}</view>
+							<view class="number">x{{item.number}}</view>
 						</view>
-						<view class="attr">
-							
-						</view>
-						<view class="price">
-							
-						</view>
+						<view class="attr">{{item.goods_specifition_name_value}}</view>
+						<view class="price">￥{{ item.retail_price}}</view>
 					</view>
+				</view>
+			</view>
+		</view>
+		
+		<view class="order-bottom">
+			<view class="address">
+				<view class="t">
+					<view class="name">{{orderInfo.consignee}}</view>
+					<view class="mobile">{{orderInfo.mobile}}</view>
+				</view>
+				<view class="b">{{orderInfo.full_region + orderInfo.address}}</view>
+			</view>
+			<view class="total">
+				<view class="t">
+					<view class="label">商品合计：</view>
+					<view class="txt">￥ {{orderInfo.goods_price}}</view>
+				</view>
+				<view class="t">
+					<view class="label">运费：</view>
+					<view class="txt">￥{{orderInfo.freight_price}}</view>
+				</view>
+				<view class="pay-fee">
+					<view class="label">实付：</view>
+					<view class="txt">￥ {{orderInfo.actual_price}}</view>
 				</view>
 			</view>
 		</view>
@@ -139,6 +155,49 @@
 				}
 			}
 			
+			.goods{
+				.item{
+					height: 192rpx;
+					display: flex;
+					border-bottom: 2rpx solid #f4f4f4;
+					padding-top: 20rpx;
+					.img{
+						width: 146rpx;
+						height: 146rpx;
+						background-color: #f4f4f4;
+						.image{
+							height: 100%;
+							width: 100%;
+						}
+					}
+					
+					.info{
+						margin-left: 20rpx;
+						flex: 1;
+						display: flex;
+						flex-direction: column;
+						justify-content: space-around;
+						color: #333;
+						font-size: 30rpx;
+						.t{
+							display: flex;
+							justify-content: space-between;
+						}
+						.price{
+							margin-bottom: 10rpx;                             
+							color: #333;
+							font-size: 30rpx;
+						}
+					}
+				}
+			}
+			
+		}
+		
+		.order-bottom{
+			margin-top: 20rpx;
+			padding: 0 30rpx;
+			background-color: #fff;
 		}
 	}
 </style>
