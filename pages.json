@@ -74,7 +74,10 @@
         }
         ,{
             "path" : "pages/ucenter/footprint/footprint",
-            "style" : {}
+            "style" : {
+				// App 和 小程序都开启下拉刷新
+				"enablePullDownRefresh":true
+			}
         }
         ,{
             "path" : "pages/ucenter/address/address",

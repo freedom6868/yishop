@@ -51,10 +51,11 @@
 					<view class="label">运费：</view>
 					<view class="txt">￥{{orderInfo.freight_price}}</view>
 				</view>
-				<view class="pay-fee">
-					<view class="label">实付：</view>
-					<view class="txt">￥ {{orderInfo.actual_price}}</view>
-				</view>
+				
+			</view>
+			<view class="pay-fee">
+				<view class="label">实付：</view>
+				<view class="txt">￥ {{orderInfo.actual_price}}</view>
 			</view>
 		</view>
 	</view>
@@ -90,7 +91,7 @@
 <style lang="scss" scoped>
 	.container{
 		width: auto;
-		height: 100%;
+		height: 100vh;
 		background-color: #f4f4f4;
 		
 		.order-info{
@@ -196,8 +197,43 @@
 		
 		.order-bottom{
 			margin-top: 20rpx;
-			padding: 0 30rpx;
+			padding: 20rpx 30rpx;
 			background-color: #fff;
+			width: auto;
+			height: auto;
+			
+			.address{
+				padding-bottom: 30rpx;
+				border-bottom: 2rpx solid #f4f4f4;
+				.t{
+					display: flex;
+					margin-bottom: 10rpx;
+					.mobile{
+						margin-left: 100rpx;
+					}
+				}
+			}
+			
+			.total{
+				padding: 20rpx 0;
+				.t{
+					display: flex;
+					.label{
+						width: 160rpx;
+					}
+				}
+			}
+			.pay-fee{
+				height: auto;
+				padding: 20rpx 0;
+				display: flex;
+				font-size: 36rpx;
+				color: #b4282d;
+				border-top: 2rpx solid #f4f4f4;
+				.label{
+					width: 160rpx;
+				}
+			}
 		}
 	}
 </style>
