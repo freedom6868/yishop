@@ -27,7 +27,7 @@
 								<text class="num" v-if="!isEditCart">x{{item.number}}</text>
 								<text class="nums" v-if="isEditCart">已选择</text>
 							</view>
-							<view class="attr" v-if="!isEditCart"></view>
+							<view class="attr" v-if="!isEditCart">{{item.goods_specifition_name_value}}</view>
 							<view class="b">
 								<text class="price">￥{{item.retail_price}}</text>
 								<view class="selnum" v-if="isEditCart">
@@ -67,7 +67,7 @@
 			}
 		},
 		methods: {
-			//获取所有选中商品的product_id 并转换成字符串并用","隔开
+			//获取所有商品的product_id 并转换成字符串并用","隔开
 			getCheckedProductId(){
 				var productId = this.cartGoods.map((v)=>{
 					//返回的是一个数组[198,234,456]
@@ -80,8 +80,14 @@
 			},
 			//删除选中购物车商品
 			async deleteCart(){
-				var productIds = this.getCheckedProductId();
-				// console.log(productIds)
+				// var productIds = this.getCheckedProductId();
+				var productId = this.cartGoods.map((v)=>{
+					if(v.checked == true){
+						return v.product_id;
+					}
+				})
+				var productIds = productId.join(',')
+				console.log(productIds)
 				var message = await deleteCheckedCart(productIds);
 				this.checkedAllStatus = this.isCheckedAll();
 				this.getCartApi();
@@ -167,7 +173,7 @@
 				this.checkedAllStatus = this.isCheckedAll();
 			}
 		},
-		created() {
+		onShow() {
 			this.getCartApi();
 		}
 	}
@@ -225,6 +231,8 @@
 		.CartData{
 			width: 100%;
 			background-color: #fff;
+			margin-bottom: 110rpx;
+
 			.list{
 				display: flex;
 				width: 100%;
