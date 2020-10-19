@@ -161,7 +161,7 @@
 					<!-- 数量 -->
 					<view class="number-item">
 						<view class="name">数量</view>
-						<u-number-box :max="10"  :min="1" v-model="number"  @change="valChange()"></u-number-box>
+						<u-number-box :min="1" v-model="number"  @change="valChange()"></u-number-box>
 					</view>
 				</view>
 			</view>
@@ -177,7 +177,8 @@
 		getGoodsRelated,
 		addOrCannelCollect,
 		getCartGoodsCount,
-		addCart
+		addCart,
+		getCart
 	} from '@/api/goodsApi.js';
 	export default {
 		data() {
@@ -194,7 +195,7 @@
 				userHasCollect: 0, //是否为收藏
 				cartGoodsCount: 0, //购物车商品数量
 				gallery: [], //商品规格图片
-				checkedSpecText: ['请选择规格数量'],
+				checkedSpecText: [],
 				specificationList: [], //规格列表
 				isShowDetail: false,
 				number: 1, //加购数量
@@ -209,7 +210,7 @@
 				const res = await getGoodsDeatil({
 					id: this.$data.id
 				})
-				console.log("商品详情：", res)
+				// console.log("商品详情：", res)
 				if (res.errno === 0) {
 					this.gallery = res.data.gallery; //轮播图
 					this.goods = res.data.info;
@@ -223,6 +224,7 @@
 					this.specificationList = res.data.specificationList; //规格列表
 					this.productList = res.data.productList;
 				}
+				console.log("规格：",this.specificationList)
 				this.getImage()
 			},
 			getImage() {
@@ -278,13 +280,13 @@
 					url: `../brandDetail/brandDetail?id=${this.brand.id}`
 				})
 			},
-			// 收藏或取消收藏
+			// 收藏或取消收藏，获取商品id默认查看是否收藏，此处用在点击收藏事件
 			async addCannelCollect() {
 				const res = await addOrCannelCollect({
 					typeId: 0,
 					valueId: this.$data.id
 				});
-				console.log("收藏：", res)
+				// console.log("收藏：", res)
 				if (res.errno == 0) {
 					if (res.data.type === 'delete') {
 						this.userHasCollect = 0
@@ -306,12 +308,12 @@
 					this.cartGoodsCount = res.data.cartTotal.goodsCount;
 				}
 			},
+			
+			// 获取选择的规格，前提该商品要有规格
 			clickSkuValue(e) {
 				const index1 = e.currentTarget.dataset.select1;
 				const index2 = e.currentTarget.dataset.select2;
 				const specificationList = this.specificationList;
-				
-				console.log(this.specificationList)
 				
 				if(specificationList[index1].valueList[index2].selected) {
 					specificationList[index1].valueList[index2].selected = false;
@@ -326,8 +328,7 @@
 				// 实现页面刷新
 				this.isShowDetail = false;
 				this.isShowDetail = true;
-				const canSubmit = this.skuCanSubmit();
-				this.getCheckedSpecValue()
+				this.checkedSpecText = this.getCheckedSpecValue()
 				
 			},
 			// 判断是否漏选规格
@@ -368,16 +369,8 @@
 					
 					checkedValues.push(_checkedObj)
 				})
+				
 				return checkedValues;
-				// console.log(checkedValues)
-				
-				
-				
-				// if(checkedValues.length <= 0) {
-				// 	this.checkedSpecText = ['请选择规格数量']
-				// }else {
-				// 	this.checkedSpecText = checkedValues
-				// }
 				
 			},
 			getCheckedSpecKey() {
@@ -386,9 +379,8 @@
 				});
 				return checkedValue.join('_');
 			},
-			// 判断是否有库存
+			
 			getCheckedProductItem(key) {
-				
 				return this.productList.filter( (item) => {
 					if(item.goods_specification_ids == key) {
 						return true;
@@ -400,7 +392,7 @@
 			// 进步器
 			valChange(e) {
 				this.number = e.value;
-				console.log(this.value)
+				// console.log(this.value)
 			},
 			// 关闭规格
 			closeDetail() {
@@ -409,17 +401,31 @@
 			// 开启规格
 			openDetail() {
 				this.isShowDetail = true;
+				// console.log(this.specificationList.length)
+				if(this.specificationList.length <= 0) {
+					this.checkedSpecText = [{
+						nameId : '',
+						valueId: 0,
+						valueText: '请选择数量'
+					}]
+				}else {
+					this.checkedSpecText = [{
+						nameId : '',
+						valueId: 0,
+						valueText: '请选择规格数量'
+					}]
+				}
 			},
 			// 加入购物车
 			async addToCart() {
 				
 				// 判断是否打开规格页面
 				if(!this.isShowDetail) {
-					this.isShowDetail = true;
+					this.openDetail()
 					return;
 				}
 				
-				// 判断是否选择完整规格
+				// 判断是否选择完整规格，如果该商品没有规格可选返回true
 				if(!this.skuCanSubmit()) {
 					uni.showToast({
 						title:'请选择规格',
@@ -428,8 +434,9 @@
 					return;
 				}
 				
-				// 根据选中规格判断是否有sku信息
+				// 根据选中规格判断是否有sku信息,如果该商品没有规格可选返回true
 				let checkedProduct = this.getCheckedProductItem(this.getCheckedSpecKey());
+				console.log("商品规格：",checkedProduct)
 				if(!checkedProduct || checkedProduct.length <= 0) {
 					uni.showToast({
 						title:'库存不足',
@@ -470,20 +477,18 @@
 				this.isShowDetail = !this.isShowDetail;
 				this.getCartGoodsNumber()
 				console.log("加入购物车")
-			}
+			},
 			
-
 
 		},
 		onLoad(options) {
-			// console.log(options.id)
 			// 模拟商品id
 			this.$data.id = options.id
 			// this.$data.id = '1181000'
 			this.getGoodsInfo();
 			this.getGoodsRelatedInfo()
 			this.getCartGoodsNumber()
-
+			
 		}
 	}
 </script>
