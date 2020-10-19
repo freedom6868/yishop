@@ -76,9 +76,16 @@
 			async getOrderDetail(){
 				let res = await getOrderDetailData({orderId:this.orderId});
 				console.log(res)
-				this.orderInfo = res.data.orderInfo;
-				this.orderGoods = res.data.orderGoods;
-				this.handleOption = res.data.handleOption;
+				if(res.errno == 0){
+					this.orderInfo = res.data.orderInfo;
+					this.orderGoods = res.data.orderGoods;
+					this.handleOption = res.data.handleOption;
+				}else{
+					uni.showToast({
+						title:res.errmsg
+					})
+				}
+				
 			}
 		},
 		onLoad(option) {

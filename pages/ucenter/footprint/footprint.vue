@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<view class="footprint">
-			<view class="day-item" v-for="(item,index) in footprintList" :key='index'>
+			<view class="day-item" v-for="(item,index) in productList" :key='index'>
 				<view class="day-hd">{{item[0].add_time}}</view>
 				<view class="day-list" >
 					<view class="item" v-for="gitem in item" :key='gitem.id'>
@@ -30,40 +30,72 @@
 		data() {
 			return {
 				footprintList:[],
+				productList:{}, // {'昨天':[],今天：【】，‘201':[]}
 				currentPage:1,
 			};
 		},
 		methods:{
 			
-			async getFootprintList(page){
-				console.log(page)
-				let res = await getFootprintListData({page});
+			async getFootprintList(){
+				let res = await getFootprintListData({page:this.currentPage});
+				
 				if(res.errno == 0){
-					if(res.data.data.length <=0 ){
-						uni.showToast({
-							title:'没有更多了'
-						})
-						return;
-					}
-					console.log(res.data.data)
-					for(var i in res.data.data){
-						console.log(i)
-						this.footprintList.push(res.data.data[i]);
-					}
-					// this.footprintList = this.footprintList.concat(res.data.data);
-					console.log(this.footprintList)
+					this.footprintList = res.data.data
+					this.footprintList.forEach(itemArr => {
+						var key = itemArr[0].add_time;
+						this.productList[key] = itemArr
+					})
+					// var key="今天"
+					// console.log(this.productList[key])
+					// console.log('initfootprintList',this.footprintList)
+					// console.log('productList',this.productList)
 					this.currentPage = parseInt(res.data.currentPage)
+				}else{
+					uni.showToast({
+						title:res.errmsg
+					})
 				}
-				// console.log(res)
+				console.log(res)
+			},
+			async loadMore(){
+				console.log('loadMore.....')
+				console.log('footprintList',this.footprintList)
+				this.currentPage = this.currentPage + 1;
+				let res = await getFootprintListData({page:this.currentPage});
+				var responData = res.data.data
+				if(responData.length <=0 ){
+					uni.showToast({
+						title:'没有更多了'
+					})
+					return;
+				}
+				
+				// console.log(responData)
+				// let lastTimeArr = this.footprintList[this.footprintList.length-1];
+				// for(let i in responData){
+				// 	if(lastTimeArr[lastTimeArr.length-1].add_time == responData[i][0].add_time){
+				// 		this.footprintList[this.footprintList.length-1] = lastTimeArr.concat(responData[i]);
+				// 	}else{
+				// 		this.footprintList.push(responData[i])
+				// 	}
+				// }
+				responData.forEach( itemArr =>{
+					let key = itemArr[0].add_time
+					if(this.productList[key]){
+						this.productList[key] = this.productList[key].concat(itemArr);
+					}else{
+						this.productList[key] = itemArr;
+					}
+				})
+				console.log(this.productList)
+				
 			}
 		},
 		onLoad() {
-			this.getFootprintList(this.currentPage);
+			this.getFootprintList();
 		},
-		onReachBottom(){
-			this.currentPage = this.currentPage + 1;
-			
-			this.getFootprintList(this.currentPage);
+		async onReachBottom(){
+			this.loadMore()
 		}
 	}
 </script>
