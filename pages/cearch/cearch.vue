@@ -2,24 +2,28 @@
 	<view class="content">
 		<view class="search-box">
 			<!-- mSearch组件 如果使用原样式，删除组件元素-->
-			<mSearch class="mSearch-input-box" :mode="2" button="inside" :placeholder="defaultKeyword" @search="doSearch(false)" @input="inputChange" @confirm="doSearch(false)" v-model="keyword"></mSearch>
-	
+			<mSearch class="mSearch-input-box" :mode="2" button="inside" :placeholder="defaultKeyword" @search="doSearch(false)"
+			 @input="inputChange" @confirm="doSearch(false)" v-model="keyword"></mSearch>
+
 		</view>
-		<view class="search-keyword" >
+		<view class="search-keyword" v-if="hasGoods">
 			<scroll-view class="keyword-list-box" v-show="isShowKeywordList" scroll-y>
 				<block v-for="(row,index) in keywordList" :key="index">
-					<view class="keyword-entry" hover-class="keyword-entry-tap" >
+					<view class="keyword-entry" hover-class="keyword-entry-tap">
 						<view class="keyword-text" @tap.stop="doSearch(keywordList[index].keyword)">
-							<rich-text :nodes="row.htmlStr"></rich-text>
+							<rich-text :nodes="row"></rich-text>
 						</view>
 						<view class="keyword-img" @tap.stop="setKeyword(keywordList[index].keyword)">
 							<image src="/static/HM-search/back.png"></image>
 						</view>
 					</view>
 				</block>
-				
+
 			</scroll-view>
 			<scroll-view class="keyword-box" v-show="!isShowKeywordList" scroll-y>
+
+
+				<!-- 历史搜索 -->
 				<view class="keyword-block" v-if="oldKeywordList.length>0">
 					<view class="keyword-list-header">
 						<view>历史搜索</view>
@@ -31,6 +35,8 @@
 						<view v-for="(keyword,index) in oldKeywordList" @tap="doSearch(keyword)" :key="index">{{keyword}}</view>
 					</view>
 				</view>
+
+				<!-- 热门搜索 -->
 				<view class="keyword-block">
 					<view class="keyword-list-header">
 						<view>热门搜索</view>
@@ -39,7 +45,8 @@
 						</view>
 					</view>
 					<view class="keyword" v-if="forbid==''">
-						<view v-for="(keyword,index) in hotKeywordList" @tap="doSearch(keyword.keyword)" :key="index">{{keyword.keyword}}</view>
+						<view v-for="(keyword,index) in hotKeywordList" @click="getgoodData(keyword)" @tap="doSearch(keyword.keyword)"
+						 :key="index">{{keyword.keyword}}</view>
 					</view>
 					<view class="hide-hot-tis" v-else>
 						<view>当前搜热门搜索已隐藏</view>
@@ -47,72 +54,128 @@
 				</view>
 			</scroll-view>
 		</view>
+		<view class="haveGoods" v-else>
+			<view class="tag">
+				<view class="together">综合</view>
+				<view class="price">价格</view>
+				<view class="classify" @click="isShow">分类</view>
+			</view>
+			<view class="fixed" v-if="isbool">
+				<view class="text" v-for="iitem in filterCategory" :key='iitem.id'>
+					{{iitem.name}}
+				</view>
+			</view>
+
+			<!-- 商品 -->
+			<view class="goods">
+				<view class="sunGoods" v-if="GoodsList.length" v-for="item in GoodsList " :key="item.id" @click="goGoodsDetail(item.id)">
+					<image class="goodsImg" :src="item.list_pic_url" mode=""></image>
+					<view class="text">
+						{{item.name}}
+					</view>
+					<view class="price">
+						￥ {{item.retail_price}}
+					</view>
+				</view>
+			</view>
+		</view>
+
 	</view>
 </template>
 
 <script>
-	import {getSearchs} from '../../api/homeApi.js';
+	import {
+		getSearchs,
+		clearHistory,
+		getGoodsList
+	} from '../../api/homeApi.js';
 	//引用mSearch组件，如不需要删除即可
 	import mSearch from '@/components/mehaotian-search-revision/mehaotian-search-revision.vue';
 	export default {
 		data() {
 			return {
+				// 默认关键字
 				defaultKeyword: "",
+				// 关键字
 				keyword: "",
+				page: 1,
+				size: 20,
+				sort: '',
+				currentSortType: 'id',
+				currentSortOrder: 'desc',
+				categoryId: 0,
 				// 历史记录list
 				oldKeywordList: [],
 				// 热门搜索
 				hotKeywordList: [],
-				// 键盘list
+				// 关键字list
 				keywordList: [],
 				forbid: '',
-				isShowKeywordList: false
+				// 搜索出来的商品
+				GoodsList: [],
+				// 分类名
+				filterCategory:[],
+
+				// 如果搜索到时，隐藏搜索box，显示商品box
+				isShowKeywordList: false,
+				hasGoods: true,
+				// 全部，居家显示隐藏
+				isbool:false
 			}
 		},
 		onLoad() {
 			this.init();
+
 		},
 		components: {
 			//引用mSearch组件，如不需要删除即可
 			mSearch
 		},
 		methods: {
-			init() {
-				// this.loadDefaultKeyword();
-				this.loadOldKeyword();
-				this.loadHotKeyword();
+			//API请求
+			async loadHotKeyword() {
+				var {
+					data
+				} = await getSearchs();
+				// 热门
+				this.hotKeywordList = data.hotKeywordList;
+				// 默认关键字
+				this.defaultKeyword = data.defaultKeyword.keyword;
+				// 历史记录
+				this.oldKeywordList = data.historyKeywordList;
+			},
+			// 获取商品信息
+			async getgoodData(event) {
+				var {
+					data
+				} = await getGoodsList(event.keyword, this.page, this.size,
+					this.currentSortType, this.currentSortOrder, this.categoryId);
+				this.GoodsList = data.goodsList;
+				this.filterCategory = data.filterCategory;
+				this.hasGoods = false;
 
 			},
-			blur(){
+			init() {
+				this.loadHotKeyword();
+			},
+			blur() {
 				uni.hideKeyboard()
 			},
-			//加载默认搜索关键字
-			// loadDefaultKeyword() {
-			// 	//定义默认搜索关键字，可以自己实现ajax请求数据再赋值,用户未输入时，以水印方式显示在输入框，直接不输入内容搜索会搜索默认关键字
-			// 	this.defaultKeyword = "默认关键字";
-			// },
-			//加载历史搜索,自动读取本地Storage
-			loadOldKeyword() {
-				uni.getStorage({
-					key: 'OldKeys',
-					success: (res) => {
-						var OldKeys = JSON.parse(res.data);
-						// console.log("ok",OldKeys)
-						this.oldKeywordList = OldKeys;
-					}
-				});
+			// 分类名的显示隐藏
+			isShow(){
+				this.isbool = !this.isbool
 			},
-			//加载热门搜索
-			async loadHotKeyword() {
-				var {data} = await getSearchs();
-				
-				 this.hotKeywordList = data.hotKeywordList;
-				 this.defaultKeyword = data.defaultKeyword.keyword;
-			}, 
+
+			// 跳往商品详情页面
+			goGoodsDetail(id) {
+				uni.navigateTo({
+					url: '../goods/goods?id=' + id
+				})
+			},
 			//监听输入
 			inputChange(event) {
 				//兼容引入组件时传入参数情况
-				var keyword = event.detail?event.detail.value:event;
+				var keyword = event.detail ? event.detail.value : event;
 				if (!keyword) {
 					this.keywordList = [];
 					this.isShowKeywordList = false;
@@ -121,11 +184,12 @@
 				this.isShowKeywordList = true;
 				//以下示例截取淘宝的关键字，请替换成你的接口
 				uni.request({
-					url: 'https://suggest.taobao.com/sug?code=utf-8&q=' + keyword, //仅为示例
+					url: 'http://47.106.90.23:8360/api/search/helper?keyword=' + keyword, //仅为示例
 					success: (res) => {
 						this.keywordList = [];
-						this.keywordList = this.drawCorrelativeKeyword(res.data.result, keyword);
-						
+						var tempArr = res.data.data
+						this.keywordList.push(tempArr[0])
+
 					}
 				});
 			},
@@ -156,91 +220,279 @@
 					content: '确定清除历史搜索记录？',
 					success: (res) => {
 						if (res.confirm) {
-							console.log('用户点击确定');
-							this.oldKeywordList = [];
-							uni.removeStorage({
-								key: 'OldKeys'
-							});
+							this.clearHistory();
 						} else if (res.cancel) {
 							console.log('用户点击取消');
 						}
 					}
-				});
+				})
+			},
+			// 清除历史
+			async clearHistory() {
+				var message = await clearHistory();
+				// 重新渲染页面
+				this.loadHotKeyword()
 			},
 			//热门搜索开关
 			hotToggle() {
 				this.forbid = this.forbid ? '' : '_forbid';
 			},
-			//执行搜索
+			//执行搜索(历史记录存库)
 			doSearch(keyword) {
-				
-				keyword = keyword===false?this.keyword:keyword;
-				
-				// 赋值给keyword
+				keyword = keyword === false ? this.keyword : keyword;
 				this.keyword = keyword;
-				this.saveKeyword(keyword); //保存为历史 
 				uni.showToast({
 					title: keyword,
 					icon: 'none',
 					duration: 2000
-				});
-			},
-			//保存关键字到历史记录
-			saveKeyword(keyword) {
-				uni.getStorage({
-					key: 'OldKeys',
-					success: (res) => {
-						var OldKeys = JSON.parse(res.data);
-						var findIndex = OldKeys.indexOf(keyword);
-						if (findIndex == -1) {
-							OldKeys.unshift(keyword);
-						} else {
-							OldKeys.splice(findIndex, 1);
-							OldKeys.unshift(keyword);
-						}
-						//最多10个纪录
-						OldKeys.length > 10 && OldKeys.pop();
-						uni.setStorage({
-							key: 'OldKeys',
-							data: JSON.stringify(OldKeys)
-						});
-						this.oldKeywordList = OldKeys; //更新历史搜索
-					},
-					fail: (e) => {
-						var OldKeys = [keyword];
-						uni.setStorage({
-							key: 'OldKeys',
-							data: JSON.stringify(OldKeys)
-						});
-						this.oldKeywordList = OldKeys; //更新历史搜索
-					}
 				});
 			}
 		}
 	}
 </script>
 <style>
-	view{display:block;}
-	.content {background-color: #F4F4F4;}
-	.search-box {width:100%;background-color:rgb(242,242,242);padding:15upx 2.5%;display:flex;justify-content:space-between;position:sticky;top: 0;}
-	.search-box .mSearch-input-box{width: 100%;}
-	.search-box .input-box {width:85%;flex-shrink:1;display:flex;justify-content:center;align-items:center;}
-	.search-box .search-btn {width:15%;margin:0 0 0 2%;display:flex;justify-content:center;align-items:center;flex-shrink:0;font-size:28upx;color:#fff;background:linear-gradient(to right,#ff9801,#ff570a);border-radius:60upx;}
-	.search-box .input-box>input {width:100%;height:60upx;font-size:32upx;border:0;border-radius:60upx;-webkit-appearance:none;-moz-appearance:none;appearance:none;padding:0 3%;margin:0;background-color:#ffffff;}
-	.placeholder-class {color:#9e9e9e;}
-	.search-keyword {width:100%;background-color:rgb(242,242,242);}
-	.keyword-list-box {height:calc(100vh - 110upx);padding-top:10upx;border-radius:20upx 20upx 0 0;background-color:#fff;}
-	.keyword-entry-tap {background-color:#eee;}
-	.keyword-entry {width:94%;height:80upx;margin:0 3%;font-size:30upx;color:#333;display:flex;justify-content:space-between;align-items:center;border-bottom:solid 1upx #e7e7e7;}
-	.keyword-entry image {width:60upx;height:60upx;}
-	.keyword-entry .keyword-text,.keyword-entry .keyword-img {height:80upx;display:flex;align-items:center;}
-	.keyword-entry .keyword-text {width:90%;}
-	.keyword-entry .keyword-img {width:10%;justify-content:center;}
-	.keyword-box {height:calc(100vh - 110upx);border-radius:20upx 20upx 0 0;background-color:#F4F4F4;}
-	.keyword-box .keyword-block {padding:10upx 0;background-color: #FFFFFF;margin-bottom: 20rpx;}
-	.keyword-box .keyword-block .keyword-list-header {width:94%;padding:10upx 3%;font-size:27upx;color:#333;display:flex;justify-content:space-between;}
-	.keyword-box .keyword-block .keyword-list-header image {width:40upx;height:40upx;}
-	.keyword-box .keyword-block .keyword {width:94%;padding:3px 3%;display:flex;flex-flow:wrap;justify-content:flex-start;}
-	.keyword-box .keyword-block .hide-hot-tis {display:flex;justify-content:center;font-size:28upx;color:#6b6b6b;}
-	.keyword-box .keyword-block .keyword>view {display:flex;justify-content:center;align-items:center;border-radius:60upx;padding:0 20upx;margin:10upx 20upx 10upx 0;height:60upx;font-size:28upx;background-color:rgb(242,242,242);color:#6b6b6b;}
+	view {
+		display: block;
+	}
+
+	.content {
+		background-color: #F4F4F4;
+	}
+
+	.content .haveGoods .tag {
+		width: 100%;
+		height: 90rpx;
+		background-color: #FFFFFF;
+		border: 2rpx solid #ccc;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+	}
+	.content .haveGoods .fixed {
+			position: fixed;
+		    background: #FFFFFF;
+		    width: 100%;
+		    height: auto;
+		    overflow: hidden;
+		    padding: 40rpx 40rpx 0 0;
+		    border-bottom: 1px solid #d9d9d9;
+			
+	}
+	.content .haveGoods .fixed .text {
+		    height: 54rpx;
+		    line-height: 54rpx;
+		    text-align: center;
+		    float: left;
+		    padding: 0 16rpx;
+		    margin: 0 0 40rpx 40rpx;
+		    border: 1px solid #666;
+		    color: #333;
+		    font-size: 24rpx;
+	}
+
+	.content .haveGoods .goods {
+		display: flex;
+		flex-wrap: wrap;
+		width: 100%;
+		padding: 0 6.25rpx;
+		height: auto;
+		overflow: hidden;
+	}
+
+	.content .haveGoods .goods .sunGoods {
+		background: #fff;
+		width: 365rpx;
+		margin: 2rpx;
+		padding-bottom: 33.333rpx;
+		height: auto;
+		overflow: hidden;
+		text-align: center;
+
+
+
+	}
+
+	.content .haveGoods .goods .sunGoods .goodsImg {
+		width: 302rpx;
+		height: 302rpx;
+	}
+
+	.content .haveGoods .goods .sunGoods .text {
+		display: block;
+		width: 365.625rpx;
+		height: 35rpx;
+		margin: 11.5rpx 0 22rpx 0;
+		text-align: center;
+		overflow: hidden;
+		padding: 0 20rpx;
+		font-size: 30rpx;
+		color: #333;
+	}
+
+	.content .haveGoods .goods .sunGoods .price {
+		display: block;
+		width: 365.625rpx;
+		height: 30rpx;
+		text-align: center;
+		font-size: 30rpx;
+		color: #b4282d;
+	}
+
+	.search-box {
+		width: 100%;
+		background-color: rgb(242, 242, 242);
+		padding: 15upx 2.5%;
+		display: flex;
+		justify-content: space-between;
+		position: sticky;
+		top: 0;
+	}
+
+	.search-box .mSearch-input-box {
+		width: 100%;
+	}
+
+	.search-box .input-box {
+		width: 85%;
+		flex-shrink: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.search-box .search-btn {
+		width: 15%;
+		margin: 0 0 0 2%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-shrink: 0;
+		font-size: 28upx;
+		color: #fff;
+		background: linear-gradient(to right, #ff9801, #ff570a);
+		border-radius: 60upx;
+	}
+
+	.search-box .input-box>input {
+		width: 100%;
+		height: 60upx;
+		font-size: 32upx;
+		border: 0;
+		border-radius: 60upx;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		padding: 0 3%;
+		margin: 0;
+		background-color: #ffffff;
+	}
+
+	.placeholder-class {
+		color: #9e9e9e;
+	}
+
+	.search-keyword {
+		width: 100%;
+		background-color: rgb(242, 242, 242);
+	}
+
+
+
+	.keyword-list-box {
+		height: calc(100vh - 110upx);
+		padding-top: 10upx;
+		border-radius: 20upx 20upx 0 0;
+		background-color: #fff;
+	}
+
+	.keyword-entry-tap {
+		background-color: #eee;
+	}
+
+	.keyword-entry {
+		width: 94%;
+		height: 80upx;
+		margin: 0 3%;
+		font-size: 30upx;
+		color: #333;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		border-bottom: solid 1upx #e7e7e7;
+	}
+
+	.keyword-entry image {
+		width: 60upx;
+		height: 60upx;
+	}
+
+	.keyword-entry .keyword-text,
+	.keyword-entry .keyword-img {
+		height: 80upx;
+		display: flex;
+		align-items: center;
+	}
+
+	.keyword-entry .keyword-text {
+		width: 90%;
+	}
+
+	.keyword-entry .keyword-img {
+		width: 10%;
+		justify-content: center;
+	}
+
+	.keyword-box {
+		height: calc(100vh - 110upx);
+		border-radius: 20upx 20upx 0 0;
+		background-color: #F4F4F4;
+	}
+
+	.keyword-box .keyword-block {
+		padding: 10upx 0;
+		background-color: #FFFFFF;
+		margin-bottom: 20rpx;
+	}
+
+	.keyword-box .keyword-block .keyword-list-header {
+		width: 94%;
+		padding: 10upx 3%;
+		font-size: 27upx;
+		color: #333;
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.keyword-box .keyword-block .keyword-list-header image {
+		width: 40upx;
+		height: 40upx;
+	}
+
+	.keyword-box .keyword-block .keyword {
+		width: 94%;
+		padding: 3px 3%;
+		display: flex;
+		flex-flow: wrap;
+		justify-content: flex-start;
+	}
+
+	.keyword-box .keyword-block .hide-hot-tis {
+		display: flex;
+		justify-content: center;
+		font-size: 28upx;
+		color: #6b6b6b;
+	}
+
+	.keyword-box .keyword-block .keyword>view {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-radius: 60upx;
+		padding: 0 20upx;
+		margin: 10upx 20upx 10upx 0;
+		height: 60upx;
+		font-size: 28upx;
+		background-color: rgb(242, 242, 242);
+		color: #6b6b6b;
+	}
 </style>

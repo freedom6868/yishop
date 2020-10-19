@@ -21,5 +21,26 @@ export function getSearchs(){
 	})
 }
 
+// 清空历史记录
+export function clearHistory(){
+	return requert ({
+		url:'search/clearhistory'
+	})
+}
 
-
+// 获取搜索商品
+export function getGoodsList(keyword,page,size,sort,order,categoryld){
+	return requert({
+		url : 'goods/list',
+		method:"GET",
+		data:{
+			keyword:keyword,
+			page:1,
+			size:size,
+			sort:sort,
+			order:order,
+			categoryld:0
+		}
+	})
+	
+}

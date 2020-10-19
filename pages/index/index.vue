@@ -27,7 +27,7 @@
 		<view class="m-menu">
 			<!-- 路径 -->
 			<!-- <navigator class="item" v-for="(item) in Channel" url="详情?id={{item.id}}" :key='id'> -->
-			<view class="item" v-for="(item) in Channel" :key='item.id'>
+			<view class="item" v-for="(item) in Channel" :key='item.id' @click="goCategory(item.url)">
 				<image :src="item.icon_url"></image>
 				<text>{{item.name}}</text>
 			</view>
@@ -178,6 +178,7 @@
 				this.Lunbo = data.banner;
 				// 宫格list
 				this.Channel = data.channel;
+				// console.log(this.Channel)
 				// 制造商直供图片
 				this.BrandList = data.brandList;
 				// 新品首发
@@ -209,6 +210,11 @@
 				var data = await getGoodsCounts();
 				this.goodCount = data.data.goodsCount;
 
+			},
+			// 调转到分类详情页面
+			goCategory(url){
+				console.log(url);
+				
 			},
 			//商品详情
 			sunnewGood(id) {
