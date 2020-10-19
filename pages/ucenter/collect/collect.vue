@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<view class="collect-list">
-			<view class="item" v-for="(item,index) in collectList" :key="item.id" @click="sunnewGood(item.value_id)">
+			<view class="item" v-for="(item,index) in collectList" :key="item.id" @click="sunnewGood(item.value_id)" @longpress="operation(item)">
 				<image class="img" :src="item.list_pic_url">
 					<view class="info">
 						<view class="name">{{item.name}}</view>
@@ -15,8 +15,12 @@
 
 <script>
 	import {
-		getCollectList
+		getCollectList,
+		getCollect
 	} from '../../../api/uncenter/collectApi.js'
+	import {
+		addOrCannelCollect
+	} from '@/api/goodsApi.js';
 	export default {
 		data() {
 			return {
@@ -34,8 +38,30 @@
 				console.log(id)
 				uni.navigateTo({
 					url: "../../goods/goods?id=" + id
-			
+
 				})
+			},
+			 operation(item) {
+				 var _this = this
+				uni.showModal({
+					content: "确定要删除吗？",
+					async success(res) {
+						
+						if (res.confirm) {
+							
+							const res1 = await addOrCannelCollect({
+								typeId: 0,
+								valueId: item.value_id
+							 });
+							 
+							_this.collectList = _this.getCollectData(_this.id)
+							console.log('用户点击确定');
+						} 
+						
+					}
+				})
+				
+				
 			}
 		},
 		created() {

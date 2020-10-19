@@ -114,12 +114,6 @@
 					url: './category?id=' + e.id + '&index=' + index,
 				});
 			},
-			//搜索跳转
-			toSearch() {
-				uni.showToast({
-					title: "建议跳转到新页面做搜索功能"
-				});
-			}
 		},
 		created() {
 			this.getClassify();
