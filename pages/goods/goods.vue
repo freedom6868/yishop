@@ -483,8 +483,8 @@
 		},
 		onLoad(options) {
 			// 模拟商品id
-			this.$data.id = options.id
-			// this.$data.id = '1181000'
+			this.$data.id = options.id;
+			// this.$data.id = '1181000';
 			this.getGoodsInfo();
 			this.getGoodsRelatedInfo()
 			this.getCartGoodsNumber()
