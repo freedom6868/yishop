@@ -39,7 +39,7 @@
 	import {
 		getComments,
 		getCommentsCount
-	} from '@/api/goodsApi.js';
+	} from '@/api/commentApi.js';
 	export default {
 		data() {
 			return {
@@ -78,17 +78,18 @@
 					page: (this.showType == 0 ? this.allPage : this.picPage),
 					showType: this.showType
 				});
-				console.log(res)
+				// console.log(res)
 				if(res.errno == 0){
 					
 					if(this.showType == 0) {
 						this.allCommentList = this.allCommentList.concat(res.data.data);
 						this.allPage = res.data.currentPage;
-						this.comments = this.allCommentList.concat(res.data.data);
+						this.comments = this.allCommentList;
+						// console.log(this.comments)
 					}else {
 						this.picCommentList = this.picCommentList.concat(res.data.data);
 						this.allPage = res.data.currentPage;
-						this.comments = this.picCommentList.concat(res.data.data);
+						this.comments = this.picCommentList;
 					}
 				}
 			},
