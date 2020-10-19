@@ -57,64 +57,18 @@
 	export default {
 		data() {
 			return {
+				//购物车商品数据
 				cartGoods: [],
 				cartTotal:{},
 				//判断是否全选
 				checkedAllStatus:true,
 				//判断是否在编辑状态
 				isEditCart:false,
-				
-				
 			}
 		},
 		methods: {
-			async deleteCart(){
-				var productId = this.cartGoods.map(v=>{
-					if(v.checked == true){
-						return v.product_id;
-					}
-				})
-				console.log(productId)
-				var productIds = productId.join(',');
-				console.log(productIds)
-				var message = await deleteCheckedCart(productIds);
-				
-				this.checkedAllStatus = this.isCheckedAll();
-				this.getCartApi();
-			},
-			async cutNumber(index){
-				var cartItem = this.cartGoods[index];
-				console.log(cartItem);
-				var number = (cartItem.number-1 > 1) ? cartItem.number-1:1;
-				console.log(number);
-				cartItem.number = number;
-				this.cartGoods = cartItem;
-				var message = await postNumber(cartItem.goods_id,cartItem.id,number,cartItem.product_id);
-				this.getCartApi();
-			},
-			async addNumber(index){
-				var cartItem = this.cartGoods[index];
-				console.log(cartItem);
-				var number = cartItem.number+1;
-				console.log(number);
-				cartItem.number = number;
-				this.cartGoods = cartItem;
-				var message = await postNumber(cartItem.goods_id,cartItem.id,number,cartItem.product_id);
-				this.getCartApi();
-			},
-			//单选按钮
-			async aloneChecked(index){
-				// console.log(index)
-				var id = this.cartGoods[index].product_id;
-				var checkeds = this.cartGoods[index].checked ? '0':'1';
-				// console.log(id)
-				// console.log(checkeds)
-				var message= await postChecked(id,checkeds);
-				this.getCartApi()
-				
-			},
-			//全选按钮
-			checkAll(){
+			//获取所有选中商品的product_id 并转换成字符串并用","隔开
+			getCheckedProductId(){
 				var productId = this.cartGoods.map((v)=>{
 					//返回的是一个数组[198,234,456]
 					return v.product_id;
@@ -122,15 +76,48 @@
 				//将数组变为字符串198,234,456
 				var productIds = productId.join(',')
 				// console.log(productIds)
-				
-				var isChecked = "";
-				//编辑模式下消除全部选中状态
-				if(this.isEditCart){
-					isChecked = this.isCheckedAll() ? '0':'0';
-				}else{
-					isChecked = this.isCheckedAll() ? '0':'1';
-				}
-				//修改选中状态q
+				return productIds;
+			},
+			//删除选中购物车商品
+			async deleteCart(){
+				var productIds = this.getCheckedProductId();
+				// console.log(productIds)
+				var message = await deleteCheckedCart(productIds);
+				this.checkedAllStatus = this.isCheckedAll();
+				this.getCartApi();
+			},
+			// 减
+			async cutNumber(index){
+				var cartItem = this.cartGoods[index];
+				// console.log(cartItem);
+				var number = (cartItem.number-1 > 1) ? cartItem.number-1:1;
+				// console.log(number);
+				cartItem.number = number;
+				var message = await postNumber(cartItem.goods_id,cartItem.id,number,cartItem.product_id);
+				this.getCartApi();
+			},
+			// 加
+			async addNumber(index){
+				var cartItem = this.cartGoods[index];
+				// console.log(cartItem);
+				var number = cartItem.number+1;
+				// console.log(number);
+				cartItem.number = number;
+				var message = await postNumber(cartItem.goods_id,cartItem.id,number,cartItem.product_id);
+				this.getCartApi();
+			},
+			//单选按钮
+			async aloneChecked(index){
+				var id = this.cartGoods[index].product_id;
+				var checkeds = this.cartGoods[index].checked ? '0':'1';
+				var message= await postChecked(id,checkeds);
+				this.getCartApi()
+			},
+			//全选按钮
+			checkAll(){
+				var productIds = this.getCheckedProductId();
+				var isChecked =  this.isCheckedAll() ? '0':'1';
+				//修改选中状态
 				var message= postChecked(productIds,isChecked);
 				this.getCartApi()
 			},
@@ -138,10 +125,18 @@
 			editCart(){
 				if(this.isEditCart){
 					this.isEditCart = !this.isEditCart;
-					this.checkAll()
+					var productIds = this.getCheckedProductId();
+					var isChecked =  this.isCheckedAll() ? '1':'1';
+					//修改选中状态
+					var message= postChecked(productIds,isChecked);
+					this.getCartApi()
 				}else{
 					this.isEditCart = !this.isEditCart;
-					this.checkAll()
+					var productIds = this.getCheckedProductId();
+					var isChecked =  this.isCheckedAll() ? '0':'0';
+					//修改选中状态
+					var message= postChecked(productIds,isChecked);
+					this.getCartApi()
 				}
 			},
 			// 判断是否全选
