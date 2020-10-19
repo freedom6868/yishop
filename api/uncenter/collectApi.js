@@ -8,8 +8,8 @@ export function getCollect(){
 	})
 }
 //收藏列表
-export function getCollect(){
+export function getCollectList(id){
 	return requert({
-		url:'collect/list'
+		url:`collect/list?typeId=${id}`
 	})
 }
