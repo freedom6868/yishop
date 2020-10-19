@@ -162,7 +162,7 @@
 				const res = await getGoodsDeatil({
 					id: this.$data.id
 				})
-				// console.log("商品详情：",res)
+				console.log("商品详情：",res)
 				if (res.errno === 0) {
 					this.gallery = res.data.gallery; //轮播图
 					this.goods = res.data.info;
@@ -225,7 +225,7 @@
 			// 点击前往品牌详情页面
 			goBrandDetail() {
 				uni.navigateTo({
-					url: `../brandDetail/brandDetail?id=${this.$data.id}`
+					url: `../brandDetail/brandDetail?id=${this.brand.id}`
 				})
 			},
 			// 收藏或取消收藏
