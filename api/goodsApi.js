@@ -33,3 +33,13 @@ export function getCartGoodsCount(){
 		url:'cart/goodscount'
 	})
 }
+
+
+// 加入购物车 cart/add
+export function addCart(data){
+	return requert({
+		url:'cart/add',
+		data: data,
+		method: 'post'
+	})
+}

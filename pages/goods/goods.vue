@@ -27,7 +27,7 @@
 		</view>
 
 		<!-- 选规格 -->
-		<view class=" section-nav">
+		<view class=" section-nav" @click="openDetail">
 			<text class="left">请选择规格数量</text>
 			<image src="../../static/images/address_right.png" mode="" class="img_size right"></image>
 		</view>
@@ -123,15 +123,15 @@
 			<view class="btn_right">
 				立即购买
 			</view>
-			<view class="btn_right addCart">
+			<view class="btn_right addCart" @click="addToCart">
 				加入购物车
 			</view>
 		</view>
 
 		<!-- 选规格 -->
-		<view class="attr-pop-box">
+		<view class="attr-pop-box" v-if="isShowDetail">
 			<view class="attr-pop">
-				<view class="close">
+				<view class="close" @click="closeDetail">
 					<image src="../../static/images/close.png" mode=""></image>
 				</view>
 				<view class="img-info">
@@ -142,7 +142,7 @@
 								价格：￥{{goods.retail_price}}
 							</view>
 							<view class="choose">
-								已选择：{{checkedSpecText}}
+								已选择：<text v-for="(item,index) in checkedSpecText" :key="index">{{item.valueText}} </text> 
 							</view>
 						</view>
 					</view>
@@ -151,7 +151,7 @@
 					<view class="spec-item" v-for="(item,index) in specificationList" :key="index">
 						<view class="name">{{item.name}}</view>
 						<view class="values">
-							<view class="value" v-for="(item1,index1) in item.valueList" :key="index1" :data-select1="index" :data-select2="index1" @click="clickSkuValue">
+							<view class="value" :class="item1.selected ? 'value_active' : '' "  v-for="(item1,index1) in item.valueList" :key="index1" :data-select1="index" :data-select2="index1" @click="clickSkuValue">
 								{{item1.value}}
 							</view>
 						</view>
@@ -161,7 +161,7 @@
 					<!-- 数量 -->
 					<view class="number-item">
 						<view class="name">数量</view>
-						<u-number-box v-model="value" @change="valChange"></u-number-box>
+						<u-number-box :max="10"  :min="1" v-model="number"  @change="valChange()"></u-number-box>
 					</view>
 				</view>
 			</view>
@@ -176,7 +176,8 @@
 		getGoodsDeatil,
 		getGoodsRelated,
 		addOrCannelCollect,
-		getCartGoodsCount
+		getCartGoodsCount,
+		addCart
 	} from '@/api/goodsApi.js';
 	export default {
 		data() {
@@ -189,11 +190,14 @@
 				goodsDesc: '', //
 				issueList: [], //常见问题
 				relatedGoods: [], //大家都在看列表
+				productList: [], //规格库存数组
 				userHasCollect: 0, //是否为收藏
 				cartGoodsCount: 0, //购物车商品数量
 				gallery: [], //商品规格图片
-				checkedSpecText: '请选择规格数量',
+				checkedSpecText: ['请选择规格数量'],
 				specificationList: [], //规格列表
+				isShowDetail: false,
+				number: 1, //加购数量
 
 			}
 		},
@@ -217,8 +221,8 @@
 					this.userHasCollect = res.data.userHasCollect; //是否为收藏0/1
 					this.gallery = res.data.gallery; //规格显示图片
 					this.specificationList = res.data.specificationList; //规格列表
+					this.productList = res.data.productList;
 				}
-				console.log(this.specificationList)
 				this.getImage()
 			},
 			getImage() {
@@ -297,28 +301,185 @@
 			// 获取购物车商品件数
 			async getCartGoodsNumber() {
 				const res = await getCartGoodsCount();
-				console.log("购物车总数：", res)
+				// console.log("购物车总数：", res)
 				if (res.errno == 0) {
 					this.cartGoodsCount = res.data.cartTotal.goodsCount;
 				}
 			},
-			clickSkuValue() {
+			clickSkuValue(e) {
 				const index1 = e.currentTarget.dataset.select1;
 				const index2 = e.currentTarget.dataset.select2;
-				console.log(index1);
-				console.log(index2)
+				const specificationList = this.specificationList;
+				
+				console.log(this.specificationList)
+				
+				if(specificationList[index1].valueList[index2].selected) {
+					specificationList[index1].valueList[index2].selected = false;
+				}else {
+					specificationList[index1].valueList.forEach(ele => {
+						ele.selected = false;
+					})
+					specificationList[index1].valueList[index2].selected = true;
+				}
+				this.specificationList = specificationList;
+				
+				// 实现页面刷新
+				this.isShowDetail = false;
+				this.isShowDetail = true;
+				const canSubmit = this.skuCanSubmit();
+				this.getCheckedSpecValue()
+				
 			},
+			// 判断是否漏选规格
+			skuCanSubmit() {
+				const specificationList = this.specificationList;
+				let canSubmit = true;
+				if(specificationList) {
+					specificationList.forEach(item => {
+						const selected = item.valueList.find(ele => {
+							return ele.selected
+						})
+						
+						if(!selected) {
+							canSubmit = false;
+						}
+					})
+				}
+				return canSubmit;
+			},
+			// 实现页面刷新
+			getCheckedSpecValue() {
+				let checkedValues = [];
+				let _specificationList = this.specificationList;
+				
+				_specificationList.forEach(item => {
+					let _checkedObj = {
+						nameId : item.specification_id,
+						valueId: 0,
+						valueText: ''
+					}
+					
+					item.valueList.forEach(ele => {
+						if(ele.selected){
+							_checkedObj.valueId = ele.id;
+							_checkedObj.valueText = ele.value;
+						}
+					})
+					
+					checkedValues.push(_checkedObj)
+				})
+				return checkedValues;
+				// console.log(checkedValues)
+				
+				
+				
+				// if(checkedValues.length <= 0) {
+				// 	this.checkedSpecText = ['请选择规格数量']
+				// }else {
+				// 	this.checkedSpecText = checkedValues
+				// }
+				
+			},
+			getCheckedSpecKey() {
+				let checkedValue = this.getCheckedSpecValue().map(function (v) {
+				  return v.valueId;
+				});
+				return checkedValue.join('_');
+			},
+			// 判断是否有库存
+			getCheckedProductItem(key) {
+				
+				return this.productList.filter( (item) => {
+					if(item.goods_specification_ids == key) {
+						return true;
+					}else {
+						return false;
+					}
+				})
+			},
+			// 进步器
+			valChange(e) {
+				this.number = e.value;
+				console.log(this.value)
+			},
+			// 关闭规格
+			closeDetail() {
+				this.isShowDetail = false;
+			},
+			// 开启规格
+			openDetail() {
+				this.isShowDetail = true;
+			},
+			// 加入购物车
+			async addToCart() {
+				
+				// 判断是否打开规格页面
+				if(!this.isShowDetail) {
+					this.isShowDetail = true;
+					return;
+				}
+				
+				// 判断是否选择完整规格
+				if(!this.skuCanSubmit()) {
+					uni.showToast({
+						title:'请选择规格',
+						icon:'none'
+					})
+					return;
+				}
+				
+				// 根据选中规格判断是否有sku信息
+				let checkedProduct = this.getCheckedProductItem(this.getCheckedSpecKey());
+				if(!checkedProduct || checkedProduct.length <= 0) {
+					uni.showToast({
+						title:'库存不足',
+						icon:'none',
+						mask: true
+					})
+					return;
+				}
+				
+				// 验证库存
+				if (checkedProduct[0].goods_number < this.number) {
+					//找不到对应的product信息，提示没有库存
+					uni.showToast({
+					  title: '库存不足',
+					  icon: 'none',
+					  mask: true
+					});
+					return false;
+				}
+				
+				const res = await addCart({
+					goodsId: this.goods.id,
+					number: this.number,
+					productId: checkedProduct[0].id
+				})
+				console.log("加入购物车：",res)
+				if(res.errno == 0) {
+					uni.showToast({
+						title:'添加成功'
+					})
+					
+				}else {
+					uni.showToast({
+						title:res.errmsg,
+						icon: 'none'
+					})
+				}
+				this.isShowDetail = !this.isShowDetail;
+				this.getCartGoodsNumber()
+				console.log("加入购物车")
+			}
 			
-
-			valChange() {}
 
 
 		},
 		onLoad(options) {
 			// console.log(options.id)
 			// 模拟商品id
-			// this.$data.id = options.id
-			this.$data.id = '1181000'
+			this.$data.id = options.id
+			// this.$data.id = '1181000'
 			this.getGoodsInfo();
 			this.getGoodsRelatedInfo()
 			this.getCartGoodsNumber()
@@ -797,6 +958,11 @@
 
 						.choose {
 							font-size: 29rpx;
+							
+							text {
+								position:inline-block;
+								margin-right: 16rpx;
+							}
 						}
 					}
 				}
@@ -822,6 +988,11 @@
 								border: 1px solid #333;
 								font-size: 25rpx;
 								color: #333;
+							}
+							
+							.value_active {
+								color: #b4282d;
+								border: 1px solid #b4282d;
 							}
 						}
 					}
