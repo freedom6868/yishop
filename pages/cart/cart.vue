@@ -41,7 +41,7 @@
 				</view>
 			</view>
 			
-			<view class="cart-bottom">
+			<view class="cart-bottom" v-if="cartGoods.length>0">
 				<view :class="[checkedAllStatus ? 'checkbox':'checked']" @click="checkAll">全选({{ cartTotal.checkedGoodsCount}})</view>
 				<view class="total">{{!isEditCart ? '￥'+cartTotal.checkedGoodsAmount : ''}}</view>
 				<view class="delete" @click="editCart">{{!isEditCart ? '编辑':'完成'}}</view>
