@@ -21,14 +21,15 @@ export function getGoodsRelated(data){
 // 收藏或取消收藏
 export function addOrCannelCollect(data){
 	return requert({
-		url:'cart/goodscount',
+		url:'collect/addordelete',
 		data: data,
+		method: 'post'
 	})
 }
 
 // 获取购物车商品件数
 export function getCartGoodsCount(){
 	return requert({
-		url:'cart/goodscount',
+		url:'cart/goodscount'
 	})
 }

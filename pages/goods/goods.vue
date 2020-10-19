@@ -20,7 +20,7 @@
 				<text class="price">&yen;{{goods.retail_price}}</text>
 				<view class="brand" v-if="brand.name" @click="goBrandDetail">
 					<!-- <navigator url=""> -->
-						<text>{{brand.name}}</text>
+					<text>{{brand.name}}</text>
 					<!-- </navigator> -->
 				</view>
 			</view>
@@ -36,7 +36,7 @@
 		<view class="comments" v-if="comment.count > 0">
 			<view class="title left">
 				<text>评价({{comment.count > 999 ? '999+' : comment.count}})</text>
-				
+
 				<view class="check_all right" @click="goCommentAll">
 					<text>查看全部</text>
 					<image src="../../static/images/address_right.png" class="img_size" mode=""></image>
@@ -114,17 +114,56 @@
 				<image v-if="userHasCollect == 0" class="icon" src="../../static/images/icon_collect.png" mode=""></image>
 				<image v-else src="../../static/images/icon_collect_checked.png" class="icon" mode=""></image>
 			</view>
-			
-			<view class="btn_left" >
+
+			<view class="btn_left">
 				<text class="cart-count">{{cartGoodsCount}}</text>
 				<image @click="openCartPage" class="icon" src="../../static/images/ic_menu_shoping_nor.png" mode=""></image>
 			</view>
-			
+
 			<view class="btn_right">
 				立即购买
 			</view>
 			<view class="btn_right addCart">
 				加入购物车
+			</view>
+		</view>
+
+		<!-- 选规格 -->
+		<view class="attr-pop-box">
+			<view class="attr-pop">
+				<view class="close">
+					<image src="../../static/images/close.png" mode=""></image>
+				</view>
+				<view class="img-info">
+					<image :src="gallery[0].img_url" mode=""></image>
+					<view class="info">
+						<view class="conent">
+							<view class="price">
+								价格：￥{{goods.retail_price}}
+							</view>
+							<view class="choose">
+								已选择：{{checkedSpecText}}
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="spec-con">
+					<view class="spec-item" v-for="(item,index) in specificationList" :key="index">
+						<view class="name">{{item.name}}</view>
+						<view class="values">
+							<view class="value" v-for="(item1,index1) in item.valueList" :key="index1" :data-select1="index" :data-select2="index1" @click="clickSkuValue">
+								{{item1.value}}
+							</view>
+						</view>
+
+					</view>
+
+					<!-- 数量 -->
+					<view class="number-item">
+						<view class="name">数量</view>
+						<u-number-box v-model="value" @change="valChange"></u-number-box>
+					</view>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -152,6 +191,10 @@
 				relatedGoods: [], //大家都在看列表
 				userHasCollect: 0, //是否为收藏
 				cartGoodsCount: 0, //购物车商品数量
+				gallery: [], //商品规格图片
+				checkedSpecText: '请选择规格数量',
+				specificationList: [], //规格列表
+
 			}
 		},
 		components: {
@@ -162,7 +205,7 @@
 				const res = await getGoodsDeatil({
 					id: this.$data.id
 				})
-				console.log("商品详情：",res)
+				console.log("商品详情：", res)
 				if (res.errno === 0) {
 					this.gallery = res.data.gallery; //轮播图
 					this.goods = res.data.info;
@@ -172,7 +215,10 @@
 					this.goodsDesc = res.data.info.goods_desc;
 					this.issueList = res.data.issue; //常见问题
 					this.userHasCollect = res.data.userHasCollect; //是否为收藏0/1
+					this.gallery = res.data.gallery; //规格显示图片
+					this.specificationList = res.data.specificationList; //规格列表
 				}
+				console.log(this.specificationList)
 				this.getImage()
 			},
 			getImage() {
@@ -189,8 +235,8 @@
 			imgInfo(imgIndex) {
 				// console.log(this.goodsDesc[imgIndex])
 				uni.previewImage({
-					urls:this.goodsDesc,
-					current:this.goodsDesc[imgIndex],
+					urls: this.goodsDesc,
+					current: this.goodsDesc[imgIndex],
 				})
 			},
 			// 获取大家都在看
@@ -211,15 +257,15 @@
 				})
 			},
 			// 点击购物车图标跳转到购物车页面
-			openCartPage(){
+			openCartPage() {
 				uni.switchTab({
-					url:'../cart/cart'
+					url: '../cart/cart'
 				})
 			},
 			// 跳转到查看全部评价的页面
 			goCommentAll() {
 				uni.navigateTo({
-					url:`../comment/comment?valueId=${this.$data.id}&typeId=0`
+					url: `../comment/comment?valueId=${this.$data.id}&typeId=0`
 				})
 			},
 			// 点击前往品牌详情页面
@@ -230,40 +276,53 @@
 			},
 			// 收藏或取消收藏
 			async addCannelCollect() {
-				const res = await addOrCannelCollect({typeId: 0,valueId: this.$data.id});
-				// console.log(res)
-				if(res.errno == 0) {
-					if(res.data.type === 'delete') {
+				const res = await addOrCannelCollect({
+					typeId: 0,
+					valueId: this.$data.id
+				});
+				console.log("收藏：", res)
+				if (res.errno == 0) {
+					if (res.data.type === 'delete') {
 						this.userHasCollect = 0
-					}else if(res.data.type === 'add'){
+					} else if (res.data.type === 'add') {
 						this.userHasCollect = 1
 					}
-				}else {
+				} else {
 					uni.showToast({
-						title:res.errmsg,
-						icon:'none'
+						title: res.errmsg,
+						icon: 'none'
 					})
 				}
 			},
 			// 获取购物车商品件数
 			async getCartGoodsNumber() {
 				const res = await getCartGoodsCount();
-				if(res.errno == 0){
+				console.log("购物车总数：", res)
+				if (res.errno == 0) {
 					this.cartGoodsCount = res.data.cartTotal.goodsCount;
 				}
-			}
+			},
+			clickSkuValue() {
+				const index1 = e.currentTarget.dataset.select1;
+				const index2 = e.currentTarget.dataset.select2;
+				console.log(index1);
+				console.log(index2)
+			},
+			
+
+			valChange() {}
 
 
 		},
 		onLoad(options) {
 			// console.log(options.id)
 			// 模拟商品id
-			this.$data.id = options.id
-			// this.$data.id = '1181000'
+			// this.$data.id = options.id
+			this.$data.id = '1181000'
 			this.getGoodsInfo();
 			this.getGoodsRelatedInfo()
 			this.getCartGoodsNumber()
-			
+
 		}
 	}
 </script>
@@ -533,7 +592,7 @@
 				vertical-align: bottom;
 			}
 		}
-		
+
 		// 常见问题
 		.common-problem {
 			background: #fff;
@@ -614,46 +673,47 @@
 				}
 			}
 
-			
+
 		}
-		
+
 		// 底部栏
 		.bottom-btn {
 			display: flex;
 			position: fixed;
 			left: 0;
 			bottom: 0;
-			
+			z-index: 9;
+
 			width: 100%;
 			height: 100rpx;
 			border-top: 1px solid #f4f4f4;
 			background-color: #fff;
-			
-			
-			
+
+
+
 			.btn_left {
 				position: relative;
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				
+
 				width: 162rpx;
 				height: 100%;
-				
+
 				border-right: 1px solid #f4f4f4;
-				
-				
+
+
 				.icon {
 					width: 44rpx;
 					height: 44rpx;
 				}
-				
+
 				.cart-count {
 					position: absolute;
 					right: 40rpx;
-					top:16rpx;
+					top: 16rpx;
 					font-size: 22rpx;
-					
+
 					width: 28rpx;
 					height: 28rpx;
 					line-height: 28rpx;
@@ -663,22 +723,118 @@
 					background: #b4282d;
 				}
 			}
-			
+
 			.btn_right {
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				
+
 				height: 100%;
 				// border: 1rpx solid #f4f4f4;
 				flex: 1;
 			}
-			
+
 			.addCart {
 				color: #fff;
 				background: #b4282d;
 			}
 		}
+
+		.attr-pop-box {
+			width: 100%;
+			height: 100%;
+
+			position: fixed;
+			background: rgba(0, 0, 0, .5);
+			z-index: 8;
+			bottom: 0;
+
+			.attr-pop {
+				width: 100%;
+				height: auto;
+				max-height: 780rpx;
+				padding: 31.25rpx;
+				background: #fff;
+				position: fixed;
+				z-index: 9;
+				bottom: 100rpx;
+
+				.close {
+					position: absolute;
+					width: 48rpx;
+					height: 48rpx;
+					right: 31.25rpx;
+					overflow: hidden;
+					top: 31.25rpx;
+
+					image {
+						width: 100%;
+						height: 100%;
+					}
+				}
+
+				.img-info {
+					display: flex;
+					margin-bottom: 41.5rpx;
+
+					image {
+						// float: left;
+						height: 177rpx;
+						width: 177rpx;
+						// background: #f4f4f4;
+						margin-right: 31.25rpx;
+					}
+
+					.info {
+						display: flex;
+						justify-content: center;
+						align-items: center;
+
+						.price {
+							font-size: 33rpx;
+							margin-bottom: 10rpx;
+						}
+
+						.choose {
+							font-size: 29rpx;
+						}
+					}
+				}
+
+				.spec-con {
+					.name {
+						margin-bottom: 22rpx;
+						font-size: 29rpx;
+						color: #333;
+					}
+
+					.spec-item {
+
+
+						.values {
+							display: flex;
+							margin-bottom: 31.25rpx;
+
+							.value {
+								padding: 14rpx 35rpx;
+								margin-right: 25rpx;
+								margin-bottom: 16.5rpx;
+								border: 1px solid #333;
+								font-size: 25rpx;
+								color: #333;
+							}
+						}
+					}
+
+					.number-item {
+						.number {
+							padding: 10rpx;
+						}
+					}
+				}
+			}
+		}
+
 
 	}
 </style>
