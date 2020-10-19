@@ -226,7 +226,7 @@
 			},
 			// 跳转到ck制造商
 			ckGoods(id) {
-				console.log(id);
+				// console.log(id);
 				uni.navigateTo({
 					url: "../brandDetail/brandDetail?id=" + id
 				})

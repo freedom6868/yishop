@@ -29,3 +29,12 @@ export function postNumber(goodsId,id,number,productId){
 		}
 	})
 }
+export function deleteCheckedCart(id){
+	return requert({
+		url:"cart/delete?productIds="+id,
+		method:"POST",
+		data:{
+			productIds:id
+		}
+	})
+}

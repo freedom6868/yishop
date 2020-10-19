@@ -45,7 +45,13 @@
 			async getOrderList(){
 				let res = await getOrderListData();
 				console.log(res);
-				this.orderList = res.data.data;
+				if(res.errno == 0){
+					this.orderList = res.data.data;
+				}else{
+					uni.showToast({
+						title:res.errmsg
+					})
+				}
 			},
 			payOrder(){
 				uni.showToast({

@@ -18,10 +18,10 @@
 				<text class="name">{{goods.name}}</text>
 				<text class="desc">{{goods.goods_brief}}</text>
 				<text class="price">&yen;{{goods.retail_price}}</text>
-				<view class="brand" v-if="brand.name">
-					<navigator url="">
+				<view class="brand" v-if="brand.name" @click="goBrandDetail">
+					<!-- <navigator url=""> -->
 						<text>{{brand.name}}</text>
-					</navigator>
+					<!-- </navigator> -->
 				</view>
 			</view>
 		</view>
@@ -35,8 +35,9 @@
 		<!-- 评价 -->
 		<view class="comments" v-if="comment.count > 0">
 			<view class="title left">
-				<text>评价({{comment.count}})</text>
-				<view class="check_all right">
+				<text>评价({{comment.count > 999 ? '999+' : comment.count}})</text>
+				
+				<view class="check_all right" @click="goCommentAll">
 					<text>查看全部</text>
 					<image src="../../static/images/address_right.png" class="img_size" mode=""></image>
 				</view>
@@ -186,7 +187,7 @@
 			},
 			// 图片预览
 			imgInfo(imgIndex) {
-				console.log(this.goodsDesc[imgIndex])
+				// console.log(this.goodsDesc[imgIndex])
 				uni.previewImage({
 					urls:this.goodsDesc,
 					current:this.goodsDesc[imgIndex],
@@ -197,7 +198,7 @@
 				const res = await getGoodsRelated({
 					id: this.$data.id
 				});
-				console.log(res.data.goodsList)
+				// console.log(res.data.goodsList)
 				if (res.errno == 0) {
 					this.relatedGoods = res.data.goodsList
 				}
@@ -215,10 +216,22 @@
 					url:'../cart/cart'
 				})
 			},
+			// 跳转到查看全部评价的页面
+			goCommentAll() {
+				uni.navigateTo({
+					url:`../comment/comment?valueId=${this.$data.id}&typeId=0`
+				})
+			},
+			// 点击前往品牌详情页面
+			goBrandDetail() {
+				uni.navigateTo({
+					url: `../brandDetail/brandDetail?id=${this.brand.id}`
+				})
+			},
 			// 收藏或取消收藏
 			async addCannelCollect() {
 				const res = await addOrCannelCollect({typeId: 0,valueId: this.$data.id});
-				console.log(res)
+				// console.log(res)
 				if(res.errno == 0) {
 					if(res.data.type === 'delete') {
 						this.userHasCollect = 0
@@ -243,7 +256,7 @@
 
 		},
 		onLoad(options) {
-			console.log(options.id)
+			// console.log(options.id)
 			// 模拟商品id
 			this.$data.id = options.id
 			// this.$data.id = '1181000'

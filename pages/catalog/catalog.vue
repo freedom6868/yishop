@@ -6,12 +6,15 @@
 			<view class="addr">
 				<view class="icon location"></view>{{city}}
 			</view>
-			<view class="input-box">
-				<input placeholder="默认关键字" placeholder-style="color:#c0c0c0;" @tap="toSearch()" />
-				<view class="icon search"></view>
-			</view>
-			<view class="icon-btn">
-				<view class="icon tongzhi" @tap="toMsg"></view>
+			<view class="search">
+				<navigator url="../cearch/cearch">
+					<view class="searchBox">
+						<image class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/search2-2fb94833aa.png"
+						 mode=""></image>
+						<!-- 动态数量 -->
+						<text class="text">商品搜索，共 {{ goodCount }} 款好物</text>
+					</view>
+				</navigator>
 			</view>
 		</view>
 		<!-- 占位 -->
@@ -19,7 +22,8 @@
 		<view class="category-list">
 			<!-- 左侧分类导航 -->
 			<scroll-view scroll-y="true" class="left">
-				<view class="row" v-for="(item,index) in categoryList" :key="item.id" :class="[index==showCategoryIndex?'on':'']" @tap="showCategory(index,item.id)">
+				<view class="row" v-for="(item,index) in categoryList" :key="item.id" :class="[index==showCategoryIndex?'on':'']"
+				 @tap="showCategory(index,item.id)">
 					<view class="text">
 						<view class="block"></view>
 						{{item.name}}
@@ -57,9 +61,13 @@
 		getCatalog,
 		getClassifyData
 	} from '../../api/catalogApi.js'
+	import {
+		getGoodsCounts
+	} from '../../api/homeApi.js';
 	export default {
 		data() {
 			return {
+				goodCount: [],
 				showCategoryIndex: 0,
 				headerPosition: "fixed",
 				city: "北京",
@@ -82,6 +90,10 @@
 			});
 		},
 		methods: {
+			async getGoodsCountsData() {
+				var data = await getGoodsCounts();
+				this.goodCount = data.data.goodsCount;
+			},
 			async getClassify() {
 				var data = await getCatalog();
 				this.categoryList = data.data.categoryList;
@@ -91,16 +103,15 @@
 			//分类切换显示
 			async showCategory(index, id) {
 				this.showCategoryIndex = index;
-				console.log(id)
 				var data = await getClassifyData(id);
 				this.subCategoryList = data.data.currentCategory;
-				console.log(data)
+				// console.log(data)
 			},
-			toCategory(e,index) {
+			toCategory(e, index) {
 				uni.setStorageSync('catName', e.name);
-				console.log(index)
+				// console.log(index)
 				uni.navigateTo({
-					url: './category?id=' + e.id +"&index ="+index,
+					url: './category?id=' + e.id + '&index=' + index,
 				});
 			},
 			//搜索跳转
@@ -112,6 +123,7 @@
 		},
 		created() {
 			this.getClassify();
+			this.getGoodsCountsData()
 		}
 	}
 </script>
@@ -161,49 +173,36 @@
 			}
 		}
 
-		.input-box {
-			width: 100%;
-			height: 60upx;
-			background-color: #f5f5f5;
-			border-radius: 30upx;
-			position: relative;
+		.search {
 			display: flex;
+			justify-content: center;
 			align-items: center;
+			width: 100%;
+			height: 90rpx;
+			background-color: #FFFFFF;
 
-			.icon {
+			.searchBox {
 				display: flex;
 				align-items: center;
-				position: absolute;
-				top: 0;
-				right: 0;
-				width: 60upx;
-				height: 60upx;
-				font-size: 34upx;
-				color: #c0c0c0;
-			}
+				justify-content: center;
+				width: 580rpx;
+				height: 56rpx;
+				border-radius: 10rpx;
+				background: #ededed;
 
-			input {
-				padding-left: 28upx;
-				height: 28upx;
-				font-size: 28upx;
+				.text {
+					color: #666;
+				}
+
+				.icon {
+					width: 28rpx;
+					height: 28rpx;
+					margin-right: 10rpx;
+				}
 			}
 		}
 
-		.icon-btn {
-			width: 60upx;
-			height: 60upx;
-			flex-shrink: 0;
-			display: flex;
 
-			.icon {
-				width: 60upx;
-				height: 60upx;
-				display: flex;
-				justify-content: flex-end;
-				align-items: center;
-				font-size: 42upx;
-			}
-		}
 	}
 
 	.place {
@@ -282,8 +281,8 @@
 			left: 24%;
 
 			.category {
+
 				width: 94%;
-				padding: 20upx 3%;
 
 				.banner {
 					width: 100%;
@@ -296,43 +295,45 @@
 						width: 100%;
 						height: 24.262vw;
 					}
+
 					.txt {
-					  position: absolute;
-					  top: 30rpx;
-					  text-align: center;
-					  color: #fff;
-					  font-size: 28rpx;
-					  left: 0;
-					  height: 192rpx;
-					  line-height: 192rpx;
-					  width: 100%;
+						position: absolute;
+						top: 30rpx;
+						text-align: center;
+						color: #fff;
+						font-size: 28rpx;
+						left: 0;
+						height: 192rpx;
+						line-height: 192rpx;
+						width: 100%;
 					}
 				}
 
 				.list {
-					margin-top: 40upx;
 					width: 100%;
 					display: flex;
 					flex-wrap: wrap;
 
 					.box {
-						width: calc(71.44vw / 3);
+						height: 216rpx;
+						width: 144rpx;
 						margin-bottom: 30upx;
 						display: flex;
 						flex-direction: column;
 						justify-content: center;
 						align-items: center;
 						flex-wrap: wrap;
+						margin-left: 30rpx;
 
 						image {
-							width: 60%;
-							height: calc(71.44vw / 3 * 0.6);
+							height: 144rpx;
+							width: 144rpx;
 						}
 
 						.txt {
 							margin-top: 5upx;
 							width: 100%;
-							// display: flex;
+							display: flex;
 							justify-content: center;
 							font-size: 26upx;
 						}

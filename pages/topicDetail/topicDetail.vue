@@ -8,7 +8,7 @@
 				<!-- 精选留言 -->
 				<view class="choiceness-comment">
 					<text class="title">精选留言</text>
-					<image class="icon" src="../../static/images/postcomment.png" mode=""></image>
+					<image class="icon" src="../../static/images/postcomment.png" mode="" @click="toPostComment"></image>
 				</view>
 				<!-- 用户留言区 -->
 				<view class="comment-item" v-for="item in detailCommentData" :key="item.id">
@@ -116,11 +116,23 @@
 				uni.navigateTo({
 					url:"../topicComment/topicComment?valueId=" + id + "&typeId=1"
 				})
+			},
+			//点击前往发表评论
+			toPostComment(){
+				let valueId = this.id;
+				uni.navigateTo({
+					url:"../commentPost/commentPost?valueId=" + valueId + "&typeId=1"
+				})
 			}
 		},
 		onLoad(options) {
 			//获取专题页传递过来的id
 			this.id = options.id;
+			// this.getDetailPic();
+			// this.getDetailCommentData();
+			// this.getTopicRecommendData();
+		},
+		onShow() {
 			this.getDetailPic();
 			this.getDetailCommentData();
 			this.getTopicRecommendData();

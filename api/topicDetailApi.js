@@ -27,3 +27,16 @@ export function getMoreComment(valueId,typeId,size,page,showType){
 		url:`comment/list?valueId=${valueId}&typeId=${typeId}&size=${size}&page=${page}&showType=${showType}`
 	})
 }
+
+//提交评论
+export function getPostComment(typeId,valueId,content){
+	return requert({
+		url:`comment/post`,
+		method:"POST",
+		data:{
+			typeId,
+			valueId,
+			content
+		}
+	})
+}

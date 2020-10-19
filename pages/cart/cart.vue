@@ -5,7 +5,7 @@
 			<view class="item">48小时快速退款</view>
 			<view class="item">满88元免邮费</view>
 		</view>
-		<!-- :class="[disabledCode==true?'code_text_tap':'code_text']" -->
+		<!-- 购物车没有商品时显示 -->
 		<view class="notCart" v-if="cartGoods.length<=0">
 			<view class="no">
 				<image src="../../static/images/cart.png" mode=""></image>
@@ -13,12 +13,11 @@
 					<navigator url="../index/index" open-type="switchTab">去添加点什么吧</navigator>
 				</view>
 			</view>
-			
 		</view>
+		<!-- 购物车有商品时显示 -->
 		<view class="CartData" v-if="cartGoods.length>0">
 			<view class="list" v-for="(item,index) in cartGoods" :key="index">
 					<!-- 勾选按钮 -->
-					<!-- [checkbox,item.checked ? 'checked':''] -->
 					<view :class="[item.checked ? 'checked':'checkbox']" @click="aloneChecked(index)"></view>
 					<view class="cart-goods">
 						<image class="img" :src="item.list_pic_url" mode=""></image>
@@ -39,68 +38,37 @@
 							</view>
 						</view>
 					</view>
-				</view>		
+				</view>
 			</view>
 			
 			<view class="cart-bottom">
 				<view :class="[checkedAllStatus ? 'checkbox':'checked']" @click="checkAll">全选({{ cartTotal.checkedGoodsCount}})</view>
 				<view class="total">{{!isEditCart ? '￥'+cartTotal.checkedGoodsAmount : ''}}</view>
 				<view class="delete" @click="editCart">{{!isEditCart ? '编辑':'完成'}}</view>
-				<view class="checkout" v-if="isEditCart">下单</view>
-				<view class="checkout" v-if="!isEditCart">删除所有</view>
+				<view class="checkout" v-if="!isEditCart">下单</view>
+				<view class="checkout" v-if="isEditCart" @click="deleteCart">删除所有</view>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
-	import {getCartApiData,postChecked,postNumber} from "@/api/cartApi.js"
+	import {getCartApiData,postChecked,postNumber,deleteCheckedCart} from "@/api/cartApi.js"
 	export default {
 		data() {
 			return {
+				//购物车商品数据
 				cartGoods: [],
 				cartTotal:{},
 				//判断是否全选
 				checkedAllStatus:true,
 				//判断是否在编辑状态
-				isEditCart:false
+				isEditCart:false,
 			}
 		},
 		methods: {
-			async cutNumber(index){
-				var cartItem = this.cartGoods[index];
-				console.log(cartItem);
-				var number = (cartItem.number-1 > 1) ? cartItem.number-1:1;
-				console.log(number);
-				cartItem.number = number;
-				this.cartGoods = cartItem;
-				var message = await postNumber(cartItem.goods_id,cartItem.id,number,cartItem.product_id);
-				this.getCartApi();
-			},
-			async addNumber(index){
-				var cartItem = this.cartGoods[index];
-				console.log(cartItem);
-				var number = cartItem.number+1;
-				console.log(number);
-				cartItem.number = number;
-				this.cartGoods = cartItem;
-				var message = await postNumber(cartItem.goods_id,cartItem.id,number,cartItem.product_id);
-				this.getCartApi();
-			},
-			//单选按钮
-			async aloneChecked(index){
-				console.log(index)
-				
-				var id = this.cartGoods[index].product_id;
-				var checkeds = this.cartGoods[index].checked ? '0':'1';
-				console.log(id)
-				console.log(checkeds)
-				var message= await postChecked(id,checkeds);
-				this.getCartApi()
-				
-			},
-			//全选按钮
-			async checkAll(){
+			//获取所有选中商品的product_id 并转换成字符串并用","隔开
+			getCheckedProductId(){
 				var productId = this.cartGoods.map((v)=>{
 					//返回的是一个数组[198,234,456]
 					return v.product_id;
@@ -108,26 +76,67 @@
 				//将数组变为字符串198,234,456
 				var productIds = productId.join(',')
 				// console.log(productIds)
-				
-				var isChecked = "";
-				//编辑模式下消除全部选中状态
-				if(this.isEditCart){
-					isChecked = this.isCheckedAll() ? '0':'0';
-				}else{
-					isChecked = this.isCheckedAll() ? '0':'1';
-				}
-				//修改选中状态q
-				var message= await postChecked(productIds,isChecked);
+				return productIds;
+			},
+			//删除选中购物车商品
+			async deleteCart(){
+				var productIds = this.getCheckedProductId();
+				// console.log(productIds)
+				var message = await deleteCheckedCart(productIds);
+				this.checkedAllStatus = this.isCheckedAll();
+				this.getCartApi();
+			},
+			// 减
+			async cutNumber(index){
+				var cartItem = this.cartGoods[index];
+				// console.log(cartItem);
+				var number = (cartItem.number-1 > 1) ? cartItem.number-1:1;
+				// console.log(number);
+				cartItem.number = number;
+				var message = await postNumber(cartItem.goods_id,cartItem.id,number,cartItem.product_id);
+				this.getCartApi();
+			},
+			// 加
+			async addNumber(index){
+				var cartItem = this.cartGoods[index];
+				// console.log(cartItem);
+				var number = cartItem.number+1;
+				// console.log(number);
+				cartItem.number = number;
+				var message = await postNumber(cartItem.goods_id,cartItem.id,number,cartItem.product_id);
+				this.getCartApi();
+			},
+			//单选按钮
+			async aloneChecked(index){
+				var id = this.cartGoods[index].product_id;
+				var checkeds = this.cartGoods[index].checked ? '0':'1';
+				var message= await postChecked(id,checkeds);
+				this.getCartApi()
+			},
+			//全选按钮
+			checkAll(){
+				var productIds = this.getCheckedProductId();
+				var isChecked =  this.isCheckedAll() ? '0':'1';
+				//修改选中状态
+				var message= postChecked(productIds,isChecked);
 				this.getCartApi()
 			},
 			//编辑按钮修改状态
 			editCart(){
 				if(this.isEditCart){
 					this.isEditCart = !this.isEditCart;
-					this.checkAll()
+					var productIds = this.getCheckedProductId();
+					var isChecked =  this.isCheckedAll() ? '1':'1';
+					//修改选中状态
+					var message= postChecked(productIds,isChecked);
+					this.getCartApi()
 				}else{
 					this.isEditCart = !this.isEditCart;
-					this.checkAll()
+					var productIds = this.getCheckedProductId();
+					var isChecked =  this.isCheckedAll() ? '0':'0';
+					//修改选中状态
+					var message= postChecked(productIds,isChecked);
+					this.getCartApi()
 				}
 			},
 			// 判断是否全选
