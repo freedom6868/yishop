@@ -56,12 +56,12 @@
 		</view>
 		<view class="haveGoods" v-else>
 			<view class="tag">
-				<view class="together">综合</view>
-				<view class="price">价格</view>
-				<view class="classify" @click="isShow">分类</view>
+				<view class="together" id="defaultSort" @click="openSortFilter">综合</view>
+				<view class="price" @click="openSortFilter" id="priceSort">价格</view>
+				<view class="classify" id="categoryFilter" @click="openSortFilter">分类</view>
 			</view>
-			<view class="fixed" v-if="isbool">
-				<view class="text" v-for="iitem in filterCategory" :key='iitem.id'>
+			<view class="fixed" v-if="categoryFilter">
+				<view class="text" v-for="(iitem,index) in filterCategory" :key='iitem.id' @click="selectCategory(index,iitem.id)">
 					{{iitem.name}}
 				</view>
 			</view>
@@ -114,13 +114,15 @@
 				// 搜索出来的商品
 				GoodsList: [],
 				// 分类名
-				filterCategory:[],
+				filterCategory: [],
 
 				// 如果搜索到时，隐藏搜索box，显示商品box
 				isShowKeywordList: false,
 				hasGoods: true,
 				// 全部，居家显示隐藏
-				isbool:false
+				isbool: false,
+				// 搜索状态
+				categoryFilter:false
 			}
 		},
 		onLoad() {
@@ -146,6 +148,15 @@
 			},
 			// 获取商品信息
 			async getgoodData(event) {
+				
+				// console.log(event.keyword)
+				// console.log(this.page)
+				// console.log(this.size)
+				// console.log(this.currentSortType)
+				// console.log(this.currentSortOrder)
+				console.log('aaa')
+				console.log(this.categoryId)
+				console.log('bbbbb')
 				var {
 					data
 				} = await getGoodsList(event.keyword, this.page, this.size,
@@ -153,6 +164,7 @@
 				this.GoodsList = data.goodsList;
 				this.filterCategory = data.filterCategory;
 				this.hasGoods = false;
+				
 
 			},
 			init() {
@@ -161,9 +173,59 @@
 			blur() {
 				uni.hideKeyboard()
 			},
-			// 分类名的显示隐藏
-			isShow(){
-				this.isbool = !this.isbool
+			// 综合，价格，分类
+			openSortFilter(event) {
+				// console.log('this',this.keyword)
+				// console.log('event',event);
+				var currentId = event.target.id;
+				switch (currentId) {
+					case 'priceSort':
+						let tempSortOrder = 'asc';
+						if (this.currentSortOrder == 'asc') {
+							tempSortOrder = 'desc';
+						}
+						this.currentSortOrder = tempSortOrder;
+						this.currentSortType = 'price';
+						// 发送请求
+						this.getgoodData(this);
+						this.categoryFilter = false;
+						break;
+					case 'categoryFilter':
+						this.currentSortOrder = 'asc';
+						this.categoryFilter = !this.categoryFilter;
+						break;
+					default:
+						this.currentSortType = 'default';
+						this.currentSortOrder = 'desc';
+						this.categoryFilter = false;
+						this.getgoodData(this);
+
+				}
+
+			},
+			// 更改分类状态
+			selectCategory(index,id){
+				console.log('eventaaaaa',id)
+				
+				
+				 var currentCategory = null;
+				 var filterCategory1 = this.filterCategory 
+				for(let key in filterCategory1){
+					if(key == index){
+						this.filterCategory[key].checked = true;
+						currentCategory = this.filterCategory[key]
+					}else{
+						this.filterCategory[key].checked = false;
+					}
+				} 
+				this.categoryFilter = false;
+				this.currentSortType = 'default';
+				this.categoryId = id;
+				this.getgoodData(this)
+				
+				
+			
+				
 			},
 
 			// 跳往商品详情页面
@@ -268,26 +330,28 @@
 		justify-content: space-around;
 		align-items: center;
 	}
+
 	.content .haveGoods .fixed {
-			position: fixed;
-		    background: #FFFFFF;
-		    width: 100%;
-		    height: auto;
-		    overflow: hidden;
-		    padding: 40rpx 40rpx 0 0;
-		    border-bottom: 1px solid #d9d9d9;
-			
+		position: fixed;
+		background: #FFFFFF;
+		width: 100%;
+		height: auto;
+		overflow: hidden;
+		padding: 40rpx 40rpx 0 0;
+		border-bottom: 1px solid #d9d9d9;
+
 	}
+
 	.content .haveGoods .fixed .text {
-		    height: 54rpx;
-		    line-height: 54rpx;
-		    text-align: center;
-		    float: left;
-		    padding: 0 16rpx;
-		    margin: 0 0 40rpx 40rpx;
-		    border: 1px solid #666;
-		    color: #333;
-		    font-size: 24rpx;
+		height: 54rpx;
+		line-height: 54rpx;
+		text-align: center;
+		float: left;
+		padding: 0 16rpx;
+		margin: 0 0 40rpx 40rpx;
+		border: 1px solid #666;
+		color: #333;
+		font-size: 24rpx;
 	}
 
 	.content .haveGoods .goods {
