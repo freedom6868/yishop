@@ -70,7 +70,9 @@
         }
         ,{
             "path" : "pages/ucenter/collect/collect",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "收藏"
+			}
         }
         ,{
             "path" : "pages/ucenter/footprint/footprint",

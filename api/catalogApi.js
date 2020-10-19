@@ -15,3 +15,8 @@ export function getCategoryData(id){
 		url:`goods/category?id=${id}`
 	})
 }
+export function getproductList(id){
+	return requert({
+		url:`goods/list?categoryId=${id}&page=1&size=10000`
+	})
+}
