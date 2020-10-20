@@ -24,7 +24,7 @@
 			</scroll-view>
 			<scroll-view class="keyword-box" v-show="!isShowKeywordList" scroll-y>
 
-
+				
 				<!-- 历史搜索 -->
 				<view class="keyword-block" v-if="oldKeywordList.length>0">
 					<view class="keyword-list-header">
@@ -389,7 +389,7 @@
 	/*#ifdef H5*/
 	.content .haveGoods .fixed {
 		position: fixed;
-		top: 257rpx;
+		top: 2rpx;
 		background: #FFFFFF;
 		width: 100%;
 		height: auto;
@@ -398,7 +398,7 @@
 		border-bottom: 1px solid #d9d9d9;
 		z-index: 1000;
 		background-color: #fff;
-
+		margin-top: 254rpx;
 	}
 
 	/*#endif*/
@@ -429,7 +429,20 @@
 
 
 	}
-
+	/*#ifdef MP-WEIXIN */
+	.content .haveGoods .goods {
+		
+		display: flex;
+		flex-wrap: wrap;
+		width: 100%;
+		padding: 0 6.25rpx;
+		height: auto;
+		overflow: hidden;
+		padding-top: 98rpx;
+	}
+	/*#endif*/
+	
+	/*#ifdef H5 */
 	.content .haveGoods .goods {
 		display: flex;
 		flex-wrap: wrap;
@@ -437,7 +450,13 @@
 		padding: 0 6.25rpx;
 		height: auto;
 		overflow: hidden;
+		margin-top: 174rpx;
 	}
+	/*#endif*/
+	
+	
+
+
 
 	.content .haveGoods .goods .noSunGoods {
 
@@ -519,10 +538,10 @@
 		position: fixed;
 		top: 80rpx;
 		width: 100%;
-		background-color: #FFFFFF;
+		/* background-color: #FFFFFF; */
+		background-color: #F4F4F4;
 		padding: 15upx 2.5%;
-		z-index: 1001;
-
+		z-index: 100;
 	}
 
 	/*#endif */
@@ -620,19 +639,42 @@
 		width: 10%;
 		justify-content: center;
 	}
-
+	/*#ifdef H5 */
+	.keyword-box {
+		height: calc(100vh - 110upx);
+		border-radius: 20upx 20upx 0 0;
+		background-color: #F4F4F4;
+		margin-top: 100rpx;
+	}
+	/*#endif */
+	
+	/*#ifdef MP-WEIXIN */
 	.keyword-box {
 		height: calc(100vh - 110upx);
 		border-radius: 20upx 20upx 0 0;
 		background-color: #F4F4F4;
 	}
-
+	/*#endif */
+	
+	
+	/*#ifdef H5 */
 	.keyword-box .keyword-block {
 		padding: 10upx 0;
 		background-color: #FFFFFF;
+		/* margin-top: 80rpx; */
 		margin-bottom: 20rpx;
 	}
-
+	/*#endif */
+	
+	/*#ifdef MP-WEIXIN */
+	.keyword-box .keyword-block {
+		padding: 10upx 0;
+		background-color: #FFFFFF;
+		/* margin-top: 100rpx; */
+		margin-bottom: 20rpx;
+	}
+	/*#endif*/
+	
 	.keyword-box .keyword-block .keyword-list-header {
 		width: 94%;
 		padding: 10upx 3%;
