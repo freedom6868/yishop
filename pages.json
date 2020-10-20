@@ -101,6 +101,10 @@
             "path" : "pages/comment/comment",
             "style" : {}
         }
+        ,{
+            "path" : "pages/checkout/checkout",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
