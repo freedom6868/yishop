@@ -1,7 +1,8 @@
 <template>
 	<view class="container">
 		<view class="footprint">
-			<view class="day-item" v-for="(item,index) in productList" :key='index'>
+			<view class="day-item" v-for="(item,index) in footprintList" :key='index'>
+				<!-- {{item[0]}} -->
 				<view class="day-hd">{{item[0].add_time}}</view>
 				<view class="day-list" >
 					<view class="item" v-for="gitem in item" :key='gitem.id'>
@@ -30,7 +31,7 @@
 		data() {
 			return {
 				footprintList:[],
-				productList:{}, // {'昨天':[],今天：【】，‘201':[]}
+				productList:{}, 
 				currentPage:1,
 			};
 		},
@@ -40,16 +41,13 @@
 				let res = await getFootprintListData({page:this.currentPage});
 				
 				if(res.errno == 0){
-					this.footprintList = res.data.data
-					this.footprintList.forEach(itemArr => {
-						var key = itemArr[0].add_time;
-						this.productList[key] = itemArr
-					})
-					// var key="今天"
-					// console.log(this.productList[key])
-					// console.log('initfootprintList',this.footprintList)
-					// console.log('productList',this.productList)
-					this.currentPage = parseInt(res.data.currentPage)
+					// let responData = res.data.data;
+					// responData.forEach(itemArr => {
+					// 	var key = itemArr[0].add_time;
+					// 	this.productList[key] = itemArr
+					// })
+					this.footprintList = res.data.data;
+					this.currentPage = parseInt(res.data.currentPage);
 				}else{
 					uni.showToast({
 						title:res.errmsg
@@ -58,8 +56,8 @@
 				console.log(res)
 			},
 			async loadMore(){
-				console.log('loadMore.....')
-				console.log('footprintList',this.footprintList)
+				// console.log('loadMore.....')
+				// console.log('footprintList',this.footprintList)
 				this.currentPage = this.currentPage + 1;
 				let res = await getFootprintListData({page:this.currentPage});
 				var responData = res.data.data
@@ -71,23 +69,24 @@
 				}
 				
 				// console.log(responData)
-				// let lastTimeArr = this.footprintList[this.footprintList.length-1];
-				// for(let i in responData){
-				// 	if(lastTimeArr[lastTimeArr.length-1].add_time == responData[i][0].add_time){
-				// 		this.footprintList[this.footprintList.length-1] = lastTimeArr.concat(responData[i]);
-				// 	}else{
-				// 		this.footprintList.push(responData[i])
-				// 	}
-				// }
-				responData.forEach( itemArr =>{
-					let key = itemArr[0].add_time
-					if(this.productList[key]){
-						this.productList[key] = this.productList[key].concat(itemArr);
+				let lastTimeArr = this.footprintList[this.footprintList.length-1];
+				for(let i in responData){
+					if(lastTimeArr[lastTimeArr.length-1].add_time == responData[i][0].add_time){
+						this.footprintList[this.footprintList.length-1] = lastTimeArr.concat(responData[i]);
 					}else{
-						this.productList[key] = itemArr;
+						this.footprintList.push(responData[i])
 					}
-				})
-				console.log(this.productList)
+				}
+				// responData.forEach( itemArr =>{
+				// 	let key = itemArr[0].add_time
+				// 	if(this.productList[key]){
+				// 		this.productList[key] = this.productList[key].concat(itemArr);
+				// 	}else{
+				// 		this.productList[key] = itemArr;
+				// 	}
+				// })
+				this.$forceUpdate();
+				// console.log(this.productList)
 				
 			}
 		},
