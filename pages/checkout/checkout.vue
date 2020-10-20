@@ -1,20 +1,27 @@
 <template>
 	<view class="container">
 		<view class="address-box">
-			<view class="address-item">
+			<view class="address-item" v-for="items in addressList"  @click="selectAddress" v-if="items.id > 0 && items.is_default === 1">
 				<view class="l">
-					<text class="name">king</text>
-					<text class="default">默认</text>
+					<text class="name">{{items.name}}</text>
+					<text class="default" v-if="items.is_default===1">默认</text>
 				</view>
 				<view class="m">
-					<text class="mobile">13433334444</text>
-					<text class="address">广东省汕头市潮南区</text>
+					<text class="mobile">{{items.mobile}}</text>
+					<text class="address">{{items.full_region + items.address}}</text>
 				</view>
 				<view class="r">
 					<image src="/static/images/address_right.png"></image>
 				</view>
 			</view>
-			
+			 <view class="address-item address-empty" @click="addAddress" v-if="items.id <= 0">
+				<view class="m">
+				   还没有收货地址，去添加
+				</view>
+				<view class="r">
+					<image src="/static/images/address_right.png"></image>
+				</view>
+			</view>
 			<view class="coupon-box">
 				<view class="coupon-item">
 					<view class="l">
@@ -26,7 +33,6 @@
 					</view>
 				</view>
 			</view>
-			
 			 <view class="order-box">
 				<view class="order-item">
 					<view class="l">
@@ -80,28 +86,59 @@
 
 <script>
 	import {getCartApiData} from "@/api/cartApi.js";
+	import {getAddressListData} from "@/api/uncenter/addressApi.js"
 	export default {
 		data() {
 			return {
 				cartGoods: [],
 				cartTotal:{},
+				addressList:[]
 			}
 		},
 		methods: {
+			addAddress(){
+				uni.navigateTo({
+					url:"/pages/ucenter/addressAdd/addressAdd"
+				})
+			},
+			selectAddress(){
+				uni.navigateTo({
+					url:"/pages/ucenter/address/address"
+				})
+			},
 			//获取所有购物车商品
 			async getCartApi() {
 				var res = await getCartApiData();
 				// console.log(res)
-				if(res.errno === 0){
+				if(res.errno == 0){
 					this.cartGoods = res.data.cartList;
 					this.cartTotal = res.data.cartTotal;
+				}else{
+					uni.showToast({
+						title:res.errmsg
+					})
+				}
+			},
+			//获取地址
+			async getAddressList(){
+				let res = await getAddressListData()
+				if(res.errno == 0){
+					console.log(res)
+					this.addressList = res.data;
+				}else{
+					uni.showToast({
+						title:res.errmsg
+					})
 				}
 				
-				
-			}
+				console.log(this.addressList)
+			},
+			
+			
 		},
 		created() {
-			this.getCartApi()
+			this.getCartApi();
+			this.getAddressList();
 		},
 		
 	}
@@ -181,6 +218,26 @@
 					}
 				}
 				
+			}
+			.address-empty{
+				line-height: 75rpx;
+				text-align: center;
+				.m{
+				    flex: 1;
+				    height: 72.25rpx;
+				    color: #999;
+				}
+				.r{
+				    width: 77rpx;
+				    height: 77rpx;
+				    display: flex;
+				    justify-content: center;
+				    align-items: center;
+					image{
+					    width: 52.078rpx;
+					    height: 52.078rpx;
+					}
+				}
 			}
 			.coupon-box{
 				margin-top: 26rpx;

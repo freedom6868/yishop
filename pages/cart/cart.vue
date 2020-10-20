@@ -173,7 +173,7 @@
 			async getCartApi() {
 				var res = await getCartApiData();
 				// console.log(res)
-				if(res.errno === 0){
+				if(res.errno == 0){
 					res.data.cartList.map(v=>{
 						if(v.checked == 1){
 							v.checked = true;
@@ -183,6 +183,10 @@
 					})
 					this.cartGoods = res.data.cartList;
 					this.cartTotal = res.data.cartTotal;
+				}else{
+					uni.showToast({
+						title:res.errmsg
+					})
 				}
 				this.checkedAllStatus = this.isCheckedAll();
 			}
