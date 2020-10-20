@@ -111,7 +111,7 @@
 				uni.setStorageSync('catName', e.name);
 				// console.log(index)
 				uni.navigateTo({
-					url: './category?id=' + e.id + '&index=' + index,
+					url: '../category/category?id=' + e.id + '&index=' + index,
 				});
 			},
 		},

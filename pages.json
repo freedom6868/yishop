@@ -59,7 +59,7 @@
 			}
         },
 		{
-		    "path" : "pages/catalog/category",
+		    "path" : "pages/category/category",
 		    "style" : {
 				"navigationBarTitleText": "分类"
 			}
