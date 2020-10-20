@@ -45,7 +45,7 @@
 				<view :class="[checkedAllStatus ? 'checkbox':'checked']" @click="checkAll">全选({{ cartTotal.checkedGoodsCount}})</view>
 				<view class="total">{{!isEditCart ? '￥'+cartTotal.checkedGoodsAmount : ''}}</view>
 				<view class="delete" @click="editCart">{{!isEditCart ? '编辑':'完成'}}</view>
-				<view class="checkout" v-if="!isEditCart">下单</view>
+				<view class="checkout" v-if="!isEditCart" @click="ToCartOrder">下单</view>
 				<view class="checkout" v-if="isEditCart" @click="deleteCart">删除所有</view>
 			</view>
 		</view>
@@ -67,6 +67,20 @@
 			}
 		},
 		methods: {
+			//下单
+			ToCartOrder(){
+				var productId = this.cartGoods.map((v)=>{
+					if(v.checked == true){
+						return v.product_id;
+					}
+				})
+				var productIds = productId.join(',')
+				// console.log(productIds)
+				console.log(productId)
+				uni.navigateTo({
+					url: `../checkout/checkout`
+				})
+			},
 			//获取所有商品的product_id 并转换成字符串并用","隔开
 			getCheckedProductId(){
 				var productId = this.cartGoods.map((v)=>{
@@ -158,7 +172,7 @@
 			//获取所有购物车商品
 			async getCartApi() {
 				var res = await getCartApiData();
-				console.log(res)
+				// console.log(res)
 				if(res.errno === 0){
 					res.data.cartList.map(v=>{
 						if(v.checked == 1){
