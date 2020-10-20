@@ -44,16 +44,24 @@
 		methods: {
 			async getCatagory(data1) {
 				var data = await getCategoryData(data1.id);
+				
 				this.brotherCategory = data.data.brotherCategory
-				this.topmenuselect = data1.index;
+				// var i1=this.brotherCategory.findIndex((value)=>value.id==data1.id);
+				this.topmenuselect = this.brotherCategory.findIndex((value)=>value.id==data1.id);
+				
 				var commodity = await getproductList(data1.id)
+				
 				this.productList = commodity.data.data
-				console.log(this.productList )
+				
+				console.log(this.brotherCategory)
+				console.log(data1.id)
+				// console.log(this.topmenuselect);
 			},
 			async select(index,id) {
 				this.topmenuselect = index;
 				var commodity = await getproductList(id)
 				this.productList = commodity.data.data
+				// console.log(commodity)
 			},
 			sunnewGood(id) {
 				console.log(id)
