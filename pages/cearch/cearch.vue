@@ -241,6 +241,7 @@
 			//监听输入
 			inputChange(event) {
 				//兼容引入组件时传入参数情况
+				this.hasGoods = true;
 				var keyword = event.detail ? event.detail.value : event;
 				if (!keyword) {
 					this.keywordList = [];
@@ -314,6 +315,7 @@
 	}
 
 	.content .haveGoods .tag {
+		position: fixed;
 		width: 100%;
 		height: 90rpx;
 		background-color: #FFFFFF;
