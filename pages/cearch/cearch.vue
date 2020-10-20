@@ -14,7 +14,9 @@
 						<view class="keyword-text" @tap.stop="doSearch(keywordList[index].keyword)">
 							<rich-text :nodes="row"></rich-text>
 						</view>
-						<view class="keyword-img" @tap.stop="setKeyword(keywordList[index].keyword)">
+
+						<!-- 模糊查询 -->
+						<view class="keyword-img" @tap.stop="setKeyword(keywordList[index].keyword)" >
 							<image src="/static/HM-search/back.png"></image>
 						</view>
 					</view>
@@ -66,8 +68,8 @@
 			<view class="fixed " v-if="categoryFilter">
 				<!-- <view :class="[ iitem.checked ? 'active1'  :'text'] " v-for="(iitem,index) in filterCategory" :key='iitem.id'
 				 @click="selectCategory(index,iitem.id)"> -->
-				 <view :class="[iitem.id == categoryld ? 'active1':'text'] " v-for="(iitem,index) in filterCategory" :key='iitem.id'
-				  @click="selectCategory(index,iitem.id)">
+				<view :class="[iitem.id == categoryld ? 'active1':'text'] " v-for="(iitem,index) in filterCategory" :key='iitem.id'
+				 @click="selectCategory(index,iitem.id)">
 					{{iitem.name}}
 				</view>
 			</view>
@@ -163,9 +165,9 @@
 				// console.log(this.size)
 				// console.log(this.currentSortType)
 				// console.log(this.currentSortOrder)
-				console.log('aaa')
-				console.log(this.categoryId)
-				console.log('bbbbb')
+				// console.log('aaa')
+				// console.log(this.categoryId)
+				// console.log('bbbbb')
 				var {
 					data
 				} = await getGoodsList(this.keyword, this.page, this.size,
@@ -190,12 +192,12 @@
 				var Img = '//yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-3127092a69.png';
 				switch (currentId) {
 					case 'priceSort':
-						
+
 						let tempSortOrder = 'asc';
 						if (this.currentSortOrder == 'asc') {
 							tempSortOrder = 'desc';
 							this.imageURL = descImg;
-						}else if(this.currentSortOrder == 'desc'){
+						} else if (this.currentSortOrder == 'desc') {
 							tempSortOrder = 'asc';
 							this.imageURL = ascImg;
 						}
@@ -231,9 +233,9 @@
 					}
 				}
 				this.categoryFilter = false;
-				console.log('id==='+id)
+				// console.log('id==='+id)
 				this.categoryId = id;
-				console.log('category' ,this.categoryId)
+				// console.log('category' ,this.categoryId)
 				this.getgoodData()
 
 
@@ -249,6 +251,8 @@
 			},
 			//监听输入
 			inputChange(event) {
+				console.log('event',event)
+				
 				//兼容引入组件时传入参数情况
 				var keyword = event.detail ? event.detail.value : event;
 				if (!keyword) {
@@ -264,32 +268,18 @@
 						this.keywordList = [];
 						var tempArr = res.data.data
 						this.keywordList.push(tempArr[0])
-
-						console.log('this.keywordlist', this.keywordList)
+						
+						
 
 					}
 				});
 			},
-			//高亮关键字
-			drawCorrelativeKeyword(keywords, keyword) {
-				var len = keywords.length,
-					keywordArr = [];
-				for (var i = 0; i < len; i++) {
-					var row = keywords[i];
-					//定义高亮#9f9f9f
-					var html = row[0].replace(keyword, "<span style='color: #9f9f9f;'>" + keyword + "</span>");
-					html = '<div>' + html + '</div>';
-					var tmpObj = {
-						keyword: row[0],
-						htmlStr: html
-					};
-					keywordArr.push(tmpObj)
-				}
-				return keywordArr;
-			},
+
 			//顶置关键字
 			setKeyword(index) {
+				console.log('index', index);
 				this.keyword = this.keywordList[index].keyword;
+				// console.log('aaaaa', this.keywordList[index].keyword)
 			},
 			//清除历史搜索
 			oldDelete() {
@@ -359,9 +349,9 @@
 		width: 15rpx;
 		height: 25rpx;
 		background-color: #007AFF;
-		margin-top:10rpx ;
-		margin-left:6rpx ;
-		
+		margin-top: 10rpx;
+		margin-left: 6rpx;
+
 
 	}
 

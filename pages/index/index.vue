@@ -213,10 +213,13 @@
 			},
 			// 调转到分类详情页面
 			goCategory(item){
-				console.log('item.url',item.url)
-				// var index = item.id -1;
-				
-				// console.log(index);
+				console.log(item);
+				var url = item.url
+				var id = url.split('id=')[1];
+				var index = item.id -1;
+				uni.navigateTo({
+					url:'../category/category?id='+id+ '&index='+ index
+				})
 				
 			},
 			//商品详情

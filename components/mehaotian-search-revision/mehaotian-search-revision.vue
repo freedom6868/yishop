@@ -174,7 +174,7 @@ export default {
 				height: 60upx;
 				transition: all 0.2s linear;
 				&.center {
-					width: 200upx;
+					width: 250upx;
 				}
 				&.sub {
 					// position: absolute;
