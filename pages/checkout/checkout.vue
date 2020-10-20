@@ -79,7 +79,7 @@
 		<!-- 底部 -->
 		<view class="order-total">
 		        <view class="l">实付：￥{{cartTotal.checkedGoodsAmount}}</view>
-		        <view class="r">去付款</view>
+		        <view class="r" @click="submitOrder">去付款</view>
 		</view>
 	</view>
 </template>
@@ -104,6 +104,12 @@
 			selectAddress(){
 				uni.navigateTo({
 					url:"/pages/ucenter/address/address"
+				})
+			},
+			submitOrder(){
+				uni.showModal({
+					title: '提示',
+					content:"请添加默认地址",
 				})
 			},
 			//获取所有购物车商品
