@@ -27,7 +27,7 @@
 		<view class="m-menu">
 			<!-- 路径 -->
 			<!-- <navigator class="item" v-for="(item) in Channel" url="详情?id={{item.id}}" :key='id'> -->
-			<view class="item" v-for="(item) in Channel" :key='item.id' @click="goCategory(item.url)">
+			<view class="item" v-for="(item) in Channel" :key='item.id' @click="goCategory(item)">
 				<image :src="item.icon_url"></image>
 				<text>{{item.name}}</text>
 			</view>
@@ -212,8 +212,11 @@
 
 			},
 			// 调转到分类详情页面
-			goCategory(url){
-				console.log(url);
+			goCategory(item){
+				console.log('item.url',item.url)
+				// var index = item.id -1;
+				
+				// console.log(index);
 				
 			},
 			//商品详情

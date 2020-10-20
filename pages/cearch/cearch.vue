@@ -1,5 +1,6 @@
 <template>
 	<view class="content">
+
 		<view class="search-box">
 			<!-- mSearch组件 如果使用原样式，删除组件元素-->
 			<mSearch class="mSearch-input-box" :mode="2" button="inside" :placeholder="defaultKeyword" @search="doSearch(false)"
@@ -45,8 +46,7 @@
 						</view>
 					</view>
 					<view class="keyword" v-if="forbid==''">
-						<view v-for="(keyword,index) in hotKeywordList" @click="getgoodData(keyword)" @tap="doSearch(keyword.keyword)"
-						 :key="index">{{keyword.keyword}}</view>
+						<view v-for="(keyword,index) in hotKeywordList" @tap="doSearch(keyword.keyword)" :key="index">{{keyword.keyword}}</view>
 					</view>
 					<view class="hide-hot-tis" v-else>
 						<view>当前搜热门搜索已隐藏</view>
@@ -56,12 +56,18 @@
 		</view>
 		<view class="haveGoods" v-else>
 			<view class="tag">
-				<view class="together" id="defaultSort" @click="openSortFilter">综合</view>
-				<view class="price" @click="openSortFilter" id="priceSort">价格</view>
-				<view class="classify" id="categoryFilter" @click="openSortFilter">分类</view>
+				<view :class="[together,currentSortType == 'default' ? 'active' :'' ]" id="defaultSort" @click="openSortFilter">综合</view>
+				<view :class="[price, currentSortType == 'price' ? 'active' :'']" @click="openSortFilter" id="priceSort">
+					价格
+					<image class="price-desc-asc" :src="imageURL" mode=""></image>
+				</view>
+				<view class="classify " id="categoryFilter" @click="openSortFilter">分类</view>
 			</view>
-			<view class="fixed" v-if="categoryFilter">
-				<view class="text" v-for="(iitem,index) in filterCategory" :key='iitem.id' @click="selectCategory(index,iitem.id)">
+			<view class="fixed " v-if="categoryFilter">
+				<!-- <view :class="[ iitem.checked ? 'active1'  :'text'] " v-for="(iitem,index) in filterCategory" :key='iitem.id'
+				 @click="selectCategory(index,iitem.id)"> -->
+				 <view :class="[iitem.id == categoryld ? 'active1':'text'] " v-for="(iitem,index) in filterCategory" :key='iitem.id'
+				  @click="selectCategory(index,iitem.id)">
 					{{iitem.name}}
 				</view>
 			</view>
@@ -94,6 +100,9 @@
 	export default {
 		data() {
 			return {
+				// 背景颜色
+				imageURL: '//yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-3127092a69.png',
+
 				// 默认关键字
 				defaultKeyword: "",
 				// 关键字
@@ -122,7 +131,7 @@
 				// 全部，居家显示隐藏
 				isbool: false,
 				// 搜索状态
-				categoryFilter:false
+				categoryFilter: false
 			}
 		},
 		onLoad() {
@@ -147,8 +156,8 @@
 				this.oldKeywordList = data.historyKeywordList;
 			},
 			// 获取商品信息
-			async getgoodData(event) {
-				
+			async getgoodData() {
+
 				// console.log(event.keyword)
 				// console.log(this.page)
 				// console.log(this.size)
@@ -159,12 +168,12 @@
 				console.log('bbbbb')
 				var {
 					data
-				} = await getGoodsList(event.keyword, this.page, this.size,
+				} = await getGoodsList(this.keyword, this.page, this.size,
 					this.currentSortType, this.currentSortOrder, this.categoryId);
 				this.GoodsList = data.goodsList;
 				this.filterCategory = data.filterCategory;
 				this.hasGoods = false;
-				
+
 
 			},
 			init() {
@@ -175,57 +184,61 @@
 			},
 			// 综合，价格，分类
 			openSortFilter(event) {
-				// console.log('this',this.keyword)
-				// console.log('event',event);
 				var currentId = event.target.id;
+				var ascImg = 'http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/up-636b92c0a5.png';
+				var descImg = 'http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/down-95e035f3e5.png';
+				var Img = '//yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-3127092a69.png';
 				switch (currentId) {
 					case 'priceSort':
+						
 						let tempSortOrder = 'asc';
 						if (this.currentSortOrder == 'asc') {
 							tempSortOrder = 'desc';
+							this.imageURL = descImg;
+						}else if(this.currentSortOrder == 'desc'){
+							tempSortOrder = 'asc';
+							this.imageURL = ascImg;
 						}
 						this.currentSortOrder = tempSortOrder;
 						this.currentSortType = 'price';
-						// 发送请求
-						this.getgoodData(this);
+						this.getgoodData();
 						this.categoryFilter = false;
 						break;
 					case 'categoryFilter':
 						this.currentSortOrder = 'asc';
+						this.currentSortType = '';
+						this.imageURL = Img;
 						this.categoryFilter = !this.categoryFilter;
 						break;
 					default:
+						this.imageURL = Img;
 						this.currentSortType = 'default';
 						this.currentSortOrder = 'desc';
 						this.categoryFilter = false;
-						this.getgoodData(this);
+						this.getgoodData();
 
 				}
 
 			},
 			// 更改分类状态
-			selectCategory(index,id){
-				console.log('eventaaaaa',id)
-				
-				
-				 var currentCategory = null;
-				 var filterCategory1 = this.filterCategory 
-				for(let key in filterCategory1){
-					if(key == index){
+			selectCategory(index, id) {
+				var filterCategory1 = this.filterCategory;
+				for (let key in filterCategory1) {
+					if (key == index) {
 						this.filterCategory[key].checked = true;
-						currentCategory = this.filterCategory[key]
-					}else{
+					} else {
 						this.filterCategory[key].checked = false;
 					}
-				} 
+				}
 				this.categoryFilter = false;
-				this.currentSortType = 'default';
+				console.log('id==='+id)
 				this.categoryId = id;
-				this.getgoodData(this)
-				
-				
-			
-				
+				console.log('category' ,this.categoryId)
+				this.getgoodData()
+
+
+
+
 			},
 
 			// 跳往商品详情页面
@@ -251,6 +264,8 @@
 						this.keywordList = [];
 						var tempArr = res.data.data
 						this.keywordList.push(tempArr[0])
+
+						console.log('this.keywordlist', this.keywordList)
 
 					}
 				});
@@ -300,14 +315,18 @@
 				this.forbid = this.forbid ? '' : '_forbid';
 			},
 			//执行搜索(历史记录存库)
-			doSearch(keyword) {
+			async doSearch(keyword) {
 				keyword = keyword === false ? this.keyword : keyword;
 				this.keyword = keyword;
-				uni.showToast({
-					title: keyword,
-					icon: 'none',
-					duration: 2000
-				});
+
+				console.log('this.keyword', this.keyword);
+				var {
+					data
+				} = await getGoodsList(this.keyword, this.page, this.size,
+					this.currentSortType, this.currentSortOrder, this.categoryId);
+				this.GoodsList = data.goodsList;
+				this.filterCategory = data.filterCategory;
+				this.hasGoods = false;
 			}
 		}
 	}
@@ -331,6 +350,29 @@
 		align-items: center;
 	}
 
+	.content .haveGoods .tag .price {
+		display: flex;
+	}
+
+	.content .haveGoods .tag .price-desc-asc {
+
+		width: 15rpx;
+		height: 25rpx;
+		background-color: #007AFF;
+		margin-top:10rpx ;
+		margin-left:6rpx ;
+		
+
+	}
+
+	#priceSort {
+		display: flex;
+	}
+
+	.content .haveGoods .tag .active {
+		color: #B4282d;
+	}
+
 	.content .haveGoods .fixed {
 		position: fixed;
 		background: #FFFFFF;
@@ -339,6 +381,7 @@
 		overflow: hidden;
 		padding: 40rpx 40rpx 0 0;
 		border-bottom: 1px solid #d9d9d9;
+		z-index: 1000;
 
 	}
 
@@ -352,6 +395,21 @@
 		border: 1px solid #666;
 		color: #333;
 		font-size: 24rpx;
+	}
+
+	.content .haveGoods .fixed .active1 {
+		height: 54rpx;
+		line-height: 54rpx;
+		text-align: center;
+		float: left;
+		padding: 0 16rpx;
+		margin: 0 0 40rpx 40rpx;
+		border: 1px solid #B4282d;
+		color: #333;
+		font-size: 24rpx;
+		color: #B4282d;
+
+
 	}
 
 	.content .haveGoods .goods {

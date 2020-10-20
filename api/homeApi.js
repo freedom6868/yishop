@@ -35,11 +35,11 @@ export function getGoodsList(keyword,page,size,sort,order,categoryld){
 		method:"GET",
 		data:{
 			keyword:keyword,
-			page:1,
+			page:page,
 			size:size,
 			sort:sort,
 			order:order,
-			categoryld:0
+			categoryld:categoryld
 		}
 	})
 	
