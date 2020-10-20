@@ -103,7 +103,7 @@
 			},
 			selectAddress(){
 				uni.navigateTo({
-					url:"/pages/ucenter/address/address"
+					url:"/pages/shopping/address/address"
 				})
 			},
 			submitOrder(){
