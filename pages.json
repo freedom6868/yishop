@@ -109,6 +109,10 @@
 			"path" : "pages/ucenter/addressAdd/addressAdd",
 			"style" : {}
 		}
+        ,{
+            "path" : "pages/shopping/address/address",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
