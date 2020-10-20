@@ -64,6 +64,7 @@
 				</view>
 				<view class="classify " id="categoryFilter" @click="openSortFilter">分类</view>
 			</view>
+			<!-- 分类 -->
 			<view class="fixed " v-if="categoryFilter">
 				<!-- <view :class="[ iitem.checked ? 'active1'  :'text'] " v-for="(iitem,index) in filterCategory" :key='iitem.id'
 				 @click="selectCategory(index,iitem.id)"> -->
@@ -314,8 +315,10 @@
 		background-color: #F4F4F4;
 	}
 
+	/*#ifdef MP-WEIXIN */
 	.content .haveGoods .tag {
 		position: fixed;
+
 		width: 100%;
 		height: 90rpx;
 		background-color: #FFFFFF;
@@ -325,6 +328,25 @@
 		align-items: center;
 	}
 
+	/*#endif*/
+
+	/*#ifdef H5*/
+	.content .haveGoods .tag {
+		position: fixed;
+		top: 168rpx;
+		width: 100%;
+		height: 90rpx;
+		border: 2rpx solid #ccc;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		background-color: #FFFFFF;
+		z-index: 1200;
+	}
+
+	/*#endif*/
+
+
 	.content .haveGoods .tag .price {
 		display: flex;
 	}
@@ -333,7 +355,7 @@
 
 		width: 15rpx;
 		height: 25rpx;
-		background-color: #007AFF;
+		/* background-color: #007AFF; */
 		margin-top: 10rpx;
 		margin-left: 6rpx;
 
@@ -348,8 +370,10 @@
 		color: #B4282d;
 	}
 
+	/*#ifdef MP-WEIXIN */
 	.content .haveGoods .fixed {
 		position: fixed;
+		top: 180rpx;
 		background: #FFFFFF;
 		width: 100%;
 		height: auto;
@@ -357,8 +381,27 @@
 		padding: 40rpx 40rpx 0 0;
 		border-bottom: 1px solid #d9d9d9;
 		z-index: 1000;
+		background-color: #fff;
 
 	}
+
+	/*#endif*/
+	/*#ifdef H5*/
+	.content .haveGoods .fixed {
+		position: fixed;
+		top: 257rpx;
+		background: #FFFFFF;
+		width: 100%;
+		height: auto;
+		overflow: hidden;
+		padding: 40rpx 40rpx 0 0;
+		border-bottom: 1px solid #d9d9d9;
+		z-index: 1000;
+		background-color: #fff;
+
+	}
+
+	/*#endif*/
 
 	.content .haveGoods .fixed .text {
 		height: 54rpx;
@@ -395,10 +438,11 @@
 		height: auto;
 		overflow: hidden;
 	}
+
 	.content .haveGoods .goods .noSunGoods {
-		
+
 		margin: 100rpx auto;
-		
+
 	}
 
 	.content .haveGoods .goods .noSunGoods .icon {
@@ -457,7 +501,9 @@
 		color: #b4282d;
 	}
 
+	/*#ifdef MP-WEIXIN */
 	.search-box {
+		position: fixed;
 		width: 100%;
 		background-color: rgb(242, 242, 242);
 		padding: 15upx 2.5%;
@@ -466,6 +512,20 @@
 		position: sticky;
 		top: 0;
 	}
+
+	/*#endif */
+	/*#ifdef  H5*/
+	.search-box {
+		position: fixed;
+		top: 80rpx;
+		width: 100%;
+		background-color: #FFFFFF;
+		padding: 15upx 2.5%;
+		z-index: 1001;
+
+	}
+
+	/*#endif */
 
 	.search-box .mSearch-input-box {
 		width: 100%;
