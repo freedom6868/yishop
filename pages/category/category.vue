@@ -1,5 +1,6 @@
 <template>
 	<view class="topmenu">
+		<!-- 头部菜单选项 -->
 		<view class="menu">
 			<scroll-view class="top" scroll-x="true" style="padding-right: 50rpx;">
 				<text v-for="(item,index) in brotherCategory" :key="item.id" :class="index == topmenuselect?'select wzbox':'wzbox'"
@@ -8,6 +9,7 @@
 				</text>
 			</scroll-view>
 		</view>
+		<!-- 商品分类介绍 -->
 		<view class="intro">
 			<view class="title">
 				<text class="">{{brotherCategory[topmenuselect].name}}</text>
@@ -18,6 +20,7 @@
 			</view>
 
 		</view>
+		<!-- 所有商品 -->
 		<view class="productList">
 			<view class="commodity" v-for="(item,index) in productList" :key="item.id" :class=" [(index + 1) % 2 == 0 ? 'commodity-b' : 'commodity']" @click="sunnewGood(item.id)">
 				<image :src="item.list_pic_url"></image>
@@ -43,14 +46,16 @@
 		},
 		methods: {
 			async getCatagory(data1) {
+				//获取二级分类的头部选项
 				var data = await getCategoryData(data1.id);
-				
 				this.brotherCategory = data.data.brotherCategory
+				
+				//将获取的到的id放到数据列表里进行匹配，所在下标赋值为在头部菜单中的下标
 				// var i1=this.brotherCategory.findIndex((value)=>value.id==data1.id);
 				this.topmenuselect = this.brotherCategory.findIndex((value)=>value.id==data1.id);
 				
+				//获取所在分类的全部商品
 				var commodity = await getproductList(data1.id)
-				
 				this.productList = commodity.data.data
 				
 				console.log(this.brotherCategory)

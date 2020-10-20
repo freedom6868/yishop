@@ -90,10 +90,12 @@
 			});
 		},
 		methods: {
+			//搜索显示总商品个数
 			async getGoodsCountsData() {
 				var data = await getGoodsCounts();
 				this.goodCount = data.data.goodsCount;
 			},
+			//获取一二级分类列表
 			async getClassify() {
 				var data = await getCatalog();
 				this.categoryList = data.data.categoryList;
@@ -107,6 +109,7 @@
 				this.subCategoryList = data.data.currentCategory;
 				// console.log(data)
 			},
+			//跳转到商品三级分类列表
 			toCategory(e, index) {
 				uni.setStorageSync('catName', e.name);
 				// console.log(index)
