@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<view class="business">
-			<view class="item">30天无忧退货</view>
+			<view class="item">12330天无忧退货</view>
 			<view class="item">48小时快速退款</view>
 			<view class="item">满88元免邮费</view>
 		</view>
