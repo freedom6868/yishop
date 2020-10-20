@@ -9,14 +9,13 @@
 		</view>
 		<view class="search-keyword" v-if="hasGoods">
 			<scroll-view class="keyword-list-box" v-show="isShowKeywordList" scroll-y>
-				<block v-for="(row,index) in keywordList" :key="index">
+				<block v-for="row in keywordList" :key="keywordList">
 					<view class="keyword-entry" hover-class="keyword-entry-tap">
-						<view class="keyword-text" @tap.stop="doSearch(keywordList[index].keyword)">
+						<view class="keyword-text" @click="getgoodData()">
 							<rich-text :nodes="row"></rich-text>
 						</view>
-
 						<!-- 模糊查询 -->
-						<view class="keyword-img" @tap.stop="setKeyword(keywordList[index].keyword)" >
+						<view class="keyword-img" @tap.stop="setKeyword(keywordList[index].keyword)">
 							<image src="/static/HM-search/back.png"></image>
 						</view>
 					</view>
@@ -58,8 +57,8 @@
 		</view>
 		<view class="haveGoods" v-else>
 			<view class="tag">
-				<view :class="[together,currentSortType == 'default' ? 'active' :'' ]" id="defaultSort" @click="openSortFilter">综合</view>
-				<view :class="[price, currentSortType == 'price' ? 'active' :'']" @click="openSortFilter" id="priceSort">
+				<view :class="[currentSortType == 'default' ? 'active' :'' ]" id="defaultSort" @click="openSortFilter">综合</view>
+				<view :class="[ currentSortType == 'price' ? 'active' :'']" @click="openSortFilter" id="priceSort">
 					价格
 					<image class="price-desc-asc" :src="imageURL" mode=""></image>
 				</view>
@@ -68,8 +67,7 @@
 			<view class="fixed " v-if="categoryFilter">
 				<!-- <view :class="[ iitem.checked ? 'active1'  :'text'] " v-for="(iitem,index) in filterCategory" :key='iitem.id'
 				 @click="selectCategory(index,iitem.id)"> -->
-				<view :class="[iitem.id == categoryld ? 'active1':'text'] " v-for="(iitem,index) in filterCategory" :key='iitem.id'
-				 @click="selectCategory(index,iitem.id)">
+				<view class="text" v-for="(iitem,index) in filterCategory" :key='iitem.id' @click="selectCategory(index,iitem.id)">
 					{{iitem.name}}
 				</view>
 			</view>
@@ -84,6 +82,12 @@
 					<view class="price">
 						￥ {{item.retail_price}}
 					</view>
+				</view>
+
+				<view class="noSunGoods" v-if="!GoodsList.length">
+					<image class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/noSearchResult-7572a94f32.png">
+					</image>
+					<text class="text">您寻找的商品还未上架</text>
 				</view>
 			</view>
 		</view>
@@ -159,15 +163,6 @@
 			},
 			// 获取商品信息
 			async getgoodData() {
-
-				// console.log(event.keyword)
-				// console.log(this.page)
-				// console.log(this.size)
-				// console.log(this.currentSortType)
-				// console.log(this.currentSortOrder)
-				// console.log('aaa')
-				// console.log(this.categoryId)
-				// console.log('bbbbb')
 				var {
 					data
 				} = await getGoodsList(this.keyword, this.page, this.size,
@@ -175,14 +170,9 @@
 				this.GoodsList = data.goodsList;
 				this.filterCategory = data.filterCategory;
 				this.hasGoods = false;
-
-
 			},
 			init() {
 				this.loadHotKeyword();
-			},
-			blur() {
-				uni.hideKeyboard()
 			},
 			// 综合，价格，分类
 			openSortFilter(event) {
@@ -233,9 +223,8 @@
 					}
 				}
 				this.categoryFilter = false;
-				// console.log('id==='+id)
+				this.currentSortType = 'id';
 				this.categoryId = id;
-				// console.log('category' ,this.categoryId)
 				this.getgoodData()
 
 
@@ -251,8 +240,6 @@
 			},
 			//监听输入
 			inputChange(event) {
-				console.log('event',event)
-				
 				//兼容引入组件时传入参数情况
 				var keyword = event.detail ? event.detail.value : event;
 				if (!keyword) {
@@ -267,19 +254,17 @@
 					success: (res) => {
 						this.keywordList = [];
 						var tempArr = res.data.data
+						if (tempArr == '') {
+							return;
+						}
 						this.keywordList.push(tempArr[0])
-						
-						
-
 					}
 				});
 			},
 
 			//顶置关键字
 			setKeyword(index) {
-				console.log('index', index);
 				this.keyword = this.keywordList[index].keyword;
-				// console.log('aaaaa', this.keywordList[index].keyword)
 			},
 			//清除历史搜索
 			oldDelete() {
@@ -306,10 +291,8 @@
 			},
 			//执行搜索(历史记录存库)
 			async doSearch(keyword) {
-				keyword = keyword === false ? this.keyword : keyword;
+				keyword = keyword == false ? this.keyword : keyword;
 				this.keyword = keyword;
-
-				console.log('this.keyword', this.keyword);
 				var {
 					data
 				} = await getGoodsList(this.keyword, this.page, this.size,
@@ -410,6 +393,28 @@
 		height: auto;
 		overflow: hidden;
 	}
+	.content .haveGoods .goods .noSunGoods {
+		
+		margin: 100rpx auto;
+		
+	}
+
+	.content .haveGoods .goods .noSunGoods .icon {
+		margin: 0 auto;
+		display: block;
+		width: 240rpx;
+		height: 240rpx;
+	}
+
+	.content .haveGoods .goods .noSunGoods .text {
+		display: block;
+		width: 100%;
+		height: 40rpx;
+		font-size: 28rpx;
+		text-align: center;
+		color: #999;
+	}
+
 
 	.content .haveGoods .goods .sunGoods {
 		background: #fff;
