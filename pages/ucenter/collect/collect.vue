@@ -30,42 +30,48 @@
 		},
 		methods: {
 			async getCollectData() {
+				//加载用户收藏的物品
 				var data = await getCollectList(this.id);
 				this.collectList = data.data.data
 				console.log(this.collectList)
 			},
 			sunnewGood(id) {
+				//点击商品跳转到详情页面
 				console.log(id)
 				uni.navigateTo({
 					url: "../../goods/goods?id=" + id
 
 				})
 			},
-			 operation(item) {
-				 var _this = this
+			operation(item) {
+				//长按弹出确认框，确认是否要删除指定收藏物品
+				var _this = this
 				uni.showModal({
 					content: "确定要删除吗？",
 					async success(res) {
-						
 						if (res.confirm) {
-							
 							const res1 = await addOrCannelCollect({
 								typeId: 0,
 								valueId: item.value_id
-							 });
-							 
+							});
 							_this.collectList = _this.getCollectData(_this.id)
 							console.log('用户点击确定');
-						} 
-						
+						}
+
 					}
 				})
-				
-				
 			}
 		},
 		created() {
 			this.getCollectData()
+		},
+		onPullDownRefresh() {
+			//收藏页面下拉刷新
+			var _this = this
+			setTimeout(function() {
+				uni.stopPullDownRefresh();
+				_this.collectList = _this.getCollectData(_this.id)
+			}, 1000);
 		}
 	}
 </script>
