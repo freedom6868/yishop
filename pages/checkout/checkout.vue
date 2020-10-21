@@ -92,10 +92,22 @@
 			return {
 				cartGoods: [],
 				cartTotal:{},
-				addressList:[]
+				addressList:[],
+				addressId:0,
+				couponId:0
 			}
 		},
 		methods: {
+			//支付
+			submitOrder(){
+				if(this.addressList.length < 0){
+					uni.showToast({
+						title: "请选择收货地址",
+					})
+					return false;
+				}
+				
+			},
 			addAddress(){
 				uni.navigateTo({
 					url:"/pages/ucenter/addressAdd/addressAdd"
@@ -106,16 +118,7 @@
 					url:"/pages/shopping/address/address"
 				})
 			},
-			submitOrder(){
-				if(this.addressList.length < 0){
-					uni.showToast({
-						title: "请选择收货地址",
-					})
-					return false;
-				}
-				
-				
-			},
+			
 			//获取所有购物车商品
 			async getCartApi() {
 				var res = await getCartApiData();
@@ -140,8 +143,13 @@
 						title:res.errmsg
 					})
 				}
-				
+				this.addressList.map(v=>{
+					if(v.is_default == 1){
+						this.addressId = v.id;
+					}
+				})
 				console.log(this.addressList)
+				console.log(this.addressId)
 			},
 			
 			
@@ -150,6 +158,7 @@
 			this.getCartApi();
 			this.getAddressList();
 		},
+		
 		
 	}
 </script>
