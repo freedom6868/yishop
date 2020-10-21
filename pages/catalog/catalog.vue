@@ -7,7 +7,7 @@
 				<view class="icon location"></view>{{city}}
 			</view>
 			<view class="search">
-				<navigator url="../cearch/cearch">
+				<navigator url="../search/search">
 					<view class="searchBox">
 						<image class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/search2-2fb94833aa.png"
 						 mode=""></image>
