@@ -107,10 +107,14 @@
 				})
 			},
 			submitOrder(){
-				uni.showModal({
-					title: '提示',
-					content:"请添加默认地址",
-				})
+				if(this.addressList.length < 0){
+					uni.showToast({
+						title: "请选择收货地址",
+					})
+					return false;
+				}
+				
+				
 			},
 			//获取所有购物车商品
 			async getCartApi() {

@@ -1,12 +1,12 @@
 <template>
 	<view class="container">
 		<view class="address-list" v-if="addressList.length > 0">
-			<view class="item" v-for="item in addressList" :key='item.id' @tap="navigateBack"  :data-address-id='item.id' >
-				<view class="l">
+			<view class="item" v-for="item in addressList" :key='item.id' :data-address-id='item.id' >
+				<view class="l" @tap="navigateBack" >
 					<view class="name">{{item.name}}</view>
 					<view class="default" v-if="item.is_default">默认</view>
 				</view>
-				<view class="c">
+				<view class="c" @tap="navigateBack" >
 					<view class="mobile">{{item.mobile}}</view>
 					<view class="address">{{item.full_region + item.address}}</view>
 				</view>

@@ -113,6 +113,10 @@
             "path" : "pages/shopping/address/address",
             "style" : {}
         }
+        ,{
+            "path" : "pages/payResult/payResult",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
