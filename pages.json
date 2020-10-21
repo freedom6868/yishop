@@ -66,7 +66,9 @@
 		}
         ,{
             "path" : "pages/ucenter/order/order",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "我的订单"
+			}
         }
         ,{
             "path" : "pages/ucenter/collect/collect",
@@ -78,13 +80,17 @@
         ,{
             "path" : "pages/ucenter/footprint/footprint",
             "style" : {
+				
 				// App 和 小程序都开启下拉刷新
-				"enablePullDownRefresh":true
+				"enablePullDownRefresh":true,
+				"navigationBarTitleText": "我的足迹"
 			}
         }
         ,{
             "path" : "pages/ucenter/address/address",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "地址管理"
+			}
         }
         ,{
             "path" : "pages/commentPost/commentPost",
@@ -104,18 +110,26 @@
         }
         ,{
             "path" : "pages/checkout/checkout",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "确认订单"
+			}
         },{
 			"path" : "pages/ucenter/addressAdd/addressAdd",
-			"style" : {}
+			"style" : {
+				"navigationBarTitleText": "编辑地址"
+			}
 		}
         ,{
             "path" : "pages/shopping/address/address",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "地址管理"
+			}
         }
         ,{
             "path" : "pages/payResult/payResult",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "付款结果"
+			}
         }
     ],
 	"globalStyle": {
