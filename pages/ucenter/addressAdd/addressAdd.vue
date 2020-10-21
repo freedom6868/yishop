@@ -18,7 +18,13 @@
 					<text @click="isDefault" class="default-input" :class="address.is_default == 1 ? 'selected' : ''" >设为默认地址</text>
 				</view>
 			</view>
-			
+			<view class="site-clipboard">
+				<textarea @input='autoRecognition' placeholder-class="line"  value="" placeholder="粘贴文本,可自动识别姓名和地址等" />
+				<view class="clipboard">
+					地址粘贴板
+					<u-icon name="arrow-down" class="icon" :size="20"></u-icon>
+				</view>
+			</view>
 			<view class="btns">
 				<button class="cannel" @click="cancelAddress">取消</button>
 				<button class="save" @click="saveAddress">保存</button>
@@ -51,7 +57,8 @@
 </template>
 
 <script>
-	import {getAddressDetailData,addressSaveData,getRegionListData} from '@/api/uncenter/addressAddApi.js'
+	import {getAddressDetailData,addressSaveData,getRegionListData} from '@/api/uncenter/addressAddApi.js';
+	import {getDetailedAddress} from '@/utils/util.js';
 	export default {
 		data() {
 			return {
@@ -75,7 +82,9 @@
 				  { id: 0, name: '城市', parent_id: 1, type: 2 },
 				  { id: 0, name: '区县', parent_id: 1, type: 3 }
 				],
-				selectRegionDone:false
+				selectRegionDone:false,
+				// 省份列表
+				provinceList:[]
 			};
 		},
 		methods:{
@@ -301,6 +310,79 @@
 					return v.id != 0
 				});
 				this.selectRegionDone = doneStatus;
+			},
+			autoRecognition(e){
+				uni.showLoading({
+					title:'智能识别中',
+					mask:true,
+				})
+				let that = this;
+				setTimeout(()=>{
+					uni.hideLoading({
+						async success(){
+							let value = e.detail.value;
+							let res = getDetailedAddress(value);
+							console.log(res)
+							if(res.code == 0){
+								let address = res.msg;
+								console.log('address',address)
+								let provinceItem = await that.getData({regionId:1,data:address.province});
+								let cityItem = await that.getData({regionId:provinceItem.id,data:address.city});
+								let areaItem = await that.getData({regionId:cityItem.id,data:address.area});
+								console.log('provinceItem',provinceItem,'cityItem',cityItem,'areaItem',areaItem);
+								that.address.city_id = cityItem.id;
+								that.address.city_name = cityItem.name;
+								that.address.district_id = areaItem.id;
+								that.address.district_name = areaItem.name;
+								that.address.province_id = provinceItem.id;
+								that.address.province_name = provinceItem.name;
+								that.address.full_region = provinceItem.name + cityItem.name + areaItem.name;
+								that.address.address = address.details || '';
+								that.address.name = address.name || '';
+								that.address.mobile = address.phone || '';
+								that.$forceUpdate();
+							}else{
+								uni.showToast({
+									title:res.msg,
+									icon:'none'
+								})
+							}
+						}
+					});
+				},0);
+				
+			},
+			async getData(msg){
+				let res = await getRegionListData({parentId:msg.regionId});
+				console.log('getData',res);
+				let data = res.data;
+				let boolArr = [];
+				let trueLength = 0;
+				let item = data.find((v)=>{
+					if(v.name == msg.data){
+						return v;
+					}
+				});
+				if(item == null){
+					item = data.find((v)=>{
+						trueLength = 0;
+						boolArr = [];
+						for(let i=0;i<msg.data.length;i++){
+							if(v.name.indexOf(msg.data[i]) != -1){
+								boolArr.push(true);
+							}
+						}
+						boolArr.forEach(v=>{
+							if(v === true){
+								trueLength++;
+							}
+						})
+						if(trueLength >= 3 ){
+							return v
+						}
+					});
+				}
+				return item;
 			}
 		},
 		onLoad(options) {
@@ -308,7 +390,7 @@
 			if(options.id){
 				this.addressId = options.id;
 				this.getAddressDetail();
-			}
+			};
 		}
 	}
 </script>
@@ -316,6 +398,7 @@
 <style lang="scss" scoped>
 	.container{
 		.add-address{
+			background-color: #fff;
 			.add-form{
 				background-color: #fff;
 				width: 100%;
@@ -359,7 +442,31 @@
 					}
 				}
 			}
-		
+			
+			.site-clipboard {
+				padding-right: 40rpx;
+				textarea {
+					// width: 100%;
+					height: 150rpx;
+					background-color: #f7f7f7;
+					line-height: 60rpx;
+					margin: 40rpx auto;
+					padding: 20rpx;
+				}
+				.clipboard {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					font-size: 26rpx;
+					color: $u-tips-color;
+					height: 80rpx;
+					.icon {
+						margin-top: 6rpx;
+						margin-left: 10rpx;
+					}
+				}
+			}
+			
 			.btns{
 				position: fixed;
 				bottom: 0;
