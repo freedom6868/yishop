@@ -91,7 +91,7 @@
 
 		<!-- 专题精选 -->
 		<view class="supply">
-			<navigator url="../topic/topic">
+			<navigator url="../topic/topic"  open-type="switchTab">
 				<text class="supplyText">专题精选</text>
 			</navigator>
 		</view>
@@ -230,6 +230,12 @@
 
 				})
 			},
+			// // 跳转到专题页面
+			// gotopic(){
+			// 	uni.navigateTo({
+			// 		url:'../topic/topic'
+			// 	})
+			// },
 			// 跳转到ck制造商
 			ckGoods(id) {
 				// console.log(id);

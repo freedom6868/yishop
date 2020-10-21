@@ -225,7 +225,9 @@
 				this.currentSortType = 'id';
 				this.categoryId = id;
 				this.getgoodData()
-				// console.log(this.filterCategory)
+				console.log(this.filterCategory)
+				// http://47.106.90.23:8360/api/goods/list?keyword=&page=1&size=20&sort=id&order=asc&categoryld=1010000
+				// http://47.106.90.23:8360/api/goods/list?keyword=&page=1&size=20&sort=id&order=asc&categoryId=1010000
 
 
 
