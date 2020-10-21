@@ -209,7 +209,7 @@
 				const res = await getGoodsDeatil({
 					id: this.$data.id
 				})
-				console.log("商品详情：", res)
+				// console.log("商品详情：", res)
 				if (res.errno === 0) {
 					this.gallery = res.data.gallery; //轮播图
 					this.goods = res.data.info;
@@ -326,7 +326,8 @@
 				// 实现页面刷新
 				this.isShowDetail = false;
 				this.isShowDetail = true;
-				const canSubmit = this.skuCanSubmit();
+				this.checkedSpecText = this.getCheckedSpecValue()
+				// const canSubmit = this.skuCanSubmit();
 				this.getCheckedSpecValue()
 				
 			},
@@ -409,17 +410,31 @@
 			// 开启规格
 			openDetail() {
 				this.isShowDetail = true;
+				if(this.specificationList.length <= 0) {
+					this.checkedSpecText = [{
+						nameId : '',
+						valueId: 0,
+						valueText: '请选择数量'
+					}]
+				}else {
+					this.checkedSpecText = [{
+						nameId : '',
+						valueId: 0,
+						valueText: '请选择规格数量'
+					}]
+				}
 			},
 			// 加入购物车
 			async addToCart() {
 				
 				// 判断是否打开规格页面
 				if(!this.isShowDetail) {
-					this.isShowDetail = true;
+					this.openDetail()
+					// this.isShowDetail = true;
 					return;
 				}
 				
-				// 判断是否选择完整规格
+				// 判断是否选择完整规格，如果该商品没有规格可选返回true
 				if(!this.skuCanSubmit()) {
 					uni.showToast({
 						title:'请选择规格',
@@ -428,7 +443,7 @@
 					return;
 				}
 				
-				// 根据选中规格判断是否有sku信息
+				// 根据选中规格判断是否有sku信息,如果该商品没有规格可选返回true
 				let checkedProduct = this.getCheckedProductItem(this.getCheckedSpecKey());
 				if(!checkedProduct || checkedProduct.length <= 0) {
 					uni.showToast({
@@ -455,10 +470,10 @@
 					number: this.number,
 					productId: checkedProduct[0].id
 				})
-				console.log("加入购物车：",res)
+				// console.log("加入购物车：",res)
 				if(res.errno == 0) {
 					uni.showToast({
-						title:'添加成功'
+						title:'加购成功'
 					})
 					
 				}else {
@@ -469,7 +484,7 @@
 				}
 				this.isShowDetail = !this.isShowDetail;
 				this.getCartGoodsNumber()
-				console.log("加入购物车")
+				// console.log("加入购物车")
 			}
 			
 
