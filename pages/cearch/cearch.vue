@@ -24,7 +24,7 @@
 			</scroll-view>
 			<scroll-view class="keyword-box" v-show="!isShowKeywordList" scroll-y>
 
-				
+
 				<!-- 历史搜索 -->
 				<view class="keyword-block" v-if="oldKeywordList.length>0">
 					<view class="keyword-list-header">
@@ -56,7 +56,7 @@
 			</scroll-view>
 		</view>
 		<view class="haveGoods" v-else>
-			<view class="tag">
+			<view class="tag" v-if="GoodsList.length">
 				<view :class="[currentSortType == 'default' ? 'active' :'' ]" id="defaultSort" @click="openSortFilter">综合</view>
 				<view :class="[ currentSortType == 'price' ? 'active' :'']" @click="openSortFilter" id="priceSort">
 					价格
@@ -66,9 +66,7 @@
 			</view>
 			<!-- 分类 -->
 			<view class="fixed " v-if="categoryFilter">
-				<!-- <view :class="[ iitem.checked ? 'active1'  :'text'] " v-for="(iitem,index) in filterCategory" :key='iitem.id'
-				 @click="selectCategory(index,iitem.id)"> -->
-				<view class="text" v-for="(iitem,index) in filterCategory" :key='iitem.id' @click="selectCategory(index,iitem.id)">
+				<view :class="[iitem.id == categoryId ? 'active1' : 'text']"  v-for="(iitem,index) in filterCategory" :key='iitem.id' @click="selectCategory(index,iitem.id)">
 					{{iitem.name}}
 				</view>
 			</view>
@@ -227,6 +225,7 @@
 				this.currentSortType = 'id';
 				this.categoryId = id;
 				this.getgoodData()
+				// console.log(this.filterCategory)
 
 
 
@@ -373,7 +372,7 @@
 	/*#ifdef MP-WEIXIN */
 	.content .haveGoods .fixed {
 		position: fixed;
-		top: 180rpx;
+		top: 179rpx;
 		background: #FFFFFF;
 		width: 100%;
 		height: auto;
@@ -429,9 +428,10 @@
 
 
 	}
+
 	/*#ifdef MP-WEIXIN */
 	.content .haveGoods .goods {
-		
+
 		display: flex;
 		flex-wrap: wrap;
 		width: 100%;
@@ -440,8 +440,9 @@
 		overflow: hidden;
 		padding-top: 98rpx;
 	}
+
 	/*#endif*/
-	
+
 	/*#ifdef H5 */
 	.content .haveGoods .goods {
 		display: flex;
@@ -452,9 +453,10 @@
 		overflow: hidden;
 		margin-top: 174rpx;
 	}
+
 	/*#endif*/
-	
-	
+
+
 
 
 
@@ -509,6 +511,10 @@
 		padding: 0 20rpx;
 		font-size: 30rpx;
 		color: #333;
+
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 	}
 
 	.content .haveGoods .goods .sunGoods .price {
@@ -639,33 +645,39 @@
 		width: 10%;
 		justify-content: center;
 	}
+
 	/*#ifdef H5 */
 	.keyword-box {
+		position: fixed;
+		top: 100rpx;
 		height: calc(100vh - 110upx);
 		border-radius: 20upx 20upx 0 0;
 		background-color: #F4F4F4;
-		margin-top: 100rpx;
+		margin-top: 80rpx;
 	}
+
 	/*#endif */
-	
+
 	/*#ifdef MP-WEIXIN */
 	.keyword-box {
 		height: calc(100vh - 110upx);
 		border-radius: 20upx 20upx 0 0;
 		background-color: #F4F4F4;
 	}
+
 	/*#endif */
-	
-	
+
+
 	/*#ifdef H5 */
 	.keyword-box .keyword-block {
 		padding: 10upx 0;
 		background-color: #FFFFFF;
-		/* margin-top: 80rpx; */
+		
 		margin-bottom: 20rpx;
 	}
+
 	/*#endif */
-	
+
 	/*#ifdef MP-WEIXIN */
 	.keyword-box .keyword-block {
 		padding: 10upx 0;
@@ -673,8 +685,9 @@
 		/* margin-top: 100rpx; */
 		margin-bottom: 20rpx;
 	}
+
 	/*#endif*/
-	
+
 	.keyword-box .keyword-block .keyword-list-header {
 		width: 94%;
 		padding: 10upx 3%;
