@@ -129,8 +129,8 @@
 		</view>
 
 		<!-- 选规格 -->
-		<view class="attr-pop-box" v-if="isShowDetail">
-			<view class="attr-pop">
+		<view class="attr-pop-box" :class="isShowDetail ? 'attr-pop-box_show' : 'attr-pop-box' ">
+			<view class="attr-pop" :class="isShowDetail ? 'attr_pop_show' : 'attr-pop'">
 				<view class="close" @click="closeDetail">
 					<image src="../../static/images/close.png" mode=""></image>
 				</view>
@@ -917,14 +917,18 @@
 		}
 
 		.attr-pop-box {
-			width: 100%;
-			height: 100%;
-
+			
 			position: fixed;
 			background: rgba(0, 0, 0, .5);
 			z-index: 8;
+			
+			top: 0;
 			bottom: 0;
-
+			left: 0;
+			right: 0;
+			display: none;
+			
+			// 隐藏规格
 			.attr-pop {
 				width: 100%;
 				height: auto;
@@ -934,7 +938,8 @@
 				position: fixed;
 				z-index: 9;
 				bottom: 100rpx;
-
+				display: none;
+				
 				.close {
 					position: absolute;
 					width: 48rpx;
@@ -1019,8 +1024,33 @@
 					}
 				}
 			}
+			// 显示规格
+			.attr_pop_show {
+				display: block;
+				animation:fadeIn 0.3s linear;
+			}
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+					transform: translateY(100rpx);
+				}
+				100% {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
 		}
-
-
+		// 显示遮盖层
+		.attr-pop-box_show {
+			display: block;
+		}	
+		// @keyframes fadeOut {
+		// 	100% {
+		// 		bottom: -100%;
+		// 		transform: translateY(-400rpx);
+		// 	}
+		// }
+		
 	}
 </style>
