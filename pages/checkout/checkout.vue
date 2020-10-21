@@ -26,7 +26,7 @@
 				<view class="coupon-item">
 					<view class="l">
 						<text class="name">请选择优惠劵</text>
-						<text class="txt">19张</text>
+						<text class="txt">{{couponNumber}}张</text>
 					</view>
 					<view class="r">
 						<image src="/static/images/address_right.png" mode=""></image>
@@ -47,7 +47,7 @@
 						<text class="name">运费</text>
 					</view>
 					<view class="r">
-						<text class="txt">￥26</text>
+						<text class="txt">￥{{freightPrice}}</text>
 					</view>
 				</view>
 				<view class="order-item no-border">
@@ -55,7 +55,7 @@
 						<text class="name">优惠券</text>
 					</view>
 					<view class="r">
-						<text class="txt">-￥12</text>
+						<text class="txt">-￥{{couponPrice}}</text>
 					</view>
 				</view>
 			</view>
@@ -86,27 +86,44 @@
 
 <script>
 	import {getCartApiData} from "@/api/cartApi.js";
-	import {getAddressListData} from "@/api/uncenter/addressApi.js"
+	import {getAddressListData} from "@/api/uncenter/addressApi.js";
+	import {getCartCheckout,postOrderSubmit} from "@/api/orderApi.js"
 	export default {
 		data() {
 			return {
+				address:{},
 				cartGoods: [],
 				cartTotal:{},
 				addressList:[],
+				couponNumber:0,
+				freightPrice: 0.00,    //快递费
+				couponPrice: 0.00,     //优惠券的价格
 				addressId:0,
 				couponId:0
 			}
 		},
 		methods: {
 			//支付
-			submitOrder(){
+			async submitOrder(){
 				if(this.addressList.length < 0){
 					uni.showToast({
-						title: "请选择收货地址",
+						title:"请选择收货地址",
+						icon:"none"
 					})
 					return false;
 				}
-				
+				if(this.address.errno === 0){
+					//生成订单
+					var res = await postOrderSubmit(this.addressId,this.couponId);
+					uni.navigateTo({
+						url:"../payResult/payResult"
+					})
+				}else{
+					uni.showToast({
+						title:"下单失败",
+						icon:"none"
+					})
+				}
 			},
 			addAddress(){
 				uni.navigateTo({
@@ -128,7 +145,8 @@
 					this.cartTotal = res.data.cartTotal;
 				}else{
 					uni.showToast({
-						title:res.errmsg
+						title:res.errmsg,
+						icon:"none"
 					})
 				}
 			},
@@ -148,6 +166,7 @@
 						this.addressId = v.id;
 					}
 				})
+				this.address = res
 				console.log(this.addressList)
 				console.log(this.addressId)
 			},
@@ -157,6 +176,7 @@
 		created() {
 			this.getCartApi();
 			this.getAddressList();
+			this.getCheckoutInfo()
 		},
 		
 		

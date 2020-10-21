@@ -10,3 +10,14 @@ export function getCartCheckout(addressId,couponId){
 		}
 	})
 }
+
+export function postOrderSubmit(addressId,couponId){
+	return requert({
+		url:'order/submit',
+		method:"POST",
+		data:{
+			addressId:addressId,
+			couponId:couponId
+		}
+	})
+}
