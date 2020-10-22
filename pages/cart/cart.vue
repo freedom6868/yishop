@@ -46,7 +46,7 @@
 				<view class="total">{{!isEditCart ? '￥'+cartTotal.checkedGoodsAmount : ''}}</view>
 				<view class="delete" @click="editCart">{{!isEditCart ? '编辑':'完成'}}</view>
 				<view class="checkout" v-if="!isEditCart" @click="ToCartOrder">下单</view>
-				<view class="checkout" v-if="isEditCart" @click="deleteCart">删除所有</view>
+				<view class="checkout" v-if="isEditCart" @click="deleteCart">删除所选</view>
 			</view>
 		</view>
 	</view>
