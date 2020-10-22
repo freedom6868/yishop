@@ -31,7 +31,7 @@
 			return {
 				id: "",
 				typeId: "",
-				size:20,
+				size:100,
 				page:1,
 				showType:0,
 				moreCommentData:[]

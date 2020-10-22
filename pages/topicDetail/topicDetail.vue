@@ -91,6 +91,7 @@
 				let { data } = await getDetailComment(valueId,typeId,size);
 				this.detailCommentData = data.data;
 				// console.log(this.detailCommentData);
+				//判断评论数量大于5显示加载更多按钮
 				if(data.count > 5){
 					this.isShow = true;
 				}else{
