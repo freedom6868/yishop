@@ -323,11 +323,9 @@
 				}
 				this.specificationList = specificationList;
 				
-				// 实现页面刷新
-				this.isShowDetail = false;
-				this.isShowDetail = true;
+				// 实现页面强制刷新
+				this.$forceUpdate();
 				this.checkedSpecText = this.getCheckedSpecValue()
-				// const canSubmit = this.skuCanSubmit();
 				this.getCheckedSpecValue()
 				
 			},
@@ -370,15 +368,6 @@
 					checkedValues.push(_checkedObj)
 				})
 				return checkedValues;
-				// console.log(checkedValues)
-				
-				
-				
-				// if(checkedValues.length <= 0) {
-				// 	this.checkedSpecText = ['请选择规格数量']
-				// }else {
-				// 	this.checkedSpecText = checkedValues
-				// }
 				
 			},
 			getCheckedSpecKey() {
