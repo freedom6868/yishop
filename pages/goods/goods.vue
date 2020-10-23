@@ -2,7 +2,7 @@
 	<view class="goods_container">
 		<!-- 轮播图 -->
 		<swiper :indicator-dots="true" :autoplay="true" :interval="3000" :duration="1000" :circular="true" class="swiper">
-			<swiper-item class="swiper_item" v-for="(item,index) in gallery" :key="index">
+			<swiper-item class="swiper_item" v-for="(item,index) in gallery" :key="index" @click="swiperImgInfo(index)">
 				<image :src="item.img_url" mode=""></image>
 			</swiper-item>
 		</swiper>
@@ -234,6 +234,17 @@
 					result.push(data[1])
 				}
 				this.goodsDesc = result;
+			},
+			// 轮播图图片预览
+			swiperImgInfo(imgIndex) {
+				console.log(1)
+				var arr = this.gallery.map(item => {
+					return item.img_url;
+				})
+				uni.previewImage({
+					urls: arr,
+					current: arr[imgIndex],
+				})
 			},
 			// 图片预览
 			imgInfo(imgIndex) {
