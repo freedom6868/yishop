@@ -74,6 +74,14 @@
 						return v.product_id;
 					}
 				})
+				console.log(productId)
+				if(productId[0]== undefined){
+					uni.showToast({
+						title:'还未选择商品哦',
+						icon:'none'
+					})
+					return;
+				}
 				var productIds = productId.join(',')
 				// console.log(productIds)
 				console.log(productId)
