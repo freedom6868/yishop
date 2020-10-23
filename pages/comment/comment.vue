@@ -89,7 +89,10 @@
 					}else {
 						this.picCommentList = this.picCommentList.concat(res.data.data);
 						this.allPage = res.data.currentPage;
-						this.comments = this.picCommentList;
+						this.comments = this.picCommentList.filter(item => {
+							return item.pic_list.length > 0
+						})
+						// this.comments = this.picCommentList;
 					}
 				}
 			},
