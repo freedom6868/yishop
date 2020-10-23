@@ -22,7 +22,7 @@
 					<image src="/static/images/address_right.png"></image>
 				</view>
 			</view>
-			<view class="coupon-box">
+			<!-- <view class="coupon-box">
 				<view class="coupon-item">
 					<view class="l">
 						<text class="name">请选择优惠劵</text>
@@ -32,7 +32,7 @@
 						<image src="/static/images/address_right.png" mode=""></image>
 					</view>
 				</view>
-			</view>
+			</view> -->
 			 <view class="order-box">
 				<view class="order-item">
 					<view class="l">
@@ -50,14 +50,14 @@
 						<text class="txt">￥{{freightPrice}}</text>
 					</view>
 				</view>
-				<view class="order-item no-border">
+				<!-- <view class="order-item no-border">
 					<view class="l">
 						<text class="name">优惠券</text>
 					</view>
 					<view class="r">
 						<text class="txt">-￥{{couponPrice}}</text>
 					</view>
-				</view>
+				</view> -->
 			</view>
 			<!-- 订单商品 -->
 			 <view class="goods-items">
