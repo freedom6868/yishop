@@ -69,13 +69,14 @@
 		methods: {
 			//下单
 			ToCartOrder(){
+				let bool = false;
 				var productId = this.cartGoods.map((v)=>{
 					if(v.checked == true){
+						bool = true;
 						return v.product_id;
 					}
 				})
-				console.log(productId)
-				if(productId[0]== undefined){
+				if(!bool){
 					uni.showToast({
 						title:'还未选择商品哦',
 						icon:'none'
