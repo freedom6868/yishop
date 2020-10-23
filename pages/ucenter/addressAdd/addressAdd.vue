@@ -19,7 +19,7 @@
 				</view>
 			</view>
 			<view class="site-clipboard">
-				<textarea @input='autoRecognition' placeholder-class="line"  value="" placeholder="粘贴文本,可自动识别姓名和地址等" />
+				<textarea @input='autoRecognition' placeholder-class="line"  value="" placeholder="粘贴文本,可自动识别姓名和地址如:罗xx , 18534444444,广东省汕头市xx区xx街道xx" />
 				<view class="clipboard">
 					地址粘贴板
 					<u-icon name="arrow-down" class="icon" :size="20"></u-icon>
@@ -349,7 +349,7 @@
 							}
 						}
 					});
-				},0);
+				},1000);
 				
 			},
 			async getData(msg){

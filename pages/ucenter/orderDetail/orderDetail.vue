@@ -7,7 +7,7 @@
 				<view class="l">实付:<text class="cost">￥{{orderInfo.actual_price}}</text></view>
 				<view class="r">
 					<view class="btn">取消订单</view>
-					<view class="btn active">去付款</view>
+					<view class="btn active" @click="goToPay">去付款</view>
 				</view>
 			</view>
 		</view>
@@ -86,6 +86,11 @@
 					})
 				}
 				
+			},
+			goToPay(){
+				uni.showToast({
+					title:'付款成功'
+				})
 			}
 		},
 		onLoad(option) {

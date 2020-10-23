@@ -7,7 +7,7 @@
 				<text @click="onUserInfoClick" class="name">{{userInfo.nickname || '点击登录'}} </text>
 			</view>
 			
-			<image @click="onUserInfoClick" src="/static/images/address_right.png" mode="" class="btn"></image>
+			<image @click="onUserInfoClick" v-if="this.userInfo.nickname=='点击登录'" src="/static/images/address_right.png" mode="" class="btn"></image>
 		</view>
 		
 		<view class="user-menu">
@@ -59,9 +59,13 @@
 		},
 		methods: {
 			onUserInfoClick(){
-				this.isShowLoginDialog();
+				if(this.userInfo.nickname == '点击登录'){
+					this.isShowLoginDialog();
+				}
+				
 			},
 			isShowLoginDialog(){
+				
 				this.showLoginDialog = true;
 			},
 			onCloseLoginDialog(){
