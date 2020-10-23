@@ -76,12 +76,14 @@
 				if(e.detail.errMsg !== 'getUserInfo:ok'){
 					if(e.detail.errMsg === 'getUserInfo:fail auth deny'){
 						uni.showToast({
-							title:'微信登录失败'
+							title:'微信登录失败',
+							icon:'none'
 						})
 						return;
 					}
 					uni.showToast({
-						title:'微信登录失败'
+						title:'微信登录失败',
+						icon:'none'
 					})
 					return;
 				}
@@ -95,7 +97,8 @@
 				console.log(res2)
 				if(res2.errno != 0){
 					uni.showToast({
-						title:'微信登录失败'
+						title:'微信登录失败',
+						icon:'none'
 					})
 				}else{
 					this.userInfo = res2.data.userInfo;
@@ -107,6 +110,13 @@
 				}
 			},
 			click(index){
+				if(this.userInfo.nickname == '点击登录'){
+					uni.showToast({
+						title:'请先登录',
+						icon:'none'
+					})
+					return;
+				}
 				let currentItem = this.itemList[index];
 				if(currentItem.url.length != 0){
 					console.log(currentItem.url)

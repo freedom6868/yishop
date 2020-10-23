@@ -6,7 +6,7 @@ export default {
 			this.globalData.userInfo = JSON.parse(uni.getStorageSync('userInfo'))
 			this.globalData.token = uni.getStorageSync('token')
 		}catch(err){
-			console.log(err)
+			// console.log(err)
 		}
 	},
 	onShow: function() {
