@@ -42,11 +42,11 @@
 				this.topicData = data.data;
 				this.count = data.count;
 				// console.log(this.count);
-				console.log(this.topicData);
+				// console.log(this.topicData);
 			},
 			//前往专题详情
 			toTopicDetail(id){
-				console.log("topic",id);
+				// console.log("topic",id);
 				uni.navigateTo({
 					url:"../topicDetail/topicDetail?id="+id
 				})

@@ -2,12 +2,12 @@
 	<view class="indexBox">
 		<!-- 首页搜索框 -->
 		<view class="search">
-			<navigator url="../cearch/cearch">
+			<navigator url="../search/search">
 				<view class="searchBox">
 					<image class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/search2-2fb94833aa.png"
 					 mode=""></image>
 					<!-- 动态数量 -->
-					<text class="text">商品搜索，共300款好物</text>
+					<text class="text">商品搜索，共 {{ goodCount }} 款好物</text>
 				</view>
 			</navigator>
 		</view>
@@ -15,7 +15,7 @@
 		<!-- 轮播图 -->
 		<view class="lunbo">
 			<swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
-				<swiper-item v-for="(item) in Lunbo" :key='id'>
+				<swiper-item v-for="(item) in Lunbo" :key='item.id'>
 					<view class="swiper-item">
 						<image class="lunboImg" :src="item.image_url"></image>
 					</view>
@@ -27,71 +27,71 @@
 		<view class="m-menu">
 			<!-- 路径 -->
 			<!-- <navigator class="item" v-for="(item) in Channel" url="详情?id={{item.id}}" :key='id'> -->
-			<navigator class="item" v-for="(item) in Channel" :key='id'>
+			<view class="item" v-for="(item) in Channel" :key='item.id' @click="goCategory(item)">
 				<image :src="item.icon_url"></image>
 				<text>{{item.name}}</text>
-			</navigator>
+			</view>
 		</view>
 
 		<!-- 商品直供 -->
 		<view class="supply">
-			<navigator url="">
-				<text class="supplyText">品牌制造商直供</text>
-			</navigator>
+			<!-- <navigator url=""> -->
+			<text class="supplyText">品牌制造商直供</text>
+			<!-- </navigator> -->
 		</view>
 
 		<!-- 制造商直供图片 -->
 		<view class="manufacturer">
-			<navigator url="" v-for="item in BrandList" :key="id" class="manubox">
+			<view url="" v-for="item in BrandList" :key="item.id" @click="ckGoods(item.id)" class="manubox">
 				<view class="manuImg">
-					<image :src="item.new_pic_url" mode=""></image>
+					<image :src="item.new_pic_url"></image>
 				</view>
 				<view class="manuText">
 					<text class="brand">{{item.name}}</text><br>
 					<text class="price">{{item.floor_price}}</text>
 					<text class="unit">元起</text>
 				</view>
-			</navigator>
+			</view>
 		</view>
 
 		<!-- 新品首发 -->
 		<view class="supply">
-			<navigator url="">
-				<text class="supplyText">周一周四 · 新品首发</text>
-			</navigator>
+			<!-- <navigator url=""> -->
+			<text class="supplyText">周一周四 · 新品首发</text>
+			<!-- </navigator> -->
 		</view>
 
 		<view class="newpro">
 			<view class="sunNewPro" v-for="item in newGoods" :key='item.id'>
 				<view @click="sunnewGood(item.id)">
-					<image :src="item.list_pic_url" mode=""></image>
+					<image :src="item.list_pic_url"></image>
 					<text class="name">{{item.name}}</text>
-					<text class="price">${{item.retail_price}}</text>
+					<text class="price">￥{{item.retail_price}}</text>
 				</view>
 			</view>
 		</view>
 		<!-- 人气推荐 -->
 		<view class="supply">
-			<navigator url="">
-				<text class="supplyText">人气推荐</text>
-			</navigator>
+			<!-- <navigator url=""> -->
+			<text class="supplyText">人气推荐</text>
+			<!-- </navigator> -->
 		</view>
 
 		<!-- 人气推荐商品信息 -->
 		<view class="top">
 			<view class="topGood" v-for="item in hotGoodsList" :key='item.id' @click="sunnewGood(item.id)">
-				<image :src="item.list_pic_url" mode=""></image>
+				<image :src="item.list_pic_url"></image>
 				<view class="topText">
-					<text class="title">{{item.name}}</text><br>
+					<text class="titlename">{{item.name}}</text><br>
 					<text class="detail">{{item.goods_brief}}</text><br>
 					<text class="top-price">￥{{item.retail_price}}</text>
 				</view>
 			</view>
 		</view>
 
-		<!-- 人气推荐 -->
+		<!-- 专题精选 -->
 		<view class="supply">
-			<navigator url="../topic/topic">
+			<navigator url="../topic/topic"  open-type="switchTab">
 				<text class="supplyText">专题精选</text>
 			</navigator>
 		</view>
@@ -99,17 +99,40 @@
 		<!-- swiper -->
 		<special-banner :banner-list="bannerList" :swiper-config="swiperConfig"></special-banner>
 
+
+		<!-- 居家 -->
+		<view class="categoryList" v-for="item in categoryList" :key='item.id'>
+			<!-- 居家标题 -->
+			<view class="supply">
+				<text class="supplyText">{{item.name}}</text>
+			</view>
+			<!-- 居家商品 -->
+			<view class="newpro">
+				<view class="sunNewPro" v-for="sumItem in item.goodsList" :key='sumItem.id'>
+					<view @click="sunnewGood(sumItem.id)">
+						<image :src="sumItem.list_pic_url" mode=""></image>
+						<text class="name">{{sumItem.name}}</text>
+						<text class="price">￥{{sumItem.retail_price}}</text>
+					</view>
+				</view>
+			</view>
+		</view>
+
+
 	</view>
 </template>
 
 <script>
 	import {
-		getHomeLunbo
+		getHome,
+		getGoodsCounts
 	} from '@/api/homeApi.js';
 	import specialBanner from '../../components/EtherealWheat-banner/specialBanner.vue'
 	export default {
 		data() {
 			return {
+				// 商品数量
+				goodCount: [],
 				// 轮播图
 				Lunbo: [],
 				// 五宫格
@@ -120,31 +143,18 @@
 				newGoods: [],
 				// 人气推荐
 				hotGoodsList: [],
+				// 商品lunbo
+				topicList: [],
+				// 居家
+				categoryList: [],
+				// 进入专题轮播list
+				bannerList: [],
+
 				indicatorDots: true,
 				autoplay: true,
 				interval: 2000,
 				duration: 500,
-				bannerList: [{
-					picture: 'http://image.mishi.cn/r/yry_h5_test/detail/3_1535359279285.png',
-					title: '七夕将至：时光足够久，韧性也能炖出味',
-					description: '一万年太久，就现在，给你爱',
-					path: ''
-				}, {
-					picture: 'http://image.mishi.cn/r/yry_h5_test/detail/2_1535359240426.png',
-					title: '新菜上架：无边海洋，找到顺眼的那尾鱼',
-					description: '花中樱，鱼乃鲷花中樱，鱼乃鲷',
-					path: ''
-				}, {
-					picture: 'http://image.mishi.cn/r/yry_h5_test/detail/1_1535359204228.png',
-					title: '在湘西的烟火气里，发现苗族少女的神明',
-					description: '取材自湘西苗族传统的烟熏文化',
-					path: ''
-				}, {
-					picture: 'http://image.mishi.cn/r/yry_h5_test/detail/4_1535359327213.png',
-					title: '福利降临，陪伴独自行走的丰盛旅程',
-					description: '在自己的小世界里，日日好日，夜夜好清宵',
-					path: ''
-				}],
+
 				swiperConfig: {
 					indicatorDots: true,
 					indicatorColor: 'rgba(255, 255, 255, .4)',
@@ -159,15 +169,16 @@
 			}
 		},
 		methods: {
-			// 轮播图
-			async getLunboDate() {
+			// 获取所有home数据
+			async getHomeData() {
 				var {
 					data
-				} = await getHomeLunbo();
+				} = await getHome();
 				// 轮播图list
 				this.Lunbo = data.banner;
 				// 宫格list
 				this.Channel = data.channel;
+				// console.log(this.Channel)
 				// 制造商直供图片
 				this.BrandList = data.brandList;
 				// 新品首发
@@ -175,7 +186,41 @@
 				// 人气推荐
 				this.hotGoodsList = data.hotGoodsList;
 				// 专题精选
-				this.topicList = data.topicList
+				let newArr = [];
+				// console.log('dat	a.topic',data.topicList)
+				data.topicList.map(v => {
+					let obj = {};
+					obj.picture = v.item_pic_url;
+					obj.title = v.title;
+					obj.description = v.subtitle;
+					obj.id = v.id;
+					// console.log(obj)
+					newArr.push(obj);
+
+				})
+				// console.log("newArr",newArr)
+				this.bannerList = newArr;
+				// this.showBanner = true;
+
+				// 居家
+				this.categoryList = data.categoryList
+			},
+			// 商品数量
+			async getGoodsCountsData() {
+				var data = await getGoodsCounts();
+				this.goodCount = data.data.goodsCount;
+
+			},
+			// 调转到分类详情页面
+			goCategory(item){
+				console.log(item);
+				var url = item.url
+				var id = url.split('id=')[1];
+				var index = item.id -1;
+				uni.navigateTo({
+					url:'../category/category?id='+id+ '&index='+ index
+				})
+				
 			},
 			//商品详情
 			sunnewGood(id) {
@@ -184,23 +229,37 @@
 					url: "../goods/goods?id=" + id
 
 				})
-
 			},
+			// // 跳转到专题页面
+			// gotopic(){
+			// 	uni.navigateTo({
+			// 		url:'../topic/topic'
+			// 	})
+			// },
+			// 跳转到ck制造商
+			ckGoods(id) {
+				// console.log(id);
+				uni.navigateTo({
+					url: "../brandDetail/brandDetail?id=" + id
+				})
+			}
 		},
 		created() {
-			this.getLunboDate();
+			this.getHomeData();
+			this.getGoodsCountsData();
+
 		},
-		components:{
-			"special-banner" :specialBanner 
+		components: {
+			"special-banner": specialBanner
 		}
-		
+
 	}
 </script>
 
 <style lang="scss" scoped>
 	.indexBox {
 		background-color: #F4F4F4;
-		height: 20000rpx;
+		// height: 20000rpx;
 
 		.search {
 			display: flex;
@@ -359,7 +418,8 @@
 		}
 
 		.newpro {
-			width: 690rpx;
+			text-align: center;
+			width: 100%;
 			background-color: #FFFFFF;
 			overflow: hidden;
 			padding: 0 31rpx 45rpx 31rpx;
@@ -377,11 +437,15 @@
 				.name {
 					text-align: center;
 					display: block;
-					width: 320rpx;
-					height: 35rpx;
+					width: 300rpx;
+					height: 40rpx;
 					font-size: 30rpx;
 					color: #333;
 					margin-bottom: 14rpx;
+
+					overflow: hidden;
+					white-space: nowrap;
+					text-overflow: ellipsis;
 				}
 
 				.price {
@@ -389,11 +453,7 @@
 					text-align: center;
 					line-height: 30rpx;
 					font-size: 30rpx;
-					color: red;
-
-					overflow: hidden;
-					text-overflow: ellipsis;
-					white-space: nowrap;
+					color: #b4282d;
 				}
 			}
 		}
@@ -428,7 +488,7 @@
 					height: 264rpx;
 					width: 456rpx;
 
-					.title {
+					.titlename {
 						width: 456rpx;
 						display: block;
 						line-height: 50rpx;
