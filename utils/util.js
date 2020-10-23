@@ -68,19 +68,28 @@ export function getDetailedAddress(value){
 		} )
 		
 		// 获取字符串中的姓
-		let firstName = firstNameData.find( v=>{
-			if(value.indexOf(v) != -1){
-				return v;
-			}
-		})
+		// let firstName = firstNameData.find( v=>{
+			
+		// 	if(value.indexOf(v) != -1 || ){
+		// 		return v;
+		// 	}
+		// })
 		
 		// 将字符串分割
 		let addressArr = value.split(reg1);
 		
+		let firstName = addressArr.find( v =>{
+			let temp = firstNameData.find( item =>{
+				if(v.indexOf(item) != -1 && v.length <= 5){
+					return v;
+				}
+			})
+			return temp;
+		})
+		address.name = firstName;
+		
 		addressArr.find( v => {
-			if (v.indexOf(firstName)!=-1){
-				address.name = v;
-			}
+			
 			if(street){
 				if (v.indexOf(street) != -1) {
 					address.details = v.substring(v.indexOf(street));
