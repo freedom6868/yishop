@@ -31,7 +31,7 @@ export function getDetailedAddress(value){
 	let res = {};
 	let address  = {};
 	// 匹配所有标点符号的正则
-	let reg1 = /[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?\，]/g;
+	let reg1 = /[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?\，|\s+ ]/g;
 	// 截取手机号
 	let reg2 = /1[3-9]\d{9}/g;
 	
@@ -80,7 +80,7 @@ export function getDetailedAddress(value){
 		
 		let firstName = addressArr.find( v =>{
 			let temp = firstNameData.find( item =>{
-				if(v.indexOf(item) != -1 && v.length <= 5){
+				if(v.indexOf(item) != -1 && v.length <= 4){
 					return v;
 				}
 			})
