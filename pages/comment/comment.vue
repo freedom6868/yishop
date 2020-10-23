@@ -24,8 +24,8 @@
 					{{item.content}}
 				</view>
 				<view class="imgs">
-					<block v-for="(item1,index1) in item.pic_list" :key='index1'>
-					<image :src="item1.pic_url" mode=""></image>
+					<block v-for="(item1,index1) in item.pic_list" :key='index1' >
+					<image :src="item1.pic_url" mode="" @click='getImg(index,index1)'></image>
 					</block>
 
 				</view>
@@ -93,7 +93,16 @@
 					}
 				}
 			},
-			
+			getImg(InfoIndex,imgIndex) {
+				const arr = this.comments[InfoIndex].pic_list.map(item => {
+					return item.pic_url
+				})  
+				uni.previewImage({
+					urls: arr,
+					current: arr[imgIndex],
+				})
+				// console.log(this.comments[InfoIndex].pic_list)
+			},
 			// 点击导航栏
 			clickTab() {
 				this.showType = this.showType == 1 ? 0 : 1;

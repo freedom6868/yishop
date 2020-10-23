@@ -56,7 +56,7 @@
 				<view class="content">{{comment.data.content}}</view>
 				<view class="imgs" v-if="comment.data.pic_list.length > 0">
 					<block v-for="(item,index) in comment.data.pic_list" :key='index'>
-						<image :src="item.pic_url" mode=""></image>
+						<image :src="item.pic_url" mode="" @click="getCommentImg(index)"></image>
 					</block>
 
 				</view>
@@ -253,6 +253,17 @@
 					urls: this.goodsDesc,
 					current: this.goodsDesc[imgIndex],
 				})
+			},
+			// 评论预览
+			getCommentImg(imgIndex) {
+				const arr = this.comment.data.pic_list.map(item => {
+					return item.pic_url
+				})  
+				uni.previewImage({
+					urls: arr,
+					current: arr[imgIndex],
+				})
+				// console.log(this.comments[InfoIndex].pic_list)
 			},
 			// 获取大家都在看
 			async getGoodsRelatedInfo() {
