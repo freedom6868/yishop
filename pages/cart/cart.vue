@@ -104,11 +104,20 @@
 			//删除选中购物车商品
 			async deleteCart(){
 				// var productIds = this.getCheckedProductId();
+				let bool = false;
 				var productId = this.cartGoods.map((v)=>{
 					if(v.checked == true){
+						bool = true;
 						return v.product_id;
 					}
 				})
+				if(!bool){
+					uni.showToast({
+						title:'还未选择商品哦',
+						icon:'none'
+					})
+					return;
+				}
 				var productIds = productId.join(',')
 				console.log(productIds)
 				var message = await deleteCheckedCart(productIds);
