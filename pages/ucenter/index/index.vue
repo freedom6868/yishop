@@ -46,13 +46,13 @@
 					{name:'star','txt':'我的收藏',url:'/pages/ucenter/collect/collect'},
 					{name:'map','txt':'地址管理',url:'/pages/ucenter/address/address'},
 					{name:'list-dot','txt':'我的足迹',url:'/pages/ucenter/footprint/footprint'},
-					{name:'coupon','txt':'优惠券',url:'/pages/ucenter/coupon/coupon'},
+					{name:'coupon','txt':'优惠券',url:''},
 					{name:'gift','txt':'礼品卡',url:''},
 					{name:'integral','txt':'会员福利',url:''},
 					{name:'lock','txt':'账号安全',url:'/pages/ucenter/accountSecurity/accountSecurity'},
 					{name:'kefu-ermai','txt':'联系客服',url:'/pages/ucenter/relationService/relationService'},
-					{name:'question-circle','txt':'帮助中心',url:''},
-					{name:'chat','txt':'意见反馈',url:''},
+					{name:'question-circle','txt':'帮助中心',url:'/pages/ucenter/helpCenter/helpCenter'},
+					{name:'chat','txt':'意见反馈',url:'/pages/ucenter/feedback/feedback'},
 				],
 				show: false
 			}
