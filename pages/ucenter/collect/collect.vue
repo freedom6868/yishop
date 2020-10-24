@@ -15,8 +15,7 @@
 
 <script>
 	import {
-		getCollectList,
-		getCollect
+		getCollectList
 	} from '../../../api/uncenter/collectApi.js'
 	import {
 		addOrCannelCollect

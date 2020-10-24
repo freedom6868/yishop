@@ -142,6 +142,17 @@
             "style" : {
 				"navigationBarTitleText": "账号安全"
 			}
+        },{
+            "path" : "pages/ucenter/helpCenter/helpCenter",
+            "style" : {
+				"navigationBarTitleText": "帮助中心"
+			}
+        }
+        ,{
+            "path" : "pages/ucenter/feedback/feedback",
+            "style" : {
+				"navigationBarTitleText": "意见反馈"
+			}
         }
     ],
 	"globalStyle": {
