@@ -75,7 +75,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.container {
 		background: #f4f4f4;
 		min-height: 100%;
