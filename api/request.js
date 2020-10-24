@@ -1,4 +1,5 @@
-const baseURL = 'http://47.106.90.23:8360/api/';
+// const baseURL = 'http://47.106.90.23:8360/api/';
+const baseURL = http://shopapi.homi168.com/api/;
 
 function request(option){
 	return new Promise((resolve,reject)=>{
