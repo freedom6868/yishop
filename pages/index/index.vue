@@ -40,7 +40,7 @@
 			<!-- </navigator> -->
 		</view>
 
-		<!-- 制造商直供图片 -->
+		<!-- 制造商直供图片 -->                                                                                                            
 		<view class="manufacturer">
 			<view url="" v-for="item in BrandList" :key="item.id" @click="ckGoods(item.id)" class="manubox">
 				<view class="manuImg">

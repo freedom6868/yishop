@@ -154,6 +154,10 @@
 				"navigationBarTitleText": "意见反馈"
 			}
         }
+        ,{
+            "path" : "pages/ucenter/coupon/coupon",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

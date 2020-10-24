@@ -112,6 +112,7 @@
 					})
 					return false;
 				}
+				
 				if(this.address.errno === 0){
 					//生成订单
 					var res = await postOrderSubmit(this.addressId,this.couponId);
