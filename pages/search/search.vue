@@ -66,7 +66,7 @@
 			</view>
 			<!-- 分类 -->
 			<view class="fixed " v-if="categoryFilter">
-				<view :class="[iitem.id == categoryId ? 'active1' : 'text']"  v-for="(iitem,index) in filterCategory" :key='iitem.id' @click="selectCategory(index,iitem.id)">
+				<view :class="[iitem.id == categoryId? 'active1' : 'text']"  v-for="(iitem,index) in filterCategory" :key='iitem.id' @click="selectCategory(index,iitem.id)">
 					{{iitem.name}}
 				</view>
 			</view>
@@ -226,8 +226,6 @@
 				this.categoryId = id;
 				this.getgoodData()
 				console.log(this.filterCategory)
-				// http://47.106.90.23:8360/api/goods/list?keyword=&page=1&size=20&sort=id&order=asc&categoryld=1010000
-				// http://47.106.90.23:8360/api/goods/list?keyword=&page=1&size=20&sort=id&order=asc&categoryId=1010000
 
 
 
