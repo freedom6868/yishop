@@ -46,7 +46,7 @@
 					{name:'star','txt':'我的收藏',url:'/pages/ucenter/collect/collect'},
 					{name:'map','txt':'地址管理',url:'/pages/ucenter/address/address'},
 					{name:'list-dot','txt':'我的足迹',url:'/pages/ucenter/footprint/footprint'},
-					{name:'coupon','txt':'优惠券',url:''},
+					{name:'coupon','txt':'优惠券',url:'/pages/ucenter/coupon/coupon'},
 					{name:'gift','txt':'礼品卡',url:''},
 					{name:'integral','txt':'会员福利',url:''},
 					{name:'lock','txt':'账号安全',url:'/pages/ucenter/accountSecurity/accountSecurity'},

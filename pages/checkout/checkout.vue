@@ -50,14 +50,14 @@
 						<text class="txt">￥{{freightPrice}}</text>
 					</view>
 				</view>
-				<!-- <view class="order-item no-border">
+				<view class="order-item no-border" @click="ToCoupon">
 					<view class="l">
 						<text class="name">优惠券</text>
 					</view>
 					<view class="r">
 						<text class="txt">-￥{{couponPrice}}</text>
 					</view>
-				</view> -->
+				</view>
 			</view>
 			<!-- 订单商品 -->
 			 <view class="goods-items">
@@ -78,8 +78,8 @@
 		</view>
 		<!-- 底部 -->
 		<view class="order-total">
-		        <view class="l">实付：￥{{cartTotal.checkedGoodsAmount}}</view>
-		        <view class="r" @click="submitOrder">去付款</view>
+			<view class="l">实付：￥{{cartTotal.checkedGoodsAmount}}</view>
+			<view class="r" @click="submitOrder">去付款</view>
 		</view>
 	</view>
 </template>
@@ -103,6 +103,12 @@
 			}
 		},
 		methods: {
+			//跳转优惠页面
+			ToCoupon(){
+				uni.navigateTo({
+					url:"../ucenter/coupon/coupon"
+				})
+			},
 			//支付
 			async submitOrder(){
 				if(this.addressList.length < 0){
@@ -150,6 +156,7 @@
 						icon:"none"
 					})
 				}
+				console.log(res.data.cartTotal)
 			},
 			//获取地址
 			async getAddressList(){
