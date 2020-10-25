@@ -19,9 +19,7 @@
 				<text class="desc">{{goods.goods_brief}}</text>
 				<text class="price">&yen;{{goods.retail_price}}</text>
 				<view class="brand" v-if="brand.name" @click="goBrandDetail">
-					<!-- <navigator url=""> -->
 					<text>{{brand.name}}</text>
-					<!-- </navigator> -->
 				</view>
 			</view>
 		</view>
@@ -43,7 +41,6 @@
 				</view>
 			</view>
 			<view class="matter left">
-				<!-- <view class="item"> -->
 				<view class="info">
 					<view class="user">
 						<image :src="comment.data.avatar" class="img" mode=""></image>
@@ -60,7 +57,6 @@
 					</block>
 
 				</view>
-				<!-- </view> -->
 			</view>
 		</view>
 
@@ -120,14 +116,33 @@
 				<image @click="openCartPage" class="icon" src="../../static/images/ic_menu_shoping_nor.png" mode=""></image>
 			</view>
 
-			<view class="btn_right">
-				立即购买
+			<view class="btn_right" @click="showShare">
+				分享
 			</view>
 			<view class="btn_right addCart" @click="addToCart">
 				加入购物车
 			</view>
 		</view>
-
+		<!-- 分享 -->
+		<view class="share" :class="isShowShare ? 'share_show' : '' " @click="showShare">
+			<view class="share_box" :class="isShowShare ? 'share_box_show' : '' ">
+				<button type="default" class="share_item" open-type="share">
+					<image src="../../static/images/wechat.png" mode=""></image>
+					<view class="text">分享好友</view>
+				</button>
+				<button type="default" class="share_item">
+					<image src="../../static/images/circleOfFriends.png" mode="" @click="eventDraw"></image>
+					<view class="text">生成海报</view>
+				</button>
+				
+				<view class="poster">
+					<image :src="shareImage" class="share-image"></image>
+					<canvasdrawer painting="painting" class="canvasdrawer" bind:getImage="eventGetImage"/>
+				</view>
+				
+			</view>
+		</view>
+		
 		<!-- 选规格 -->
 		<view class="attr-pop-box" :class="isShowDetail ? 'attr-pop-box_show' : 'attr-pop-box' ">
 			<view class="attr-pop" :class="isShowDetail ? 'attr_pop_show' : 'attr-pop'">
@@ -197,7 +212,10 @@
 				checkedSpecText: ['请选择规格数量'],
 				specificationList: [], //规格列表
 				isShowDetail: false,
+				isShowShare: false,
 				number: 1, //加购数量
+				painting: {},
+				shareImage: ''
 
 			}
 		},
@@ -496,13 +514,150 @@
 				this.isShowDetail = !this.isShowDetail;
 				this.getCartGoodsNumber()
 				// console.log("加入购物车")
-			}
+			},
+			// 是否展示分享 
+			showShare() {
+				this.isShowShare = !this.isShowShare
+			},
+			// 生成海报
+			eventDraw () {
+			    wx.showLoading({
+			      title: '绘制分享图片中',
+			      mask: true
+			    })
+			    this.painting = {
+			        width: 375,
+			        height: 555,
+			        clear: true,
+			        views: [
+			          // 背景图
+			          {
+			            type: 'image',
+			            url: 'https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2446485085,2752527560&fm=26&gp=0.jpg',
+			            top: 0,
+			            left: 0,
+			            width: 375,
+			            height: 555
+			          },
+			        
+			          // 头像
+			          {
+			            type: 'image',
+			            url: 'https://thirdwx.qlogo.cn/mmopen/vi_32/ZHFmLTNlgJCp5SRUbess6OsaFW7I4UdxCbj1lO4xIibAeqzQBfQ6D6FYbIuH5QaCD0ACicTm6xOjsBTiaicCKBF2yA/132',
+			            top: 27.5,
+			            left: 29,
+			            width: 54,
+			            height: 54
+			          },
+			          // 头像外层的镂空圆形
+			          {
+			            type: 'image',
+			            url: '../../images/dot.png',
+			            top: 6,
+			            left: 6,
+			            width: 100,
+			            height: 100
+			          },
+			          {
+			            type: 'text',
+			            content: '胡里',
+			            fontSize: 16,
+			            color: '#000',
+			            textAlign: 'left',
+			            top: 33,
+			            left: 96,
+			            bolder: true
+			          },
+			          {
+			            type: 'text',
+			            content: '分享给你一件好货',
+			            fontSize: 15,
+			            color: '#000',
+			            textAlign: 'left',
+			            top: 59.5,
+			            left: 96
+			          },
+			          // 商品图片
+			          {
+			            type: 'image',
+			            url: 'http://yanxuan.nosdn.127.net/767b370d07f3973500db54900bcbd2a7.png',
+			            top: 136,
+			            left: 42.5,
+			            width: 290,
+			            height: 290
+			          },
 			
-
-
+			          // 商品标题
+			          {
+			            type: 'text',
+			            content: '正品MAC魅可口红礼盒生日唇膏小辣椒Chili西柚情人',
+			            fontSize: 16,
+			            lineHeight: 21,
+			            color: '#383549',
+			            textAlign: 'left',
+			            top: 450,
+			            left: 29,
+			            width: 200,
+			            MaxLineNumber: 2,
+			            breakWord: true,
+			            bolder: true
+			          },
+			          // 商品价格
+			          {
+			            type: 'text',
+			            content: '￥0.00',
+			            fontSize: 24,
+			            color: '#E62004',
+			            textAlign: 'left',
+			            top: 500,
+			            left: 29,
+			            bolder: true
+			          },
+			          
+			          // 二维码图片
+			          {
+			            type: 'image',
+			            url: 'http://yanxuan.nosdn.127.net/767b370d07f3973500db54900bcbd2a7.png',
+			            top: 424,
+			            left: 270,
+			            width: 100,
+			            height: 100
+			          },
+			          {
+			            type: 'text',
+			            content: '长按识别二维码 或者发送给好友',
+			            fontSize: 12,
+			            color: '#ccc',
+			            textAlign: 'left',
+			            top: 520,
+			            left: 280,
+			            lineHeight: 20,
+			            MaxLineNumber: 2,
+			            breakWord: true,
+			            width: 86
+			          }
+			        ]
+			      }
+			    
+			  },
+			  eventGetImage() {}
+			
+		},
+		// 分享好友
+		onShareAppMessage(res) {  
+			console.log(res)  
+			if (res.from === 'button') {// 来自页面内分享按钮  
+				console.log(res.target)  
+			}  
+			return {  
+				title: this.goods.name,  
+				path: `pages/goods/goods?id=${this.$data.id}` ,  
+				success(resp){  
+					console.log(resp)  
+				}  
+			}  
 		},
 		onLoad(options) {
-			// console.log(options.id)
 			// 模拟商品id
 			this.$data.id = options.id;
 			// this.$data.id = '1181000';
@@ -926,7 +1081,60 @@
 				background: #b4282d;
 			}
 		}
-
+		.share {
+			position: fixed;
+			background: rgba(0, 0, 0, .5);
+			z-index: 8;
+			
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			display: none;
+			
+			.share_box {
+				
+				width: 100%;
+				height: auto;
+				max-height: 780rpx;
+				padding: 31.25rpx;
+				background: #fff;
+				position: fixed;
+				z-index: 9;
+				bottom: 100rpx;
+				display: none;
+				
+				
+				
+				.share_item {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					background-color: #fff;
+					
+					.text {
+						font-size: 24rpx;
+					}
+				}
+				
+				.share_item::after{ border: none;} 
+				
+				image {
+					width: 48rpx;
+					height: 48rpx;
+					// margin-bottom: 10rpx;
+				}
+			}
+			// 显示规格
+			.share_box_show {
+				display: flex;
+				justify-content: space-around;
+				animation:fadeIn 0.3s linear;
+			}
+		}
+		.share_show {
+			display: block;
+		}
 		.attr-pop-box {
 			
 			position: fixed;

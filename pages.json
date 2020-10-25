@@ -37,7 +37,11 @@
         ,{
             "path" : "pages/goods/goods",
             "style" : {
-				"navigationBarTitleText": "商品详情"
+				"navigationBarTitleText": "商品详情",
+				// "navigationBarTitleText": "canvasdrawer",
+				// "usingComponents": {
+					"canvasdrawer": "/canvasdrawer/canvasdrawer"
+				// }
 			}
         }
         ,{
