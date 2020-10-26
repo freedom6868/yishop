@@ -628,28 +628,28 @@
 							},
 
 							// 二维码图片
-							{
-								type: 'image',
-								url: 'http://yanxuan.nosdn.127.net/767b370d07f3973500db54900bcbd2a7.png',
-								top: 424,
-								left: 270,
-								width: 100,
-								height: 100,
+							// {
+							// 	type: 'image',
+							// 	url: 'http://yanxuan.nosdn.127.net/767b370d07f3973500db54900bcbd2a7.png',
+							// 	top: 424,
+							// 	left: 270,
+							// 	width: 100,
+							// 	height: 100,
 
-							},
-							{
-								type: 'text',
-								content: '长按识别二维码 或者发送给好友',
-								fontSize: 12,
-								color: '#ccc',
-								textAlign: 'left',
-								top: 520,
-								left: 280,
-								lineHeight: 20,
-								MaxLineNumber: 2,
-								breakWord: true,
-								width: 86
-							}
+							// },
+							// {
+							// 	type: 'text',
+							// 	content: '长按识别二维码 或者发送给好友',
+							// 	fontSize: 12,
+							// 	color: '#ccc',
+							// 	textAlign: 'left',
+							// 	top: 520,
+							// 	left: 280,
+							// 	lineHeight: 20,
+							// 	MaxLineNumber: 2,
+							// 	breakWord: true,
+							// 	width: 86
+							// }
 						]
 					}
 				}
