@@ -21,8 +21,8 @@
 				</view>
 				<view class="bottom">
 					<view class="useCondition">
-						<text :class="[details ? 'txt':'text']">【11.1-11.3狂欢开幕】全品类可用，新品可用；详情页标注不可用券的商品除外</text>
-						<view class="icon" @click="isShow">
+						<text :class="[item.details ? 'txt':'text']">【11.1-11.3狂欢开幕】全品类可用，新品可用；详情页标注不可用券的商品除外</text>
+						<view class="icon" @click="isShow(index)">
 							<image class="imge" src="../../../static/images/jt.png" mode="" />
 						</view>
 					</view>
@@ -40,7 +40,6 @@
 		data() {
 			return {
 				userId:0,
-				details:true,
 				couponList:[]
 			}
 		},
@@ -59,16 +58,17 @@
 				res.data.res.map(v=>{
 					v.use_end_date_time = moment.unix(v.use_end_date).format('YYYY.MM.DD');    // 2020/10/26
 					v.use_start_date_time = moment.unix(v.use_start_date).format('YYYY.MM.DD'); //YYYY-MM-DD HH:mm:ss
+					v.details = true;
 				})
 				this.couponList = res.data.res;
 				console.log(this.couponList)
 				
 			},
-			isShow(){
-				if(this.details == true){
-					this.details = false;
+			isShow(index){
+				if(this.couponList[index].details == true){
+					this.couponList[index].details = false
 				}else{
-					this.details = true;
+					this.couponList[index].details = true
 				}
 			}
 		},
