@@ -26,7 +26,7 @@
 				<view class="coupon-item">
 					<view class="l">
 						<text class="name">{{couponName !='' ? couponName : '请选择优惠劵'}}</text>
-						<text class="txt">{{couponCount}}张</text>
+						<text class="txt">{{couponName !='' ? type_money+'元' : couponCount+'张'}}</text>
 					</view>
 					<view class="r">
 						<image src="/static/images/address_right.png" mode=""></image>
@@ -93,6 +93,7 @@
 				cartGoods: [],
 				addressList:{},
 				couponName:'',
+				type_money:0.00,
 				couponCount:0,
 				freightPrice: 0.00,    //快递费
 				couponPrice: 0.00,     //优惠券的价格
@@ -106,13 +107,14 @@
 			async tempCheckedout(){
 				let res = await getCartCheckout(this.addressId,this.couponId);
 				if(res.errno === 0){
-					this.cartGoods = res.data.checkedGoodsList;
-					this.addressList = res.data.checkedAddress;
-					this.addressId = res.data.checkedAddress.id;
-					this.couponPrice = res.data.couponPrice;
+					this.cartGoods = res.data.checkedGoodsList;			  //商品
+					this.addressList = res.data.checkedAddress;			  //地址
+					this.addressId = res.data.checkedAddress.id;		  //地址id
+					this.couponPrice = res.data.couponPrice;			  
 				    this.freightPrice = res.data.freightPrice;
 					this.couponCount = res.data.couponCount;
-					this.couponName = res.data.checkedCoupon.name;
+					this.couponName = res.data.checkedCoupon.name; 		  //红包名
+					this.type_money = res.data.checkedCoupon.type_money;  //红包金额
 				    this.goodsTotalPrice = res.data.goodsTotalPrice;
 				    this.orderTotalPrice = res.data.orderTotalPrice;
 					this.userId = res.data.checkedAddress.user_id;
