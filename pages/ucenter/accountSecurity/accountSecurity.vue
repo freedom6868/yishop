@@ -2,7 +2,7 @@
 	<view>
 		<template>
 			<u-cell-group>
-				<u-cell-item icon="weixin-fill" title="微信名" :value="nickname"></u-cell-item>
+				<u-cell-item icon="weixin-fill" title="微信名" :value="nickname" @click="changName"></u-cell-item>
 				<u-cell-item icon="phone-fill" title="手机号" :value="mobile"  @click="open"></u-cell-item>
 			</u-cell-group>
 
@@ -12,7 +12,7 @@
 					<view style="display: flex; margin: 50rpx;">
 
 						<!-- 手机号码:<input type="tel"  maxlength="11" :v-model="phoneValue" :value="phoneValue" @input="onInput" :placeholder="mobile"/> -->
-						手机号码:<input type="tel" maxlength="11" @input="onInput" :placeholder="mobile" />
+						手机号码:<input style="margin-left: 10rpx;" type="tel" maxlength="11" @input="onInput" :placeholder="mobile" />
 					</view>
 				</u-modal>
 
@@ -38,6 +38,14 @@
 			}
 		},
 		methods: {
+			changName(){
+					uni.showToast({
+						title: '小程序与微信同号，请前往微信进行更改',
+						duration: 3000,
+						icon: 'none'
+					})
+			},
+			
 			async confirm() {
 				var userId = this.userId;
 				var mobile = this.phoneValue;
