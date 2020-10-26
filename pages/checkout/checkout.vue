@@ -139,7 +139,8 @@
 					return;
 				}
 				uni.navigateTo({
-					url:'../ucenter/coupon/coupon?userId='+this.userId
+					// url:'../../coupon/coupon?userId='+this.userId
+					url:'../coupon/coupon?userId='+this.userId
 				})
 			},
 			//支付

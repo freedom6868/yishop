@@ -17,7 +17,7 @@
 						<view class="name">{{item.name}}</view>
 						<view class="time">{{item.use_start_date_time}}-{{item.use_end_date_time}}</view>
 					</view>
-					<view class="right" @click="toCoupon">去使用</view>
+					<view class="right" @click="toCoupon(index)">去使用</view>
 				</view>
 				<view class="bottom">
 					<view class="useCondition">
@@ -34,8 +34,8 @@
 </template>
 
 <script>
-	import {getCouponApiData} from "../../../api/uncenter/couponApi.js"
-	import moment from "../../../utils/moment.js";
+	import {getCouponApiData} from "../../api/uncenter/couponApi.js"
+	import moment from "../../utils/moment.js";
 	export default {
 		data() {
 			return {
@@ -44,9 +44,12 @@
 			}
 		},
 		methods: {
-			toCoupon(){
-				uni.switchTab({
-					url:"../../index/index"
+			toCoupon(index){
+				console.log(index)
+				var couponId = this.couponList[index].coupon_id;
+				console.log(couponId)
+				uni.navigateTo({
+					url:'/pages/checkout/checkout?couponId='+couponId
 				})
 			},
 			async getCouponList(){

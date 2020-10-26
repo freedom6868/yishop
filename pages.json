@@ -167,6 +167,10 @@
             "path" : "pages/ucenter/coupon/coupon",
             "style" : {}
         }
+        ,{
+            "path" : "pages/coupon/coupon",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
