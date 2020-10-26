@@ -4,11 +4,9 @@
 			<text style="color: #F04A44;" class="icon iconfont icon-kefu"></text>
 			<button class="kefu" open-type="contact">联系客服</button>
 		</view>
+		
 		<button class='button' @click='addWechat'>复制添加客服微信</button>
 		<button class='button' @click="phone">点击拨打客服电话</button>
-
-
-
 	</view>
 </template>
 
@@ -43,8 +41,6 @@
 					}
 				})
 			},
-
-
 		}
 	}
 </script>

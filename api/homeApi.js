@@ -30,13 +30,7 @@ export function clearHistory(){
 
 // 获取搜索商品
 export function getGoodsList(keyword,page,size,sort,order,categoryId){
-	
-	// console.log("keyword",keyword),
-	// console.log('page',page)
-	// console.log('size',size)
-	console.log('sort',sort)
-	console.log('order',order)
-	// console.log('categoryld',categoryld)
+
 	return requert({
 		url : 'goods/list',
 		method:"GET",
