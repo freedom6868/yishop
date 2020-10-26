@@ -15,7 +15,6 @@
 						手机号码:<input style="margin-left: 10rpx;" type="tel" maxlength="11" @input="onInput" :placeholder="mobile" />
 					</view>
 				</u-modal>
-
 			</view>
 		</template>
 	</view>
@@ -49,7 +48,7 @@
 			async confirm() {
 				var userId = this.userId;
 				var mobile = this.phoneValue;
-				if (mobile.length < 11 && !(/1[3578][0-9]\d{8}/.test(mobile))) {
+				if (mobile.length < 11) {
 					uni.showToast({
 						title: '电话号规格不正确',
 						duration: 2000,
@@ -57,8 +56,17 @@
 					})
 					return
 				}
+				if (!(/1[34578][0-9]\d{8}/.test(mobile))) {
+					uni.showToast({
+						title: '电话号规格不正确',
+						duration: 2000,
+						icon: 'none'
+					})
+					return
+				}
+				
 				var {data} = await changeUserMobile(userId,mobile);
-				console.log(data)
+				// console.log(data)
 				uni.showToast({
 					title: data.msg,
 					duration: 2000,
