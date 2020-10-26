@@ -7,60 +7,63 @@
 			</view>
 		</view>
 		<view class="couponitem">
-			<view class="item">
+			<view class="item" v-for="(item,index) in couponList" :key="index">
 				<view class="wrapper">
 					<view class="left">
-						<text class="money">40</text>
+						<text class="money">{{item.type_money}}</text>
 						<text class="unit">元</text>
 					</view>
 					<view class="middle">
-						<view class="name">每满300减40</view>
-						<view class="time">2020.11.01-2020.11.03</view>
+						<view class="name">{{item.name}}</view>
+						<view class="time">{{item.use_start_date_time}}-{{item.use_end_date_time}}</view>
 					</view>
-					<view class="right">去使用</view>
+					<view class="right" @click="toCoupon(index)">去使用</view>
 				</view>
 				<view class="bottom">
 					<view class="useCondition">
 						<text :class="[details ? 'txt':'text']">【11.1-11.3狂欢开幕】全品类可用，新品可用；详情页标注不可用券的商品除外</text>
 						<view class="icon" @click="isShow">
-							<image class="imge" src="../../../static/images/jt.png" mode=""></image>
+							<image class="imge" src="../../../static/images/jt.png" mode="" />
 						</view>
 					</view>
 				</view>
 			</view>
-			<!-- <view class="item">
-				<view class="wrapper">
-					<view class="left">
-						<text class="money">40</text>
-						<text class="unit">元</text>
-					</view>
-					<view class="middle">
-						<view class="name">每满300减40</view>
-						<view class="time">2020.11.01-2020.11.03</view>
-					</view>
-					<view class="right">去使用</view>
-				</view>
-				<view class="bottom">
-					<view class="useCondition">
-						<text :class="[details ? 'txt':'text']">【11.1-11.3狂欢开幕】全品类可用，新品可用；详情页标注不可用券的商品除外</text>
-						<view class="icon" @click="isShow">
-							<image class="imge" src="../../../static/images/jt.png" mode=""></image>
-						</view>
-					</view>
-				</view>
-			</view> -->
+			
 		</view>
 	</view>
 </template>
 
 <script>
+	import {getCouponApiData} from "../../../api/uncenter/couponApi.js"
+	import moment from "../../../utils/moment.js";
 	export default {
 		data() {
 			return {
-				details:true
+				userId:0,
+				details:true,
+				couponList:[]
 			}
 		},
 		methods: {
+			toCoupon(index){
+				console.log(index)
+				var couponId = this.couponList[index].coupon_id;
+				console.log(couponId)
+				uni.navigateTo({
+					url:'/pages/checkout/checkout?couponId='+couponId
+				})
+			},
+			async getCouponList(){
+				var res = await getCouponApiData(this.userId);
+				console.log(res)
+				res.data.res.map(v=>{
+					v.use_end_date_time = moment.unix(v.use_end_date).format('YYYY.MM.DD');    // 2020/10/26
+					v.use_start_date_time = moment.unix(v.use_start_date).format('YYYY.MM.DD'); //YYYY-MM-DD HH:mm:ss
+				})
+				this.couponList = res.data.res;
+				console.log(this.couponList)
+				
+			},
 			isShow(){
 				if(this.details == true){
 					this.details = false;
@@ -68,6 +71,14 @@
 					this.details = true;
 				}
 			}
+		},
+		created(){
+			
+		},
+		onLoad(option) {
+			console.log(option.userId)
+			this.userId = option.userId;
+			this.getCouponList();
 		}
 	}
 </script>
