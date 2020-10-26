@@ -139,6 +139,7 @@
 			</view>
 		</view>
 		<view class="poster" :class="isShowPoster ? 'poster_show' : '' ">
+				<image class="close" src="../../static/images/close1.png" mode="" @click="isShowPoster = false"></image>
 				<image :src="shareImage" class="share-image" mode="aspectFit"></image>
 				<canvasdrawer :painting="painting" class="canvasdrawer" @getImage="eventGetImage" />
 				<button @click="eventSave" class="keep">保存到本地</button>
@@ -146,7 +147,7 @@
 		<!-- 选规格 -->
 		<view class="attr-pop-box" :class="isShowDetail ? 'attr-pop-box_show' : 'attr-pop-box' ">
 			<view class="attr-pop" :class="isShowDetail ? 'attr_pop_show' : 'attr-pop'">
-				<view class="close" @click="closeDetail">
+				<view class="close" @click="isShowDetail = false">
 					<image src="../../static/images/close.png" mode=""></image>
 				</view>
 				<view class="img-info">
@@ -258,7 +259,6 @@
 			},
 			// 轮播图图片预览
 			swiperImgInfo(imgIndex) {
-				console.log(1)
 				var arr = this.gallery.map(item => {
 					return item.img_url;
 				})
@@ -427,10 +427,6 @@
 			valChange(e) {
 				this.number = e.value;
 				console.log(this.value)
-			},
-			// 关闭规格
-			closeDetail() {
-				this.isShowDetail = false;
 			},
 			// 开启规格
 			openDetail() {
@@ -1194,12 +1190,21 @@
 			right: 0;
 			display: none;
 
-			image {
-				margin: 42rpx 0;
+			.close {
+				position: absolute;
+				top: 20rpx;
+				right: 35rpx;
+				width: 48rpx;
+				height: 48rpx;
+			}
+			.share-image {
+				margin-top: 80rpx;
 				width: 100%;
 				height: 70%;
 
 			}
+			
+			
 
 			.keep {
 				display: flex;
