@@ -130,19 +130,22 @@
 					<image src="../../static/images/wechat.png" mode=""></image>
 					<view class="text">分享好友</view>
 				</button>
-				<button type="default" class="share_item">
-					<image src="../../static/images/circleOfFriends.png" mode="" @click="eventDraw"></image>
+				<button type="default" class="share_item" @click="eventDraw">
+					<image src="../../static/images/circleOfFriends.png" mode="" ></image>
 					<view class="text">生成海报</view>
 				</button>
 				
-				<view class="poster">
-					<image :src="shareImage" class="share-image"></image>
-					<canvasdrawer painting="painting" class="canvasdrawer" bind:getImage="eventGetImage"/>
-				</view>
+				
 				
 			</view>
 		</view>
-		
+		<view class="poster" :class="isShowPoster ? 'poster_show' : '' ">
+			<image :src="shareImage" class="share-image" mode="aspectFit"></image>
+			<canvasdrawer :painting="painting" class="canvasdrawer" @getImage="eventGetImage"/>
+			<button @click="eventSave" class="keep">保存到本地</button>
+			<!-- <image :src="shareImage" class="share-image"></image>
+			<canvasdrawer painting="painting" class="canvasdrawer" bind:getImage="eventGetImage"/> -->
+		</view>
 		<!-- 选规格 -->
 		<view class="attr-pop-box" :class="isShowDetail ? 'attr-pop-box_show' : 'attr-pop-box' ">
 			<view class="attr-pop" :class="isShowDetail ? 'attr_pop_show' : 'attr-pop'">
@@ -213,6 +216,7 @@
 				specificationList: [], //规格列表
 				isShowDetail: false,
 				isShowShare: false,
+				isShowPoster: false,
 				number: 1, //加购数量
 				painting: {},
 				shareImage: ''
@@ -521,126 +525,160 @@
 			},
 			// 生成海报
 			eventDraw () {
-			    wx.showLoading({
-			      title: '绘制分享图片中',
-			      mask: true
+				this.isShowPoster = true;
+			    uni.showLoading({
+					title: '绘制分享图片中',
+					mask: true
 			    })
-			    this.painting = {
-			        width: 375,
-			        height: 555,
-			        clear: true,
-			        views: [
-			          // 背景图
-			          {
-			            type: 'image',
-			            url: 'https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2446485085,2752527560&fm=26&gp=0.jpg',
-			            top: 0,
-			            left: 0,
-			            width: 375,
-			            height: 555
-			          },
-			        
-			          // 头像
-			          {
-			            type: 'image',
-			            url: 'https://thirdwx.qlogo.cn/mmopen/vi_32/ZHFmLTNlgJCp5SRUbess6OsaFW7I4UdxCbj1lO4xIibAeqzQBfQ6D6FYbIuH5QaCD0ACicTm6xOjsBTiaicCKBF2yA/132',
-			            top: 27.5,
-			            left: 29,
-			            width: 54,
-			            height: 54
-			          },
-			          // 头像外层的镂空圆形
-			          {
-			            type: 'image',
-			            url: '../../images/dot.png',
-			            top: 6,
-			            left: 6,
-			            width: 100,
-			            height: 100
-			          },
-			          {
-			            type: 'text',
-			            content: '胡里',
-			            fontSize: 16,
-			            color: '#000',
-			            textAlign: 'left',
-			            top: 33,
-			            left: 96,
-			            bolder: true
-			          },
-			          {
-			            type: 'text',
-			            content: '分享给你一件好货',
-			            fontSize: 15,
-			            color: '#000',
-			            textAlign: 'left',
-			            top: 59.5,
-			            left: 96
-			          },
-			          // 商品图片
-			          {
-			            type: 'image',
-			            url: 'http://yanxuan.nosdn.127.net/767b370d07f3973500db54900bcbd2a7.png',
-			            top: 136,
-			            left: 42.5,
-			            width: 290,
-			            height: 290
-			          },
-			
-			          // 商品标题
-			          {
-			            type: 'text',
-			            content: '正品MAC魅可口红礼盒生日唇膏小辣椒Chili西柚情人',
-			            fontSize: 16,
-			            lineHeight: 21,
-			            color: '#383549',
-			            textAlign: 'left',
-			            top: 450,
-			            left: 29,
-			            width: 200,
-			            MaxLineNumber: 2,
-			            breakWord: true,
-			            bolder: true
-			          },
-			          // 商品价格
-			          {
-			            type: 'text',
-			            content: '￥0.00',
-			            fontSize: 24,
-			            color: '#E62004',
-			            textAlign: 'left',
-			            top: 500,
-			            left: 29,
-			            bolder: true
-			          },
-			          
-			          // 二维码图片
-			          {
-			            type: 'image',
-			            url: 'http://yanxuan.nosdn.127.net/767b370d07f3973500db54900bcbd2a7.png',
-			            top: 424,
-			            left: 270,
-			            width: 100,
-			            height: 100
-			          },
-			          {
-			            type: 'text',
-			            content: '长按识别二维码 或者发送给好友',
-			            fontSize: 12,
-			            color: '#ccc',
-			            textAlign: 'left',
-			            top: 520,
-			            left: 280,
-			            lineHeight: 20,
-			            MaxLineNumber: 2,
-			            breakWord: true,
-			            width: 86
-			          }
-			        ]
-			      }
 			    
-			  },
-			  eventGetImage() {}
+				this.painting = {
+					width: 375,
+					height: 555,
+					clear: true,
+					views: [
+						// 背景图
+						{
+						  type: 'image',
+						  url: 'https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2446485085,2752527560&fm=26&gp=0.jpg',
+						  top: 0,
+						  left: 0,
+						  width: 375,
+						  height: 555
+						},
+									        
+						// 头像
+						{
+						  type: 'image',
+						  url: 'https://thirdwx.qlogo.cn/mmopen/vi_32/ZHFmLTNlgJCp5SRUbess6OsaFW7I4UdxCbj1lO4xIibAeqzQBfQ6D6FYbIuH5QaCD0ACicTm6xOjsBTiaicCKBF2yA/132',
+						  top: 38,
+						  left: 38.5,
+						  width: 42,
+						  height: 42
+						},
+						// 头像外层的镂空圆形
+						{
+						  type: 'image',
+						  url: '../../static/images/cc-dot-o.png',
+						  top: 0,
+						  left: 0,
+						  width: 118,
+						  height: 118
+						},
+						// 头像外层的镂空圆形
+						{
+						  type: 'image',
+						  url: '../../static/images/cc-dot-o.png',
+						  top: 0,
+						  left: 0,
+						  width: 119,
+						  height: 119
+						},
+						{
+						  type: 'text',
+						  content: '胡里',
+						  fontSize: 16,
+						  color: '#000',
+						  textAlign: 'left',
+						  top: 33,
+						  left: 96,
+						  bolder: true
+						},
+						{
+						  type: 'text',
+						  content: '分享给你一件好货',
+						  fontSize: 15,
+						  color: '#000',
+						  textAlign: 'left',
+						  top: 59.5,
+						  left: 96
+						},
+						// 商品图片
+						{
+						  type: 'image',
+						  url: 'http://yanxuan.nosdn.127.net/767b370d07f3973500db54900bcbd2a7.png',
+						  top: 136,
+						  left: 42.5,
+						  width: 290,
+						  height: 290
+						},
+									
+						// 商品标题
+						{
+						  type: 'text',
+						  content: '正品MAC魅可口红礼盒生日唇膏小辣椒Chili西柚情人',
+						  fontSize: 16,
+						  lineHeight: 21,
+						  color: '#383549',
+						  textAlign: 'left',
+						  top: 450,
+						  left: 29,
+						  width: 200,
+						  MaxLineNumber: 2,
+						  breakWord: true,
+						  bolder: true
+						},
+						// 商品价格
+						{
+						  type: 'text',
+						  content: '￥0.00',
+						  fontSize: 24,
+						  color: '#E62004',
+						  textAlign: 'left',
+						  top: 500,
+						  left: 29,
+						  bolder: true
+						},
+						
+						// 二维码图片
+						{
+						  type: 'image',
+						  url: 'http://yanxuan.nosdn.127.net/767b370d07f3973500db54900bcbd2a7.png',
+						  top: 424,
+						  left: 270,
+						  width: 100,
+						  height: 100,
+						  
+						},
+						{
+						  type: 'text',
+						  content: '长按识别二维码 或者发送给好友',
+						  fontSize: 12,
+						  color: '#ccc',
+						  textAlign: 'left',
+						  top: 520,
+						  left: 280,
+						  lineHeight: 20,
+						  MaxLineNumber: 2,
+						  breakWord: true,
+						  width: 86
+						}
+					]
+				}
+			},
+			eventSave () {
+			    uni.saveImageToPhotosAlbum({
+					filePath: this.shareImage,
+					success (res) {
+						uni.showToast({
+							title: '保存图片成功',
+							icon: 'success',
+							duration: 2000
+						})
+					}
+				})
+			},
+			eventGetImage(event) {
+				console.log(111)
+				uni.hideLoading()
+				// const { tempFilePath, errMsg } = event.detail
+				const result = event.detail.__args__
+				const tempFilePath = result[0].tempFilePath
+				const errMsg = result[0].errMsg
+				if (errMsg === 'canvasdrawer:ok') {
+					this.shareImage = tempFilePath
+					this.painting = {}
+				}
+			}
 			
 		},
 		// 分享好友
@@ -1134,6 +1172,45 @@
 		}
 		.share_show {
 			display: block;
+		}
+		.poster {
+			position: fixed;
+			background: rgba(0, 0, 0, .5);
+			z-index: 8;
+			
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			display: none;
+			
+			image {
+				margin: 42rpx 0;
+				width: 100%;
+				height: 70%;
+				
+			}
+			
+			.keep {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 70%;
+				height: 80rpx;
+				margin-top: 20rpx;
+				border-radius: 40rpx;
+				background-color: #b4282d;
+				color: #fff;
+				font-size: 24rpx;
+				
+			}
+		}
+		
+		.poster_show {
+			display: block;
+			// display: flex;
+			// flex-direction: column;
+			// align-items: center;
 		}
 		.attr-pop-box {
 			

@@ -38,9 +38,17 @@
             "path" : "pages/goods/goods",
             "style" : {
 				"navigationBarTitleText": "商品详情",
-				"canvasdrawer": "/canvasdrawer/canvasdrawer"
+				"usingComponents": {
+					"canvasdrawer" :"/components/uniapp-canvas-drawer/uniapp-canvas-drawer"
+				}
 			}
-        }
+        },
+		{
+		    "path" : "components/uniapp-canvas-drawer/uniapp-canvas-drawer",
+		    "style" : {
+				
+			}
+		}
         ,{
             "path" : "pages/search/search",
             "style" : {
