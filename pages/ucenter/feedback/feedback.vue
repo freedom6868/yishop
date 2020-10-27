@@ -13,15 +13,25 @@
 		</view>
 		<view class="messageBoard">
 			<text>反馈内容：</text>
-			<textarea class="input-box"
+			<!-- <textarea class="input-box"
 			v-model="content"
 			maxlength="500"
 			placeholder="对我们网站,商品,服务,您还有什么建议吗？您还希望在严选上买到什么？请告诉我们..."
-			/>
+			/> -->
+			<view class="box">
+				<textarea placeholder-class="line" maxlength="500" v-model="content" placeholder="对我们网站,商品,服务,您还有什么建议吗？您还希望在严选上买到什么？请告诉我们..." />
+				<view class="clipboard">
+					反馈内容
+					<u-icon name="arrow-down" class="icon" :size="20"></u-icon>
+				</view>
+			</view>
 		</view>
 		<view class="cellphone">
-			<text>手机号码:</text>
-			<input type="number" placeholder="请输入你的手机号码" maxlength="11" v-model="cellphone" />
+			<!-- <text>手机号码:</text>
+			<input type="number" placeholder="请输入你的手机号码" maxlength="11" v-model="cellphone" /> -->
+			<view class="form-item">
+				<input type="number"  maxlength="11"  v-model="cellphone" class="input" placeholder='联系电话 ' auto-focus />
+			</view>
 		</view>
 		<button type="default" @click="goBack">提交</button>
 	</view>
@@ -39,6 +49,7 @@
 			}
 		},
 		methods: {
+			
 			bindPickerChange: function(e) {
 				this.index = e.target.value
 			},
@@ -93,13 +104,13 @@
 
 <style lang="scss" scoped>
 	.feedback {
-		height: 2000rpx;
+		height: auto;
 		background-color: #FFFFFF;
 
 		.title {
 			text {
 				font-weight: bold;
-				font-size: 40rpx;
+				font-size: 44rpx;
 			}
 		}
 
@@ -109,14 +120,14 @@
 			padding: 30rpx;
 
 			text {
-				font-size: 38rpx;
+				font-size: 34rpx;
 			}
 
 			.menu {
 				width: 300rpx;
 				height: 60rpx;
 				border: 2rpx solid #C0C0C0;
-				font-size: 38rpx;
+				font-size: 34rpx;
 			}
 		}
 		.messageBoard{
@@ -124,24 +135,43 @@
 				font-size: 40rpx;
 				margin-left: 30rpx;
 			}
-			.input-box{
-				width: 90%;
-				height: 340rpx;
-				margin: 30rpx;
-				padding: 10rpx;
-				border: 2rpx solid #C0C0C0;
+			
+			.box {
+				padding-right: 40rpx;
+				textarea {
+					// width: 100%;
+					height: 300rpx;
+					background-color: #f7f7f7;
+					line-height: 60rpx;
+					margin: 40rpx auto;
+					padding: 20rpx;
+				}
+				.clipboard {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					font-size: 26rpx;
+					color: $u-tips-color;
+					height: 80rpx;
+					.icon {
+						margin-top: 6rpx;
+						margin-left: 10rpx;
+					}
+				}
 			}
 		}
 		.cellphone{
-			display: flex;
-			text{
-				font-size: 40rpx;
-				padding:0 10rpx;
-			}
-			input{
-				height: 60rpx;
-				width: 400rpx;
-				border: 2rpx solid #C0C0C0;
+			.form-item{
+				height: 116rpx;
+				border-bottom: 2rpx solid #d9d9d9;
+				display: flex;
+				align-items: center;
+				padding: 0 32rpx;
+				
+				.input{
+					flex: 1;
+					height: 44rpx;
+				}
 			}
 		}
 	}

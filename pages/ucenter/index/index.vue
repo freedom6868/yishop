@@ -80,16 +80,6 @@
 						url: '/pages/ucenter/coupon/coupon'
 					},
 					{
-						name: 'gift',
-						'txt': '礼品卡',
-						url: ''
-					},
-					{
-						name: 'integral',
-						'txt': '会员福利',
-						url: ''
-					},
-					{
 						name: 'lock',
 						'txt': '账号安全',
 						url: '/pages/ucenter/accountSecurity/accountSecurity'
