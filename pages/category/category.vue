@@ -83,7 +83,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.topmenu {
 		padding: 20rpx 0;
 		font-size: 30rpx;
