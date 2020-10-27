@@ -71,6 +71,11 @@
 		},
 		onLoad() {
 			this.getAddressList();
+		},
+		onUnload() {
+			uni.switchTab({
+				url: '/pages/ucenter/index/index'
+			})
 		}
 	}
 </script>

@@ -228,7 +228,7 @@
 				}
 				
 				.kefubutton {
-					height: 100rpx;
+					height: 96rpx;
 					background-color: #FFFFFF;
 					
 					display: flex;

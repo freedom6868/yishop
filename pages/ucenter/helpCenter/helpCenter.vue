@@ -1,16 +1,11 @@
 <template>
 	<view class="helpCenter">
 		<text class="title">常见问题</text>
-		<!-- 分割线 -->
-		<view class="partingLine"></view>
-		<view class="item" v-for="(item,index) in itemList" :key="index">
-			<view class="issue">
-				<text>{{index+1}}.</text><text>问 : {{item.issue}}</text>
-			</view>
-			<view class="answer">
-				<text>答 : {{item.answer}}</text>
-			</view>
-		</view>
+		<u-collapse>
+			<u-collapse-item :title="item.issue" v-for="(item, index) in itemList" :key="index">
+				{{item.answer}}
+			</u-collapse-item>
+		</u-collapse>
 		
 	</view>
 </template>
@@ -36,22 +31,10 @@
 	.helpCenter{
 		background-color: #FFFFFF;
 		.title{
-			font-size: 70rpx;
+			display: inline-block;
+			font-size: 40rpx;
+			text-align: center;
+			width: 100%;
 		}
-		.partingLine{
-			margin: 40rpx 0;
-			border-bottom: 2rpx solid #C0C0C0;
-		}
-		.item{
-			padding: 10rpx 0;
-			.issue{
-				font-size: 40rpx;
-			}
-			.answer{
-				font-size: 35rpx;
-				color: #747474;
-			}
-		}
-		
 	}
 </style>
