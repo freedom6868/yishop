@@ -71,7 +71,7 @@
 		</view>
 
 		<view class="goods_desc" v-if="goodsDesc">
-			<image v-for="(itme,index) in goodsDesc" :key='index' :src="itme" mode="widthFix" @click="imgInfo(index)"></image>
+			<image v-for="(itme,index) in goodsDesc" :key='index' :src="itme" mode="widthFix" @click="imgInfo(goodsDesc,index)"></image>
 		</view>
 
 		<!-- 常见问题 -->
@@ -104,6 +104,8 @@
 
 			</view>
 		</view>
+		
+		<!-- 底部tabbar -->
 		<view class="bottom-btn">
 			<view class="btn_left" @click="addCannelCollect">
 				<image v-if="userHasCollect == 0" class="icon" src="../../static/images/icon_collect.png" mode=""></image>
@@ -122,6 +124,7 @@
 				加入购物车
 			</view>
 		</view>
+		
 		<!-- 分享 -->
 		<view class="share" :class="isShowShare ? 'share_show' : '' " @click="showShare">
 			<view class="share_box" :class="isShowShare ? 'share_box_show' : '' ">
@@ -133,17 +136,18 @@
 					<image src="../../static/images/circleOfFriends.png" mode=""></image>
 					<view class="text">生成海报</view>
 				</button>
-
-
-
 			</view>
 		</view>
+		
+		
 		<view class="poster" :class="isShowPoster ? 'poster_show' : '' ">
 				<image class="close" src="../../static/images/close1.png" mode="" @click="isShowPoster = false"></image>
 				<image :src="shareImage" class="share-image" mode="aspectFit"></image>
 				<canvasdrawer :painting="painting" class="canvasdrawer" @getImage="eventGetImage" />
 				<button @click="eventSave" class="keep">保存到本地</button>
 		</view>
+		
+		
 		<!-- 选规格 -->
 		<view class="attr-pop-box" :class="isShowDetail ? 'attr-pop-box_show' : 'attr-pop-box' ">
 			<view class="attr-pop" :class="isShowDetail ? 'attr_pop_show' : 'attr-pop'">
@@ -178,7 +182,7 @@
 					<!-- 数量 -->
 					<view class="number-item">
 						<view class="name">数量</view>
-						<u-number-box :max="10" :min="1" v-model="number" @change="valChange()"></u-number-box>
+						<u-number-box :max="10" :min="1" v-model="number"></u-number-box>
 					</view>
 				</view>
 			</view>
@@ -188,7 +192,7 @@
 </template>
 
 <script>
-	import uDivider from '../../uview-ui/components/u-divider/u-divider.vue'
+	import uDivider from '@/uview-ui/components/u-divider/u-divider.vue'
 	import {
 		getGoodsDeatil,
 		getGoodsRelated,
@@ -256,35 +260,34 @@
 					result.push(data[1])
 				}
 				this.goodsDesc = result;
+			},		
+			
+			// 图片预览
+			getPreviewImage(arr,imgIndex){
+				uni.previewImage({
+					urls: arr,
+					current: arr[imgIndex],
+				})
 			},
 			// 轮播图图片预览
 			swiperImgInfo(imgIndex) {
 				var arr = this.gallery.map(item => {
 					return item.img_url;
 				})
-				uni.previewImage({
-					urls: arr,
-					current: arr[imgIndex],
-				})
+				this.getPreviewImage(arr,imgIndex);
 			},
 			// 商品详情图片预览
 			imgInfo(imgIndex) {
-				uni.previewImage({
-					urls: this.goodsDesc,
-					current: this.goodsDesc[imgIndex],
-				})
+				this.getPreviewImage(this.goodsDesc,imgIndex);
 			},
 			// 评论图片预览
 			getCommentImg(imgIndex) {
 				const arr = this.comment.data.pic_list.map(item => {
 					return item.pic_url
 				})
-				uni.previewImage({
-					urls: arr,
-					current: arr[imgIndex],
-				})
-
+				this.getPreviewImage(arr,imgIndex);
 			},
+			
 			// 获取大家都在看
 			async getGoodsRelatedInfo() {
 				const res = await getGoodsRelated({
@@ -325,11 +328,7 @@
 					valueId: this.$data.id
 				});
 				if (res.errno == 0) {
-					if (res.data.type === 'delete') {
-						this.userHasCollect = 0
-					} else if (res.data.type === 'add') {
-						this.userHasCollect = 1
-					}
+					res.data.type === 'delete' ? (this.userHasCollect = 0) : (this.userHasCollect = 1)
 				} else {
 					uni.showToast({
 						title: res.errmsg,
@@ -423,11 +422,6 @@
 					}
 				})
 			},
-			// 进步器
-			valChange(e) {
-				this.number = e.value;
-				console.log(this.value)
-			},
 			// 开启规格
 			openDetail() {
 				this.isShowDetail = true;
@@ -447,7 +441,7 @@
 			},
 			// 加入购物车
 			async addToCart() {
-				this.isShowShare = false; 
+				this.isShowShare = false;  //关闭分享
 				// 判断是否打开规格页面
 				if (!this.isShowDetail) {
 					this.openDetail()
@@ -663,7 +657,6 @@
 				})
 			},
 			eventGetImage(event) {
-				console.log(111)
 				uni.hideLoading()
 				// const { tempFilePath, errMsg } = event.detail
 				const result = event.detail.__args__
