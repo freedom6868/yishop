@@ -66,7 +66,8 @@
 			</view>
 			<!-- 分类 -->
 			<view class="fixed " v-if="categoryFilter">
-				<view :class="[iitem.id == categoryId? 'active1' : 'text']"  v-for="(iitem,index) in filterCategory" :key='iitem.id' @click="selectCategory(index,iitem.id)">
+				<view :class="[iitem.id == categoryId? 'active1' : 'text']" v-for="(iitem,index) in filterCategory" :key='iitem.id'
+				 @click="selectCategory(index,iitem.id)">
 					{{iitem.name}}
 				</view>
 			</view>
@@ -672,7 +673,7 @@
 	.keyword-box .keyword-block {
 		padding: 10upx 0;
 		background-color: #FFFFFF;
-		
+
 		margin-bottom: 20rpx;
 	}
 
