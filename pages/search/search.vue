@@ -100,7 +100,7 @@
 		getSearchs,
 		clearHistory,
 		getGoodsList
-	} from '../../api/homeApi.js';
+	} from '@/api/homeApi.js';
 	//引用mSearch组件，如不需要删除即可
 	import mSearch from '@/components/mehaotian-search-revision/mehaotian-search-revision.vue';
 	export default {
@@ -236,7 +236,7 @@
 			// 跳往商品详情页面
 			goGoodsDetail(id) {
 				uni.navigateTo({
-					url: '../goods/goods?id=' + id
+					url: '/pages/goods/goods?id=' + id
 				})
 			},
 			//监听输入

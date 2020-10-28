@@ -2,7 +2,7 @@
 	<view class="indexBox">
 		<!-- 首页搜索框 -->
 		<view class="search">
-			<navigator url="../search/search">
+			<navigator url="/pages/search/search">
 				<view class="searchBox">
 					<image class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/search2-2fb94833aa.png"
 					 mode=""></image>
@@ -84,7 +84,7 @@
 
 		<!-- 专题精选 -->
 		<view class="supply">
-			<navigator url="../topic/topic" open-type="switchTab">
+			<navigator url="/pages/topic/topic" open-type="switchTab">
 				<text class="supplyText">专题精选</text>
 			</navigator>
 		</view>
@@ -120,7 +120,7 @@
 		getHome,
 		getGoodsCounts
 	} from '@/api/homeApi.js';
-	import specialBanner from '../../components/EtherealWheat-banner/specialBanner.vue'
+	import specialBanner from '@/components/EtherealWheat-banner/specialBanner.vue'
 	export default {
 		data() {
 			return {
@@ -204,7 +204,7 @@
 				var id = url.split('id=')[1];
 				var index = item.id - 1;
 				uni.navigateTo({
-					url: '../category/category?id=' + id + '&index=' + index
+					url: '/pages/category/category?id=' + id + '&index=' + index
 				})
 
 			},
@@ -212,14 +212,14 @@
 			sunnewGood(id) {
 				console.log(id)
 				uni.navigateTo({
-					url: "../goods/goods?id=" + id
+					url: "/pages/goods/goods?id=" + id
 
 				})
 			},
 			// 跳转到ck制造商
 			ckGoods(id) {
 				uni.navigateTo({
-					url: "../brandDetail/brandDetail?id=" + id
+					url: "/pages/brandDetail/brandDetail?id=" + id
 				})
 			}
 		},
