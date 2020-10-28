@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<view class="address-box">
-			<view class="address-item" @click="selectAddress">
+			<view class="address-item" @click="selectAddress" v-if="!!!addressList">
 				<view class="l">
 					<text class="name">{{addressList.name}}</text>
 					<text class="default" v-if="addressList.is_default===1">默认</text>
@@ -14,7 +14,7 @@
 					<image src="/static/images/address_right.png"></image>
 				</view>
 			</view>
-			 <view class="address-item address-empty" @click="addAddress" v-if="addressList.id <= 0">
+			<view class="address-item address-empty" @click="addAddress" v-if="!!addressList">
 				<view class="m">
 				   还没有收货地址，去添加
 				</view>
