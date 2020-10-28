@@ -1,39 +1,25 @@
 <template>
-	<view class="feedback">
-		<view class="title">
-			<text>关于严选，我们还有很多希望与您交流</text>
-		</view>
-		<view class="uni-list-cell-db">
-			<text>反馈类型：</text>
-			<view class="menu">
-				<picker @change="bindPickerChange" :value="index" :range="array">
-					<view class="uni-input">{{array[index]}}</view>
-				</picker>
-			</view>
-		</view>
-		<view class="messageBoard">
-			<text>反馈内容：</text>
-			<!-- <textarea class="input-box"
-			v-model="content"
-			maxlength="500"
-			placeholder="对我们网站,商品,服务,您还有什么建议吗？您还希望在严选上买到什么？请告诉我们..."
-			/> -->
-			<view class="box">
-				<textarea placeholder-class="line" maxlength="500" v-model="content" placeholder="对我们网站,商品,服务,您还有什么建议吗？您还希望在严选上买到什么？请告诉我们..." />
-				<view class="clipboard">
-					反馈内容
-					<u-icon name="arrow-down" class="icon" :size="20"></u-icon>
+	<view class="feedback_container">
+
+		<picker @change="bindPickerChange" :value="index" :range="array">
+			<view class="picker">
+				<view class="fb-type">
+					<view class="type-label">{{array[index]}}</view>
+					<image class="type-icon img_size" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/pickerArrow-a8b918f05f.png"></image>
 				</view>
 			</view>
+		</picker>
+
+		<view class="messageBoard">
+			<textarea class="left" placeholder-class="line" maxlength="500" v-model="content" placeholder="对我们网站,商品,服务,您还有什么建议吗？您还希望在严选上买到什么？请告诉我们..." />
 		</view>
+		
 		<view class="cellphone">
-			<!-- <text>手机号码:</text>
-			<input type="number" placeholder="请输入你的手机号码" maxlength="11" v-model="cellphone" /> -->
-			<view class="form-item">
-				<input type="number"  maxlength="11"  v-model="cellphone" class="input" placeholder='联系电话 ' auto-focus />
-			</view>
+			<text> &nbsp;&nbsp; 手机号码：</text>
+			<input class="phone_input" type="text" :value="modile" :v-model="mobile" placeholder="  输入手机号便于联系上您" @input="getModile" />
+			
 		</view>
-		<button type="default" @click="goBack">提交</button>
+		<view class="btn" @click="goBack">提交</view>
 	</view>
 </template>
 
@@ -42,10 +28,13 @@
 		data() {
 			return {
 				title: 'picker',
-				array: ["请选择", '物流状况', '商品相关', '客户服务', '优惠活动', "功能异常", "产品建议", "其他"],
+				array: ["请选择类型", '物流状况', '商品相关', '客户服务', '优惠活动', "功能异常", "产品建议", "其他"],
 				index: 0,
 				content:"",
-				cellphone:""
+				mobile:"",
+				show: false,
+				
+				
 			}
 		},
 		methods: {
@@ -56,9 +45,13 @@
 			 bindTextAreaBlur: function (e) {
 				console.log(e.detail.value)
 			},
+			getModile(e) {
+				this.mobile = e.target.value
+				
+			},
 			goBack(){
 				let content = this.content;
-				let cellphone = this.cellphone;
+				let cellphone = this.mobile;
 				if(this.index == 0){
 					uni.showToast({
 						title:"请选择你要反馈的类型",
@@ -66,14 +59,14 @@
 					})
 					return;
 				}
-				if(content.trim() == "" || content.trim() == " "){
+				if(content.trim() == ""){
 					uni.showToast({
 						title:"请填写你要反馈的内容",
 						icon:"none"
 					})
 					return;
 				}
-				if(cellphone.trim() == "" || cellphone.trim() == " " ){
+				if(cellphone.trim() == ""){
 					uni.showToast({
 						title:"请填写你的手机号码",
 						icon:"none"
@@ -88,62 +81,89 @@
 					})
 					return;
 				}
+				
 				uni.showToast({
 					title:'提交成功',
 					duration:2000
 				})
-				setTimeout(function(){
-					uni.navigateBack({
-						delta:1
+				setTimeout( ()=> {
+					uni.switchTab({
+						url:'/pages/ucenter/index/index'
 					})
-				},800)
+				},500 )
+				
+				
+				
+				
+				
+
 			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.feedback {
-		height: auto;
-		background-color: #FFFFFF;
-
-		.title {
-			text {
-				font-weight: bold;
-				font-size: 44rpx;
-			}
-		}
-
-		.uni-list-cell-db {
-			display: flex;
-			flex-wrap: nowrap;
-			padding: 30rpx;
-
-			text {
-				font-size: 34rpx;
-			}
-
-			.menu {
-				width: 300rpx;
-				height: 60rpx;
-				border: 2rpx solid #C0C0C0;
-				font-size: 34rpx;
-			}
-		}
-		.messageBoard{
-			text{
-				font-size: 40rpx;
-				margin-left: 30rpx;
+	// 页面左右边距
+	.left {
+		margin-left: 31.25rpx;
+	}
+	
+	.right {
+		margin-right: 16rpx;
+	}
+	
+	.img_size {
+		width: 52rpx;
+		height: 52rpx;
+	}
+	
+	
+	.feedback_container {
+		position: relative;
+		margin: 20rpx 0;
+		
+		.picker {
+			.fb-type{
+			  height: 104rpx;
+			  width: 100%;
+			  background: #fff;
+			  margin-bottom: 20rpx;
+			  display: flex;
+			  flex-direction: row;
+			  align-items: center;
+			  padding-left: 30rpx;
+			  padding-right: 30rpx;
+			  
+			  .type-label{
+			    height: 36rpx;
+			    flex: 1;
+			    color: #333;
+			    font-size: 28rpx;
+			  }
+			  
+			  .type-icon{
+			    height: 36rpx;
+			    width: 36rpx;
+			  }
 			}
 			
-			.box {
-				padding-right: 40rpx;
+			
+		}
+
+		.messageBoard{
+			
+			background: #fff;
+			padding: 40rpx;
+			
 				textarea {
+					background-color: #fff;
+					display: block;
+					margin: 40rpx auto;
 					// width: 100%;
 					height: 300rpx;
 					background-color: #f7f7f7;
 					line-height: 60rpx;
-					margin: 40rpx auto;
+					margin: auto;
 					padding: 20rpx;
 				}
 				.clipboard {
@@ -158,21 +178,36 @@
 						margin-left: 10rpx;
 					}
 				}
+			
+		}
+
+		.cellphone {
+			text {
+				color: #909399; 
+				font-size: 22rpx;
+			}
+			.phone_input {
+				height: 100rpx;
+				background-color: #fff;
 			}
 		}
-		.cellphone{
-			.form-item{
-				height: 116rpx;
-				border-bottom: 2rpx solid #d9d9d9;
-				display: flex;
-				align-items: center;
-				padding: 0 32rpx;
-				
-				.input{
-					flex: 1;
-					height: 44rpx;
-				}
-			}
+		
+		.btn {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			
+			position: fixed;
+			left: 0;
+			bottom: 0;
+			
+			width: 100%;
+			height: 100rpx;
+			
+			background-color: #b4282d;
+			font-size: 30rpx;
+			color: #fff;
 		}
+		
 	}
 </style>

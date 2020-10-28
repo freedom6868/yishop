@@ -260,8 +260,7 @@
 					result.push(data[1])
 				}
 				this.goodsDesc = result;
-			},		
-			
+			},		 
 			// 图片预览
 			getPreviewImage(arr,imgIndex){
 				uni.previewImage({
@@ -300,25 +299,25 @@
 			// 点击商品跳转到另一个商品详情页
 			goGoodsDeatil(goodsId) {
 				uni.navigateTo({
-					url: `../goods/goods?id=${goodsId}`
+					url: `/pages/goods/goods?id=${goodsId}`
 				})
 			},
 			// 点击购物车图标跳转到购物车页面
 			openCartPage() {
 				uni.switchTab({
-					url: '../cart/cart'
+					url: '/pages/cart/cart'
 				})
 			},
 			// 跳转到查看全部评价的页面
 			goCommentAll() {
 				uni.navigateTo({
-					url: `../comment/comment?valueId=${this.$data.id}&typeId=0`
+					url: `/pages/comment/comment?valueId=${this.$data.id}&typeId=0`
 				})
 			},
 			// 点击前往品牌详情页面
 			goBrandDetail() {
 				uni.navigateTo({
-					url: `../brandDetail/brandDetail?id=${this.brand.id}`
+					url: `/pages/brandDetail/brandDetail?id=${this.brand.id}`
 				})
 			},
 			// 收藏或取消收藏
