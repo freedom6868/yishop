@@ -6,3 +6,11 @@ export function getFootprintListData(msg){
 		data:msg
 	})
 }
+
+export function deleteFootprintData(msg){
+	return request({
+		url:'footprint/delete',
+		data:msg,
+		method:'POST'
+	})
+}

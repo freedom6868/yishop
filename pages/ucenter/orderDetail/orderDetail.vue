@@ -48,6 +48,10 @@
 					<view class="txt">￥ {{orderInfo.goods_price}}</view>
 				</view>
 				<view class="t">
+					<view class="label">优惠金额：</view>
+					<view class="txt">￥ {{orderInfo.coupon_price}}</view>
+				</view>
+				<view class="t">
 					<view class="label">运费：</view>
 					<view class="txt">￥{{orderInfo.freight_price}}</view>
 				</view>
@@ -232,6 +236,9 @@
 					display: flex;
 					.label{
 						width: 160rpx;
+					}
+					.txt{
+						color: #b4282d;
 					}
 				}
 			}
