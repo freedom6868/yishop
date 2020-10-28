@@ -8,9 +8,10 @@
 				<!-- 精选留言 -->
 				<view class="choiceness-comment">
 					<text class="title">精选留言</text>
-					<image class="icon" src="../../static/images/postcomment.png" mode="" @click="toPostComment"></image>
+					<image class="icon" src="@/static/images/postcomment.png" mode="" @click="toPostComment"></image>
 				</view>
 				<!-- 用户留言区 -->
+				
 				<view class="comment-item" v-for="item in detailCommentData" :key="item.id">
 					<view class="item-top">
 						<view class="user-info">
@@ -107,7 +108,7 @@
 			//点击跳转到专题详情
 			toTopicDetail(id){
 				uni.navigateTo({
-					url:"../topicDetail/topicDetail?id="+id
+					url:"/pages/topicDetail/topicDetail?id="+id
 				})
 			},
 			//点击加载更多
@@ -115,14 +116,14 @@
 				console.log(this.id);
 				let id = this.id;
 				uni.navigateTo({
-					url:"../topicComment/topicComment?valueId=" + id + "&typeId=1"
+					url:"/pages/topicComment/topicComment?valueId=" + id + "&typeId=1"
 				})
 			},
 			//点击前往发表评论
 			toPostComment(){
 				let valueId = this.id;
 				uni.navigateTo({
-					url:"../commentPost/commentPost?valueId=" + valueId + "&typeId=1"
+					url:"/pages/commentPost/commentPost?valueId=" + valueId + "&typeId=1"
 				})
 			}
 		},
