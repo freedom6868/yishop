@@ -139,14 +139,7 @@
             "style" : {
 				"navigationBarTitleText": "付款结果"
 			}
-        }
-        ,{
-            "path" : "pages/ucenter/relationService/relationService",
-            "style" : {
-				"navigationBarTitleText": "联系客服"
-			}
-        }
-        ,{
+        },{
             "path" : "pages/ucenter/accountSecurity/accountSecurity",
             "style" : {
 				"navigationBarTitleText": "账号安全"
