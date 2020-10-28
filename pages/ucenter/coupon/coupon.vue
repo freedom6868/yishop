@@ -39,6 +39,7 @@
 	export default {
 		data() {
 			return {
+				userInfo:{},
 				userId:0,
 				couponList:[]
 			}
@@ -51,7 +52,7 @@
 			},
 			async getCouponList(){
 				var res = await getCouponApiData(this.userId);
-				console.log(res)
+				// console.log(res)
 				res.data.res.map(v=>{
 					v.use_end_date_time = moment.unix(v.use_end_date).format('YYYY.MM.DD');    // 2020/10/26
 					v.use_start_date_time = moment.unix(v.use_start_date).format('YYYY.MM.DD'); //YYYY-MM-DD HH:mm:ss
@@ -72,9 +73,17 @@
 		created(){
 			
 		},
-		onLoad(option) {
-			console.log(option.userId)
-			this.userId = option.userId;
+		onLoad() {
+			// var that = this;
+			// uni.getStorageSync({
+			//     key: 'userInfo',
+			//         console.log(res.data);
+			// 		that.userInfo = res.data
+			// });
+			// console.log("123"+that.userInfo)
+			const res = JSON.parse(uni.getStorageSync('userInfo'));
+			console.log(res)
+			this.userId = res.id;
 			this.getCouponList();
 		}
 	}
