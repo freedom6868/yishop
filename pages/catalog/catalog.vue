@@ -1,7 +1,6 @@
 <template>
 	<view>
 		<!-- 状态栏 -->
-		<view class="status" :style="{position:headerPosition}"></view>
 		<view class="header" :style="{position:headerPosition}">
 			<view class="addr">
 				<view class="icon location"></view>{{city}}
@@ -60,10 +59,10 @@
 	import {
 		getCatalog,
 		getClassifyData
-	} from '../../api/catalogApi.js'
+	} from '@/api/catalogApi.js'
 	import {
 		getGoodsCounts
-	} from '../../api/homeApi.js';
+	} from '@/api/homeApi.js';
 	export default {
 		data() {
 			return {
@@ -125,19 +124,6 @@
 	}
 </script>
 <style lang="scss" scoped>
-	.status {
-		width: 100%;
-		height: 0;
-		position: fixed;
-		z-index: 10;
-		background-color: #fff;
-		top: 0;
-		/*  #ifdef  APP-PLUS  */
-		height: var(--status-bar-height); //覆盖样式
-		/*  #endif  */
-
-	}
-
 	.header {
 		width: 92%;
 		padding: 0 4%;
@@ -218,8 +204,8 @@
 
 		.left,
 		.right {
-			position: absolute;
-
+			// position: absolute;
+			display: flex;
 			top: 100upx;
 			/*  #ifdef  APP-PLUS  */
 			top: calc(100upx + var(--status-bar-height));
