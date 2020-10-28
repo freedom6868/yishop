@@ -35,7 +35,7 @@
 	import {
 		getCategoryData,
 		getproductList
-	} from '../../api/catalogApi.js'
+	} from '@/api/catalogApi.js'
 	export default {
 		data() {
 			return {

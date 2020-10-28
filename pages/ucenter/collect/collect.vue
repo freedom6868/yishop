@@ -35,7 +35,7 @@
 <script>
 	import {
 		getCollectList
-	} from '../../../api/uncenter/collectApi.js'
+	} from '@/api/uncenter/collectApi.js'
 	import {
 		addOrCannelCollect
 	} from '@/api/goodsApi.js';
@@ -71,9 +71,10 @@
 					content: "确定要删除吗？",
 					async success(res) {
 						if (res.confirm) {
+							console.log(item);
 							const res1 = await addOrCannelCollect({
 								typeId: 0,
-								valueId: item.value_id
+								valueId: item
 							});
 							_this.collectList = _this.getCollectData(_this.id)
 							console.log('用户点击确定');
@@ -106,6 +107,7 @@
 					content: "确定要删除吗？",
 					async success(res) {
 						if (res.confirm) {
+							console.log(item);
 							const res1 = await addOrCannelCollect({
 								typeId: 0,
 								valueId: item.value_id
