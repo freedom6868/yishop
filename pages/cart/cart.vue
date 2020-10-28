@@ -8,9 +8,9 @@
 		<!-- 购物车没有商品时显示 -->
 		<view class="notCart" v-if="cartGoods.length<=0">
 			<view class="no">
-				<image src="../../static/images/cart.png" mode=""></image>
+				<image src="@/static/images/cart.png" mode=""></image>
 				<view class="text">
-					<navigator url="../index/index" open-type="switchTab">去添加点什么吧</navigator>
+					<navigator url="/pages/index/index" open-type="switchTab">去添加点什么吧</navigator>
 				</view>
 			</view>
 		</view>
@@ -87,7 +87,7 @@
 				// console.log(productIds)
 				console.log(productId)
 				uni.navigateTo({
-					url: `../checkout/checkout`
+					url: `/pages/checkout/checkout`
 				})
 			},
 			//获取所有商品的product_id 并转换成字符串并用","隔开
@@ -229,7 +229,7 @@
 			align-items: center;
 			background-color: #F4F4F4;
 			.item{
-			background: url(../../static/images/bot.png) 0 center no-repeat;
+			background: url(@/static/images/bot.png) 0 center no-repeat;
 			background-size: 10rpx;
 			padding-left: 15rpx;
 			display: flex;

@@ -139,13 +139,12 @@
 					return;
 				}
 				uni.navigateTo({
-					// url:'../../coupon/coupon?userId='+this.userId
-					url:'../coupon/coupon?userId='+this.userId
+					url:'/pages/coupon/coupon?userId='+this.userId
 				})
 			},
 			//支付
 			async submitOrder(){
-				if(this.addressList.length < 0){
+				if(this.addressList.length < 0 || this.addressList.is_default !=1){
 					uni.showToast({
 						title:"请选择收货地址",
 						icon:"none"
@@ -159,7 +158,7 @@
 				if(res.errno === 0){
 					//生成订单
 					uni.navigateTo({
-						url:"../payResult/payResult"
+						url:"/pages/payResult/payResult"
 					})
 				}else{
 					uni.showToast({

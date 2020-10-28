@@ -2,7 +2,7 @@
 	<view class="container">
 		<view class="instructions">
 			<view class="right">
-				<image class="img" src="../../../static/images/wenhao.png" mode=""></image>
+				<image class="img" src="/static/images/wenhao.png" mode=""></image>
 				<navigator class="a" url="">使用说明</navigator>
 			</view>
 		</view>
@@ -23,7 +23,7 @@
 					<view class="useCondition">
 						<text :class="[item.details ? 'txt':'text']">【11.1-11.3狂欢开幕】全品类可用，新品可用；详情页标注不可用券的商品除外</text>
 						<view class="icon" @click="isShow(index)">
-							<image class="imge" src="../../../static/images/jt.png" mode="" />
+							<image class="imge" src="/static/images/jt.png" mode="" />
 						</view>
 					</view>
 				</view>
@@ -34,8 +34,8 @@
 </template>
 
 <script>
-	import {getCouponApiData} from "../../api/uncenter/couponApi.js"
-	import moment from "../../utils/moment.js";
+	import {getCouponApiData} from "@/api/uncenter/couponApi.js"
+	import moment from "@/utils/moment.js";
 	export default {
 		data() {
 			return {
