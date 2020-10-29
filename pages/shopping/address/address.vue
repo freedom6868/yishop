@@ -50,7 +50,7 @@
 			addressAddOrUpdate(e){
 				let addressId = e.currentTarget.dataset.addressId;
 				uni.navigateTo({
-					url:'/pages/ucenter/addressAdd/addressAdd?id='+addressId
+					url:'/pages/shopping/addressAdd/addressAdd?id='+addressId
 				})
 			}
 		},
