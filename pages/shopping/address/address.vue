@@ -34,7 +34,9 @@
 		methods: {
 			//返回上一页
 			navigateBack(){
-				uni.navigateBack();
+				uni.navigateTo({
+					url:'/pages/checkout/checkout'
+				})
 			},
 			async getAddressList(){
 				let res = await getAddressListData()

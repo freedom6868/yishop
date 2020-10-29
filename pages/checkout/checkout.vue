@@ -130,17 +130,25 @@
 			//跳转优惠页面
 			
 			ToCoupon(){
-				if(this.couponCount == 0){
+				if(this.addressList.length < 0 || this.addressList.is_default !=1){
+					uni.showToast({
+						title:"请先选择收货地址",
+						icon:"none"
+					})
+					return;
+				}else if(this.couponCount == 0){
 					uni.showToast({
 						title:"没有优惠卷了",
 						icon:"none",
 						duration:1000,
 					})
 					return;
+				}else{
+					uni.navigateTo({
+						url:'/pages/coupon/coupon?userId='+this.userId
+					})
 				}
-				uni.navigateTo({
-					url:'/pages/coupon/coupon?userId='+this.userId
-				})
+				
 			},
 			//支付
 			async submitOrder(){
@@ -169,7 +177,7 @@
 			},
 			addAddress(){
 				uni.navigateTo({
-					url:"/pages/ucenter/address/address"
+					url:"/pages/shopping/address/address"
 				})
 			},
 			selectAddress(){
