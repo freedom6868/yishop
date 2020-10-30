@@ -63,9 +63,14 @@
 			this.getOrderList();
 		},
 		onUnload() {
-			uni.switchTab({
-				url:'/pages/ucenter/index/index'
-			})
+			// uni.switchTab({
+			// 	url:'/pages/ucenter/index/index'
+			// })
+			uni.navigateBack({
+			    delta: 2
+			});
+			
+			
 		}
 	}
 </script>

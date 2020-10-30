@@ -40,8 +40,11 @@
 			}
 		},
 		onUnload() {
-			uni.navigateTo({
-				url:'/pages/ucenter/order/order'
+			// uni.navigateTo({
+			// 	url:'/pages/ucenter/order/order'
+			// });
+			uni.navigateBack({
+			    delta: 1
 			});
 		}
 	}
