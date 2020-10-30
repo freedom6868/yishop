@@ -38,6 +38,11 @@
 					icon:"none"
 				})
 			}
+		},
+		onUnload() {
+			uni.navigateTo({
+				url:'/pages/ucenter/order/order'
+			});
 		}
 	}
 </script>
