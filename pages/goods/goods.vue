@@ -1024,7 +1024,6 @@
 					align-items: center;
 					width: 375rpx;
 					padding: 15rpx 31.25rpx;
-					// border: 1px solid #f4f4f4;
 					border-right: 1px solid #f4f4f4;
 					border-bottom: 1px solid #f4f4f4;
 
@@ -1034,8 +1033,12 @@
 					}
 
 					.name {
+						width: 100%;
 						font-size: 30rpx;
 						color: #333;
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
 					}
 
 					.price {
