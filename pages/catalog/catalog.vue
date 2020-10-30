@@ -300,13 +300,13 @@
 					.box {
 						height: 216rpx;
 						width: 144rpx;
-						margin-bottom: 30upx;
+						margin-bottom: 20upx;
 						display: flex;
 						flex-direction: column;
 						justify-content: center;
 						align-items: center;
-						flex-wrap: wrap;
-						margin-left: 30rpx;
+						flex-wrap: nowrap;
+						margin-left: 20rpx;
 
 						image {
 							height: 144rpx;
