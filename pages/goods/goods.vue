@@ -1036,6 +1036,7 @@
 						width: 100%;
 						font-size: 30rpx;
 						color: #333;
+						text-align: center;
 						overflow: hidden;
 						white-space: nowrap;
 						text-overflow: ellipsis;
