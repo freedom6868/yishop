@@ -654,6 +654,10 @@
 						})
 					}
 				})
+				setTimeout(()=> {
+					this.isShowPoster = false;
+				},1000)
+				
 			},
 			eventGetImage(event) {
 				uni.hideLoading()
