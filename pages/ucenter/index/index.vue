@@ -239,6 +239,7 @@
 						height: 30rpx;
 						margin-top: 0;
 						margin-bottom: 14rpx;
+						line-height: 30rpx;
 					}
 					.txt {
 						margin: 0 auto;
