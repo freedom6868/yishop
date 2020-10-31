@@ -40,17 +40,24 @@
 		data() {
 			return {
 				userId:0,
-				couponList:[]
+				couponList:[],
+				coupon:0
 			}
 		},
 		methods: {
 			toCoupon(index){
-				console.log(index)
+				/* console.log(index)
 				var couponId = this.couponList[index].coupon_id;
 				console.log(couponId)
 				uni.navigateTo({
 					url:'/pages/checkout/checkout?couponId='+couponId
-				})
+				}) */
+				this.coupon = this.couponList[index];
+				var pages = getCurrentPages();
+				var prevPage = pages[ pages.length -2 ];
+				prevPage.checkCoupon = this.coupon;
+				console.log('prevPage.checkCoupon',prevPage.checkCoupon)
+				uni.navigateBack();
 			},
 			async getCouponList(){
 				var res = await getCouponApiData(this.userId);

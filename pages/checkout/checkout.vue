@@ -216,8 +216,9 @@
 				uni.setStorageSync('checkedAddress',JSON.stringify(this.checkedAddress))
 				this.$forceUpdate()
 			};
-			if(currentPage.checkCoupon!= null && currentPage.checkCoupon != undefined ){
-				this.couponId = currentPage.checkCoupon.id;
+			if(currentPage.checkCoupon!= null){
+				console.log('currentPage.checkCoupon',currentPage.checkCoupon)
+				this.couponId = currentPage.checkCoupon.coupon_id;
 				this.tempCheckedout();
 			}
 		}
