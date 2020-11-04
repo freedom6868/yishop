@@ -4,7 +4,7 @@
 	    <view class="success" v-if="status == true">
 	      <view class="msg">付款成功</view>
 	      <view class="btns">
-	        <navigator class="btn" url="/pages/ucenter/order/order" open-type="redirect">查看订单</navigator>
+	        <navigator class="btn" @click="setStatus" url="/pages/ucenter/order/order" open-type="redirect">查看订单</navigator>
 	        <navigator class="btn" url="/pages/index/index" open-type="switchTab">继续逛</navigator>
 	      </view>
 	    </view>
@@ -29,6 +29,7 @@
 		data() {
 			return {
 				status:true,
+				temp:false
 			}
 		},
 		methods: {
@@ -37,7 +38,19 @@
 					title:"支付失败",
 					icon:"none"
 				})
+			},
+			setStatus(){
+				this.temp = true;
 			}
+			
+		},
+		onUnload() {
+			if(!this.temp){
+				uni.navigateBack({
+					delta:1
+				})
+			}
+			
 		}
 	}
 </script>

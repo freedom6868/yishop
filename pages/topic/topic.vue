@@ -48,7 +48,7 @@
 			toTopicDetail(id){
 				// console.log("topic",id);
 				uni.navigateTo({
-					url:"../topicDetail/topicDetail?id="+id
+					url:"/pages/topicDetail/topicDetail?id="+id
 				})
 			},
 			//切换上一页

@@ -2,7 +2,7 @@
 	<view class="indexBox">
 		<!-- 首页搜索框 -->
 		<view class="search">
-			<navigator url="../search/search">
+			<navigator url="/pages/search/search">
 				<view class="searchBox">
 					<image class="icon" src="http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/search2-2fb94833aa.png"
 					 mode=""></image>
@@ -26,7 +26,6 @@
 		<!-- 五宫格 -->
 		<view class="m-menu">
 			<!-- 路径 -->
-			<!-- <navigator class="item" v-for="(item) in Channel" url="详情?id={{item.id}}" :key='id'> -->
 			<view class="item" v-for="(item) in Channel" :key='item.id' @click="goCategory(item)">
 				<image :src="item.icon_url"></image>
 				<text>{{item.name}}</text>
@@ -35,9 +34,7 @@
 
 		<!-- 商品直供 -->
 		<view class="supply">
-			<!-- <navigator url=""> -->
 			<text class="supplyText">品牌制造商直供</text>
-			<!-- </navigator> -->
 		</view>
 
 		<!-- 制造商直供图片 -->
@@ -56,9 +53,7 @@
 
 		<!-- 新品首发 -->
 		<view class="supply">
-			<!-- <navigator url=""> -->
 			<text class="supplyText">周一周四 · 新品首发</text>
-			<!-- </navigator> -->
 		</view>
 
 		<view class="newpro">
@@ -72,9 +67,7 @@
 		</view>
 		<!-- 人气推荐 -->
 		<view class="supply">
-			<!-- <navigator url=""> -->
 			<text class="supplyText">人气推荐</text>
-			<!-- </navigator> -->
 		</view>
 
 		<!-- 人气推荐商品信息 -->
@@ -91,7 +84,7 @@
 
 		<!-- 专题精选 -->
 		<view class="supply">
-			<navigator url="../topic/topic"  open-type="switchTab">
+			<navigator url="/pages/topic/topic" open-type="switchTab">
 				<text class="supplyText">专题精选</text>
 			</navigator>
 		</view>
@@ -127,7 +120,7 @@
 		getHome,
 		getGoodsCounts
 	} from '@/api/homeApi.js';
-	import specialBanner from '../../components/EtherealWheat-banner/specialBanner.vue'
+	import specialBanner from '@/components/EtherealWheat-banner/specialBanner.vue'
 	export default {
 		data() {
 			return {
@@ -178,7 +171,6 @@
 				this.Lunbo = data.banner;
 				// 宫格list
 				this.Channel = data.channel;
-				// console.log(this.Channel)
 				// 制造商直供图片
 				this.BrandList = data.brandList;
 				// 新品首发
@@ -187,21 +179,15 @@
 				this.hotGoodsList = data.hotGoodsList;
 				// 专题精选
 				let newArr = [];
-				// console.log('dat	a.topic',data.topicList)
 				data.topicList.map(v => {
 					let obj = {};
 					obj.picture = v.item_pic_url;
 					obj.title = v.title;
 					obj.description = v.subtitle;
 					obj.id = v.id;
-					// console.log(obj)
 					newArr.push(obj);
-
 				})
-				// console.log("newArr",newArr)
 				this.bannerList = newArr;
-				// this.showBanner = true;
-
 				// 居家
 				this.categoryList = data.categoryList
 			},
@@ -212,35 +198,28 @@
 
 			},
 			// 调转到分类详情页面
-			goCategory(item){
+			goCategory(item) {
 				console.log(item);
 				var url = item.url
 				var id = url.split('id=')[1];
-				var index = item.id -1;
+				var index = item.id - 1;
 				uni.navigateTo({
-					url:'../category/category?id='+id+ '&index='+ index
+					url: '/pages/category/category?id=' + id + '&index=' + index
 				})
-				
+
 			},
 			//商品详情
 			sunnewGood(id) {
 				console.log(id)
 				uni.navigateTo({
-					url: "../goods/goods?id=" + id
+					url: "/pages/goods/goods?id=" + id
 
 				})
 			},
-			// // 跳转到专题页面
-			// gotopic(){
-			// 	uni.navigateTo({
-			// 		url:'../topic/topic'
-			// 	})
-			// },
 			// 跳转到ck制造商
 			ckGoods(id) {
-				// console.log(id);
 				uni.navigateTo({
-					url: "../brandDetail/brandDetail?id=" + id
+					url: "/pages/brandDetail/brandDetail?id=" + id
 				})
 			}
 		},
@@ -259,7 +238,6 @@
 <style lang="scss" scoped>
 	.indexBox {
 		background-color: #F4F4F4;
-		// height: 20000rpx;
 
 		.search {
 			display: flex;
@@ -294,11 +272,9 @@
 			width: 100%;
 			height: 400rpx;
 
-			// background-color: red;
 			.swiper {
 				height: 400rpx;
 
-				// width: 100%;
 				.swiper-item {
 					width: 100%;
 					height: 100%;
@@ -466,7 +442,6 @@
 			color: #333333;
 
 			.topGood {
-				// background-color: blue;
 				border-top: 1px solid #d9d9d9;
 				margin: 0 20rpx;
 				height: 264rpx;

@@ -1,20 +1,20 @@
 <template>
 	<view class="container">
 		<view class="address-box">
-			<view class="address-item" v-for="items in addressList"  @click="selectAddress" v-if="items.id > 0 && items.is_default === 1">
+			<view class="address-item" @click="selectAddress" v-if="addressList.length > 0">
 				<view class="l">
-					<text class="name">{{items.name}}</text>
-					<text class="default" v-if="items.is_default===1">默认</text>
+					<text class="name">{{checkedAddress.name}}</text>
+					<text class="default" v-if="checkedAddress.is_default===1">默认</text>
 				</view>
 				<view class="m">
-					<text class="mobile">{{items.mobile}}</text>
-					<text class="address">{{items.full_region + items.address}}</text>
+					<text class="mobile">{{checkedAddress.mobile}}</text>
+					<text class="address">{{checkedAddress.full_region + checkedAddress.address}}</text>
 				</view>
 				<view class="r">
 					<image src="/static/images/address_right.png"></image>
 				</view>
 			</view>
-			 <view class="address-item address-empty" @click="addAddress" v-if="items.id <= 0">
+			<view class="address-item address-empty" @click="addAddress" v-if="addressList.length <= 0">
 				<view class="m">
 				   还没有收货地址，去添加
 				</view>
@@ -22,24 +22,24 @@
 					<image src="/static/images/address_right.png"></image>
 				</view>
 			</view>
-			<!-- <view class="coupon-box">
+			<view class="coupon-box"  @click="ToCoupon">
 				<view class="coupon-item">
 					<view class="l">
-						<text class="name">请选择优惠劵</text>
-						<text class="txt">{{couponNumber}}张</text>
+						<text class="name">{{couponName !='' ? couponName : '请选择优惠劵'}}</text>
+						<text class="txt">{{couponName !='' ? type_money+'元' : couponCount+'张'}}</text>
 					</view>
 					<view class="r">
 						<image src="/static/images/address_right.png" mode=""></image>
 					</view>
 				</view>
-			</view> -->
+			</view>
 			 <view class="order-box">
 				<view class="order-item">
 					<view class="l">
 						<text class="name">商品合计</text>
 					</view>
 					<view class="r">
-						<text class="txt">￥{{cartTotal.checkedGoodsAmount}}</text>
+						<text class="txt">￥{{goodsTotalPrice}}</text>
 					</view>
 				</view>
 				<view class="order-item">
@@ -50,18 +50,18 @@
 						<text class="txt">￥{{freightPrice}}</text>
 					</view>
 				</view>
-				<!-- <view class="order-item no-border">
+				<view class="order-item no-border">
 					<view class="l">
 						<text class="name">优惠券</text>
 					</view>
 					<view class="r">
 						<text class="txt">-￥{{couponPrice}}</text>
 					</view>
-				</view> -->
+				</view>
 			</view>
 			<!-- 订单商品 -->
 			 <view class="goods-items">
-				<view class="item" v-for="(item,index) in cartGoods" v-if="item.checked == 1" :key="items.id">
+				<view class="item" v-for="(item,index) in cartGoods" v-if="item.checked == 1" :key="item.id">
 					<view class="img">
 						<image :src="item.list_pic_url"></image>
 					</view>
@@ -78,56 +78,115 @@
 		</view>
 		<!-- 底部 -->
 		<view class="order-total">
-		        <view class="l">实付：￥{{cartTotal.checkedGoodsAmount}}</view>
-		        <view class="r" @click="submitOrder">去付款</view>
+			<view class="l">实付：￥{{orderTotalPrice}}</view>
+			<view class="r" @click="submitOrder">去付款</view>
 		</view>
 	</view>
 </template>
 
 <script>
-	import {getCartApiData} from "@/api/cartApi.js";
-	import {getAddressListData} from "@/api/uncenter/addressApi.js";
-	import {getCartCheckout,postOrderSubmit} from "@/api/orderApi.js"
+	import {getCartCheckout,postOrderSubmit} from "@/api/orderApi.js";
+	import {getAddressListData} from '@/api/uncenter/addressApi.js';
 	export default {
 		data() {
 			return {
-				address:{},
+				time:0,
 				cartGoods: [],
-				cartTotal:{},
-				addressList:[],
-				couponNumber:0,
+				addressList:{},
+				couponName:'',
+				type_money:0.00,
+				couponCount:0,
 				freightPrice: 0.00,    //快递费
 				couponPrice: 0.00,     //优惠券的价格
+				goodsTotalPrice:0.00,  //商品总价
+				orderTotalPrice:0.00,  //订单总价
 				addressId:0,
-				couponId:0
+				couponId:0,
+				nextPageAddressId:0,
+				checkedAddress:{},
+				checkCoupon:{}
 			}
 		},
 		methods: {
+			async getAddressList(){
+				let res = await getAddressListData();
+				console.log(res);
+				this.addressList = res.data;
+			},
+			async tempCheckedout(){
+				let res = await getCartCheckout(this.addressId,this.couponId);
+				if(res.errno === 0){
+					this.cartGoods = res.data.checkedGoodsList;			  //商品
+					this.checkedAddress = res.data.checkedAddress;			  //地址
+					this.addressId = res.data.checkedAddress.id;		  //地址id
+					this.couponPrice = res.data.couponPrice;			  
+				    this.freightPrice = res.data.freightPrice;
+					this.couponCount = res.data.couponCount;
+					this.couponName = res.data.checkedCoupon.name; 		  //红包名
+					this.type_money = res.data.checkedCoupon.type_money;  //红包金额
+				    this.goodsTotalPrice = res.data.goodsTotalPrice;
+				    this.orderTotalPrice = res.data.orderTotalPrice;
+					this.userId = res.data.checkedAddress.user_id;
+				}else{
+					uni.showToast({
+						title:res.errmsg,
+						icon:"none"
+					})
+				}
+				console.log(res)
+			},
+			
+			//跳转优惠页面
+			
+			ToCoupon(){
+				if(this.addressList.length < 0 || this.checkedAddress == null){
+					uni.showToast({
+						title:"请先选择收货地址",
+						icon:"none"
+					})
+					return;
+				}else if(this.couponCount == 0){
+					uni.showToast({
+						title:"没有优惠卷了",
+						icon:"none",
+						duration:1000,
+					})
+					return;
+				}else{
+					uni.navigateTo({
+						url:'/pages/coupon/coupon?userId='+this.userId
+					})
+				}
+				
+			},
 			//支付
 			async submitOrder(){
-				if(this.addressList.length < 0){
+				if(this.addressList.length < 0 || this.checkedAddress.id == undefined){
 					uni.showToast({
 						title:"请选择收货地址",
 						icon:"none"
 					})
 					return false;
 				}
-				if(this.address.errno === 0){
+				var time = parseInt(new Date().getTime()/1000) ;
+				this.time = time;
+				var res = await postOrderSubmit(this.addressId,this.couponId,this.time);
+				console.log(res)
+				if(res.errno === 0){
 					//生成订单
-					var res = await postOrderSubmit(this.addressId,this.couponId);
 					uni.navigateTo({
-						url:"../payResult/payResult"
+						url:"/pages/payResult/payResult"
 					})
 				}else{
 					uni.showToast({
-						title:"下单失败",
+						title:res.errmsg,
 						icon:"none"
 					})
 				}
 			},
 			addAddress(){
 				uni.navigateTo({
-					url:"/pages/ucenter/addressAdd/addressAdd"
+					url:"/pages/shopping/address/address"
 				})
 			},
 			selectAddress(){
@@ -136,49 +195,33 @@
 				})
 			},
 			
-			//获取所有购物车商品
-			async getCartApi() {
-				var res = await getCartApiData();
-				// console.log(res)
-				if(res.errno == 0){
-					this.cartGoods = res.data.cartList;
-					this.cartTotal = res.data.cartTotal;
-				}else{
-					uni.showToast({
-						title:res.errmsg,
-						icon:"none"
-					})
-				}
-			},
-			//获取地址
-			async getAddressList(){
-				let res = await getAddressListData()
-				if(res.errno == 0){
-					console.log(res)
-					this.addressList = res.data;
-				}else{
-					uni.showToast({
-						title:res.errmsg
-					})
-				}
-				this.addressList.map(v=>{
-					if(v.is_default == 1){
-						this.addressId = v.id;
+		},
+		onLoad(option){
+			console.log(option.couponId);
+			this.couponId = option.couponId;
+			this.tempCheckedout();
+			this.getAddressList();
+			console.log(this.couponId)
+		},
+		onShow(){
+			let pages = getCurrentPages();
+			let currentPage = pages[pages.length-1];
+			if(currentPage.nextPageAddressId != 0 && currentPage.nextPageAddressId != undefined){
+				this.addressId = currentPage.nextPageAddressId;
+				this.checkedAddress = this.addressList.find(v=>{
+					if(v.id == this.addressId){
+						return v;
 					}
 				})
-				this.address = res
-				console.log(this.addressList)
-				console.log(this.addressId)
-			},
-			
-			
-		},
-		created() {
-			this.getCartApi();
-			this.getAddressList();
-			this.getCheckoutInfo()
-		},
-		
+				uni.setStorageSync('checkedAddress',JSON.stringify(this.checkedAddress))
+				this.$forceUpdate()
+			};
+			if(currentPage.checkCoupon!= null){
+				console.log('currentPage.checkCoupon',currentPage.checkCoupon)
+				this.couponId = currentPage.checkCoupon.coupon_id;
+				this.tempCheckedout();
+			}
+		}
 		
 	}
 </script>

@@ -2,23 +2,32 @@
 	<view class="container">
 		<view class="profile-info">
 			<image :src="userInfo.avatar" mode="" @click="onUserInfoClick" class="avatar"></image>
-			
+
 			<view class="info">
 				<text @click="onUserInfoClick" class="name">{{userInfo.nickname || '点击登录'}} </text>
 			</view>
-			
-			<image @click="onUserInfoClick" v-if="this.userInfo.nickname=='点击登录'" src="/static/images/address_right.png" mode="" class="btn"></image>
+
+			<image @click="onUserInfoClick" v-if="this.userInfo.nickname=='点击登录'" src="/static/images/address_right.png" mode=""
+			 class="btn"></image>
 		</view>
-		
+
 		<view class="user-menu">
 			<u-grid :col="3"  >
-				<u-grid-item @click="click" :index='index' v-for="(item,index) in itemList" :key='item.txt'>
-					<u-icon :name="item.name" :size="58"></u-icon>
-					<view class="grid-text">{{item.txt}}</view>
+				<u-grid-item class="u-grid" @click="click" :index='index' v-for="(item,index) in itemList" :key='item.txt'>
+					<button class='kefubutton' type="button" open-type="contact" v-if="item.name=='kefu-ermai'">
+						<view class="u-icon-Box" >
+							<u-icon class="u-icon" :name="item.name" :size="58"></u-icon>
+						</view>
+						
+						<view class="txt">{{item.txt}}</view>
+					</button>
+
+					<u-icon :name="item.name" :size="58" v-if="item.name !=='kefu-ermai'"></u-icon>
+					<view class="<strong>grid-text</strong>"  v-if="item.name !=='kefu-ermai'">{{item.txt}}</view>
 				</u-grid-item>
 			</u-grid>
 		</view>
-		<view class="dialog-login" @click="onCloseLoginDialog" v-if="showLoginDialog" >
+		<view class="dialog-login" @click="onCloseLoginDialog" v-if="showLoginDialog">
 			<view class="dialog-body">
 				<view class="title">
 					请选择登录方式
@@ -34,99 +43,136 @@
 
 <script>
 	let app = getApp();
-	import {login} from '@/utils/util.js';
-	import {AuthLoginByWeixin} from '@/api/uncenter/indexApi.js'
+	import {
+		login
+	} from '@/utils/util.js';
+	import {
+		AuthLoginByWeixin
+	} from '@/api/uncenter/indexApi.js'
 	export default {
 		data() {
 			return {
-				userInfo:{},
-				showLoginDialog:false,
-				itemList:[
-					{name:'order','txt':'我的订单',url:'/pages/ucenter/order/order'},
-					{name:'star','txt':'我的收藏',url:'/pages/ucenter/collect/collect'},
-					{name:'map','txt':'地址管理',url:'/pages/ucenter/address/address'},
-					{name:'list-dot','txt':'我的足迹',url:'/pages/ucenter/footprint/footprint'},
-					{name:'coupon','txt':'优惠券',url:''},
-					{name:'gift','txt':'礼品卡',url:''},
-					{name:'integral','txt':'会员福利',url:''},
-					{name:'lock','txt':'账号安全',url:''},
-					{name:'kefu-ermai','txt':'联系客服',url:''},
-					{name:'question-circle','txt':'帮助中心',url:''},
-					{name:'chat','txt':'意见反馈',url:''},
+				userInfo: {},
+				showLoginDialog: false,
+				itemList: [{
+						name: 'order',
+						'txt': '我的订单',
+						url: '/pages/ucenter/order/order'
+					},
+					{
+						name: 'star',
+						'txt': '我的收藏',
+						url: '/pages/ucenter/collect/collect'
+					},
+					{
+						name: 'map',
+						'txt': '地址管理',
+						url: '/pages/ucenter/address/address'
+					},
+					{
+						name: 'list-dot',
+						'txt': '我的足迹',
+						url: '/pages/ucenter/footprint/footprint'
+					},
+					{
+						name: 'coupon',
+						'txt': '优惠券',
+						url: '/pages/ucenter/coupon/coupon'
+					},
+					{
+						name: 'lock',
+						'txt': '账号安全',
+						url: '/pages/ucenter/accountSecurity/accountSecurity'
+					},
+					{
+						name: 'kefu-ermai',
+						'txt': '联系客服',
+						url: ''
+					},
+					{
+						name: 'question-circle',
+						'txt': '帮助中心',
+						url: '/pages/ucenter/helpCenter/helpCenter'
+					},
+					{
+						name: 'chat',
+						'txt': '意见反馈',
+						url: '/pages/ucenter/feedback/feedback'
+					},
 				],
 				show: false
 			}
 		},
 		methods: {
-			onUserInfoClick(){
-				if(this.userInfo.nickname == '点击登录'){
+			onUserInfoClick() {
+				if (this.userInfo.nickname == '点击登录') {
 					this.isShowLoginDialog();
 				}
-				
+
 			},
-			isShowLoginDialog(){
-				
+			isShowLoginDialog() {
+
 				this.showLoginDialog = true;
 			},
-			onCloseLoginDialog(){
+			onCloseLoginDialog() {
 				this.showLoginDialog = false;
 			},
-			async onWechatLogin(e){
+			async onWechatLogin(e) {
 				console.log(e)
-				if(e.detail.errMsg !== 'getUserInfo:ok'){
-					if(e.detail.errMsg === 'getUserInfo:fail auth deny'){
+				if (e.detail.errMsg !== 'getUserInfo:ok') {
+					if (e.detail.errMsg === 'getUserInfo:fail auth deny') {
 						uni.showToast({
-							title:'微信登录失败',
-							icon:'none'
+							title: '微信登录失败',
+							icon: 'none'
 						})
 						return;
 					}
 					uni.showToast({
-						title:'微信登录失败',
-						icon:'none'
+						title: '微信登录失败',
+						icon: 'none'
 					})
 					return;
 				}
 				let res1 = await login();
 				console.log(res1)
 				let msg = {
-					code : res1.code,
-					userInfo : e.detail
+					code: res1.code,
+					userInfo: e.detail
 				}
 				let res2 = await AuthLoginByWeixin(msg);
 				console.log(res2)
-				if(res2.errno != 0){
+				if (res2.errno != 0) {
 					uni.showToast({
-						title:'微信登录失败',
-						icon:'none'
+						title: '微信登录失败',
+						icon: 'none'
 					})
-				}else{
+				} else {
 					this.userInfo = res2.data.userInfo;
 					this.showLoginDialog = false;
 					app.globalData.userInfo = res2.data.userInfo;
 					app.globalData.token = res2.data.token;
-					uni.setStorageSync('userInfo',JSON.stringify(res2.data.userInfo));
-					uni.setStorageSync('token',res2.data.token)
+					uni.setStorageSync('userInfo', JSON.stringify(res2.data.userInfo));
+					uni.setStorageSync('token', res2.data.token)
 				}
 			},
-			click(index){
-				if(this.userInfo.nickname == '点击登录'){
+			click(index) {
+				if (this.userInfo.nickname == '点击登录') {
 					uni.showToast({
-						title:'请先登录',
-						icon:'none'
+						title: '请先登录',
+						icon: 'none'
 					})
 					return;
 				}
 				let currentItem = this.itemList[index];
-				if(currentItem.url.length != 0){
+				if (currentItem.url.length != 0) {
 					console.log(currentItem.url)
 					uni.navigateTo({
-						url:currentItem.url
+						url: currentItem.url
 					})
-				}else{
+				} else {
 					uni.showToast({
-						title:currentItem.txt,
-						icon:'none'
+						title: currentItem.txt,
+						icon: 'none'
 					})
 				}
 			}
@@ -138,12 +184,12 @@
 </script>
 
 <style lang="scss" scoped>
-	.container{
+	.container {
 		background-color: #f4f4f4;
 		height: auto;
 		width: 100%;
-		
-		.profile-info{
+
+		.profile-info {
 			width: auto;
 			height: 280rpx;
 			background-color: #333;
@@ -151,52 +197,84 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-			.avatar{
+
+			.avatar {
 				width: 148rpx;
 				height: 148rpx;
 				border-radius: 50%;
 			}
-			
-			.info{
+
+			.info {
 				flex: 1;
 				color: #fff;
 				margin-left: 30rpx;
 				font-size: 38rpx;
 			}
-			
-			.btn{
+
+			.btn {
 				width: 50rpx;
 				height: 50rpx;
 				border-radius: 50%;
 			}
 		}
-		
-		.user-menu{
+
+		.user-menu {
+			
 			height: auto;
 			background-color: #fff;
+			.u-grid {
+				.kefubutton::after {
+					border: none;
+				}
+				
+				.kefubutton {
+					height: 96rpx;
+					background-color: #FFFFFF;
+					
+					display: flex;
+					flex-wrap: wrap;
+					
+					.u-icon-Box{
+						width: 200rpx;
+						height: 30rpx;
+						margin-top: 0;
+						margin-bottom: 14rpx;
+						line-height: 30rpx;
+					}
+					.txt {
+						margin: 0 auto;
+						text-align: center;
+						font-size: 30rpx;
+					}
+				}
+			}
+			
 		}
-		
-		.dialog-login{
+
+		.dialog-login {
 			width: 100%;
 			height: 100%;
-			background-color: rgba(0, 0, 0, 0.5);;
+			background-color: rgba(0, 0, 0, 0.5);
+			;
 			position: fixed;
 			top: 0;
 			left: 0;
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			
-			.dialog-body{
+
+			.dialog-body {
 				width: 540rpx;
 				height: auto;
 				background-color: #fff;
 				border-radius: 10rpx;
 				padding: 40rpx;
-				.title{
+
+				.title {
 					text-align: center;
 				}
-				.btn{
+
+				.btn {
 					margin-top: 20rpx;
 				}
 			}

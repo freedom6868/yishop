@@ -9,9 +9,9 @@
 		</view>
 		<view class="search-keyword" v-if="hasGoods">
 			<scroll-view class="keyword-list-box" v-show="isShowKeywordList" scroll-y>
-				<block v-for="row in keywordList" :key="keywordList">
+				<block v-for="(row,index) in keywordList" :key="keywordList">
 					<view class="keyword-entry" hover-class="keyword-entry-tap">
-						<view class="keyword-text" @click="getgoodData()">
+						<view class="keyword-text" @click="getgoodData" :data-rowIndex=index>
 							<rich-text :nodes="row"></rich-text>
 						</view>
 						<!-- 模糊查询 -->
@@ -66,7 +66,8 @@
 			</view>
 			<!-- 分类 -->
 			<view class="fixed " v-if="categoryFilter">
-				<view :class="[iitem.id == categoryId ? 'active1' : 'text']"  v-for="(iitem,index) in filterCategory" :key='iitem.id' @click="selectCategory(index,iitem.id)">
+				<view :class="[iitem.id == categoryId? 'active1' : 'text']" v-for="(iitem,index) in filterCategory" :key='iitem.id'
+				 @click="selectCategory(index,iitem.id)">
 					{{iitem.name}}
 				</view>
 			</view>
@@ -99,7 +100,7 @@
 		getSearchs,
 		clearHistory,
 		getGoodsList
-	} from '../../api/homeApi.js';
+	} from '@/api/homeApi.js';
 	//引用mSearch组件，如不需要删除即可
 	import mSearch from '@/components/mehaotian-search-revision/mehaotian-search-revision.vue';
 	export default {
@@ -136,7 +137,7 @@
 				// 全部，居家显示隐藏
 				isbool: false,
 				// 搜索状态
-				categoryFilter: false
+				categoryFilter: false,
 			}
 		},
 		onLoad() {
@@ -156,12 +157,19 @@
 				// 热门
 				this.hotKeywordList = data.hotKeywordList;
 				// 默认关键字
+				
 				this.defaultKeyword = data.defaultKeyword.keyword;
 				// 历史记录
 				this.oldKeywordList = data.historyKeywordList;
 			},
 			// 获取商品信息
-			async getgoodData() {
+			async getgoodData(e) {
+				if(!! e ){
+				console.log('row',e)
+				this.keyword = this.keywordList[e.target.dataset.rowindex];	
+					
+				}
+			
 				var {
 					data
 				} = await getGoodsList(this.keyword, this.page, this.size,
@@ -181,7 +189,6 @@
 				var Img = '//yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/no-3127092a69.png';
 				switch (currentId) {
 					case 'priceSort':
-
 						let tempSortOrder = 'asc';
 						if (this.currentSortOrder == 'asc') {
 							tempSortOrder = 'desc';
@@ -226,8 +233,6 @@
 				this.categoryId = id;
 				this.getgoodData()
 				console.log(this.filterCategory)
-				// http://47.106.90.23:8360/api/goods/list?keyword=&page=1&size=20&sort=id&order=asc&categoryld=1010000
-				// http://47.106.90.23:8360/api/goods/list?keyword=&page=1&size=20&sort=id&order=asc&categoryId=1010000
 
 
 
@@ -237,7 +242,7 @@
 			// 跳往商品详情页面
 			goGoodsDetail(id) {
 				uni.navigateTo({
-					url: '../goods/goods?id=' + id
+					url: '/pages/goods/goods?id=' + id
 				})
 			},
 			//监听输入
@@ -267,7 +272,9 @@
 
 			//顶置关键字
 			setKeyword(index) {
-				this.keyword = this.keywordList[index].keyword;
+				
+				/* this.keyword = this.keywordList[index].keyword;
+				console.log('this.keyword',this.keyword) */
 			},
 			//清除历史搜索
 			oldDelete() {
@@ -674,7 +681,7 @@
 	.keyword-box .keyword-block {
 		padding: 10upx 0;
 		background-color: #FFFFFF;
-		
+
 		margin-bottom: 20rpx;
 	}
 

@@ -19,14 +19,12 @@
 				<text class="desc">{{goods.goods_brief}}</text>
 				<text class="price">&yen;{{goods.retail_price}}</text>
 				<view class="brand" v-if="brand.name" @click="goBrandDetail">
-					<!-- <navigator url=""> -->
 					<text>{{brand.name}}</text>
-					<!-- </navigator> -->
 				</view>
 			</view>
 		</view>
 
-		<!-- 选规格 -->
+		<!-- 请选择规格数量 -->
 		<view class=" section-nav" @click="openDetail">
 			<text class="left">请选择规格数量</text>
 			<image src="../../static/images/address_right.png" mode="" class="img_size right"></image>
@@ -43,7 +41,6 @@
 				</view>
 			</view>
 			<view class="matter left">
-				<!-- <view class="item"> -->
 				<view class="info">
 					<view class="user">
 						<image :src="comment.data.avatar" class="img" mode=""></image>
@@ -58,9 +55,7 @@
 					<block v-for="(item,index) in comment.data.pic_list" :key='index'>
 						<image :src="item.pic_url" mode="" @click="getCommentImg(index)"></image>
 					</block>
-
 				</view>
-				<!-- </view> -->
 			</view>
 		</view>
 
@@ -76,7 +71,7 @@
 		</view>
 
 		<view class="goods_desc" v-if="goodsDesc">
-			<image v-for="(itme,index) in goodsDesc" :key='index' :src="itme" mode="widthFix" @click="imgInfo(index)"></image>
+			<image v-for="(itme,index) in goodsDesc" :key='index' :src="itme" mode="widthFix" @click="imgInfo(goodsDesc,index)"></image>
 		</view>
 
 		<!-- 常见问题 -->
@@ -109,6 +104,8 @@
 
 			</view>
 		</view>
+		
+		<!-- 底部tabbar -->
 		<view class="bottom-btn">
 			<view class="btn_left" @click="addCannelCollect">
 				<image v-if="userHasCollect == 0" class="icon" src="../../static/images/icon_collect.png" mode=""></image>
@@ -120,18 +117,41 @@
 				<image @click="openCartPage" class="icon" src="../../static/images/ic_menu_shoping_nor.png" mode=""></image>
 			</view>
 
-			<view class="btn_right">
-				立即购买
+			<view class="btn_right" @click="showShare">
+				分享
 			</view>
 			<view class="btn_right addCart" @click="addToCart">
 				加入购物车
 			</view>
 		</view>
-
+		
+		<!-- 分享 -->
+		<view class="share" :class="isShowShare ? 'share_show' : '' " @click="showShare">
+			<view class="share_box" :class="isShowShare ? 'share_box_show' : '' ">
+				<button type="default" class="share_item" open-type="share">
+					<image src="../../static/images/wechat.png" mode=""></image>
+					<view class="text">分享好友</view>
+				</button>
+				<button type="default" class="share_item" @click="eventDraw">
+					<image src="../../static/images/circleOfFriends.png" mode=""></image>
+					<view class="text">生成海报</view>
+				</button>
+			</view>
+		</view>
+		
+		
+		<view class="poster" :class="isShowPoster ? 'poster_show' : '' ">
+				<image class="close" src="../../static/images/close1.png" mode="" @click="isShowPoster = false"></image>
+				<image :src="shareImage" class="share-image" mode="aspectFit"></image>
+				<canvasdrawer :painting="painting" class="canvasdrawer" @getImage="eventGetImage" />
+				<button @click="eventSave" class="keep">保存到本地</button>
+		</view>
+		
+		
 		<!-- 选规格 -->
 		<view class="attr-pop-box" :class="isShowDetail ? 'attr-pop-box_show' : 'attr-pop-box' ">
 			<view class="attr-pop" :class="isShowDetail ? 'attr_pop_show' : 'attr-pop'">
-				<view class="close" @click="closeDetail">
+				<view class="close" @click="isShowDetail = false">
 					<image src="../../static/images/close.png" mode=""></image>
 				</view>
 				<view class="img-info">
@@ -142,7 +162,7 @@
 								价格：￥{{goods.retail_price}}
 							</view>
 							<view class="choose">
-								已选择：<text v-for="(item,index) in checkedSpecText" :key="index">{{item.valueText}} </text> 
+								已选择：<text v-for="(item,index) in checkedSpecText" :key="index">{{item.valueText}} </text>
 							</view>
 						</view>
 					</view>
@@ -151,7 +171,8 @@
 					<view class="spec-item" v-for="(item,index) in specificationList" :key="index">
 						<view class="name">{{item.name}}</view>
 						<view class="values">
-							<view class="value" :class="item1.selected ? 'value_active' : '' "  v-for="(item1,index1) in item.valueList" :key="index1" :data-select1="index" :data-select2="index1" @click="clickSkuValue">
+							<view class="value" :class="item1.selected ? 'value_active' : '' " v-for="(item1,index1) in item.valueList" :key="index1"
+							 :data-select1="index" :data-select2="index1" @click="clickSkuValue">
 								{{item1.value}}
 							</view>
 						</view>
@@ -161,7 +182,7 @@
 					<!-- 数量 -->
 					<view class="number-item">
 						<view class="name">数量</view>
-						<u-number-box :max="10"  :min="1" v-model="number"  @change="valChange()"></u-number-box>
+						<u-number-box :max="10" :min="1" v-model="number"></u-number-box>
 					</view>
 				</view>
 			</view>
@@ -171,7 +192,7 @@
 </template>
 
 <script>
-	import uDivider from '../../uview-ui/components/u-divider/u-divider.vue'
+	import uDivider from '@/uview-ui/components/u-divider/u-divider.vue'
 	import {
 		getGoodsDeatil,
 		getGoodsRelated,
@@ -197,7 +218,12 @@
 				checkedSpecText: ['请选择规格数量'],
 				specificationList: [], //规格列表
 				isShowDetail: false,
+				isShowShare: false,
+				isShowPoster: false,
 				number: 1, //加购数量
+				painting: {},
+				shareImage: '',
+				userInfo: ''
 
 			}
 		},
@@ -234,43 +260,38 @@
 					result.push(data[1])
 				}
 				this.goodsDesc = result;
+			},		 
+			// 图片预览
+			getPreviewImage(arr,imgIndex){
+				uni.previewImage({
+					urls: arr,
+					current: arr[imgIndex],
+				})
 			},
 			// 轮播图图片预览
 			swiperImgInfo(imgIndex) {
-				console.log(1)
 				var arr = this.gallery.map(item => {
 					return item.img_url;
 				})
-				uni.previewImage({
-					urls: arr,
-					current: arr[imgIndex],
-				})
+				this.getPreviewImage(arr,imgIndex);
 			},
-			// 图片预览
+			// 商品详情图片预览
 			imgInfo(imgIndex) {
-				// console.log(this.goodsDesc[imgIndex])
-				uni.previewImage({
-					urls: this.goodsDesc,
-					current: this.goodsDesc[imgIndex],
-				})
+				this.getPreviewImage(this.goodsDesc,imgIndex);
 			},
-			// 评论预览
+			// 评论图片预览
 			getCommentImg(imgIndex) {
 				const arr = this.comment.data.pic_list.map(item => {
 					return item.pic_url
-				})  
-				uni.previewImage({
-					urls: arr,
-					current: arr[imgIndex],
 				})
-				// console.log(this.comments[InfoIndex].pic_list)
+				this.getPreviewImage(arr,imgIndex);
 			},
+			
 			// 获取大家都在看
 			async getGoodsRelatedInfo() {
 				const res = await getGoodsRelated({
 					id: this.$data.id
 				});
-				// console.log(res.data.goodsList)
 				if (res.errno == 0) {
 					this.relatedGoods = res.data.goodsList
 				}
@@ -278,26 +299,25 @@
 			// 点击商品跳转到另一个商品详情页
 			goGoodsDeatil(goodsId) {
 				uni.navigateTo({
-					url: `../goods/goods?id=${goodsId}`
-
+					url: `/pages/goods/goods?id=${goodsId}`
 				})
 			},
 			// 点击购物车图标跳转到购物车页面
 			openCartPage() {
 				uni.switchTab({
-					url: '../cart/cart'
+					url: '/pages/cart/cart'
 				})
 			},
 			// 跳转到查看全部评价的页面
 			goCommentAll() {
 				uni.navigateTo({
-					url: `../comment/comment?valueId=${this.$data.id}&typeId=0`
+					url: `/pages/comment/comment?valueId=${this.$data.id}&typeId=0`
 				})
 			},
 			// 点击前往品牌详情页面
 			goBrandDetail() {
 				uni.navigateTo({
-					url: `../brandDetail/brandDetail?id=${this.brand.id}`
+					url: `/pages/brandDetail/brandDetail?id=${this.brand.id}`
 				})
 			},
 			// 收藏或取消收藏
@@ -306,13 +326,8 @@
 					typeId: 0,
 					valueId: this.$data.id
 				});
-				console.log("收藏：", res)
 				if (res.errno == 0) {
-					if (res.data.type === 'delete') {
-						this.userHasCollect = 0
-					} else if (res.data.type === 'add') {
-						this.userHasCollect = 1
-					}
+					res.data.type === 'delete' ? (this.userHasCollect = 0) : (this.userHasCollect = 1)
 				} else {
 					uni.showToast({
 						title: res.errmsg,
@@ -323,7 +338,6 @@
 			// 获取购物车商品件数
 			async getCartGoodsNumber() {
 				const res = await getCartGoodsCount();
-				// console.log("购物车总数：", res)
 				if (res.errno == 0) {
 					this.cartGoodsCount = res.data.cartTotal.goodsCount;
 				}
@@ -332,36 +346,34 @@
 				const index1 = e.currentTarget.dataset.select1;
 				const index2 = e.currentTarget.dataset.select2;
 				const specificationList = this.specificationList;
-				
-				console.log(this.specificationList)
-				
-				if(specificationList[index1].valueList[index2].selected) {
+
+				if (specificationList[index1].valueList[index2].selected) {
 					specificationList[index1].valueList[index2].selected = false;
-				}else {
+				} else {
 					specificationList[index1].valueList.forEach(ele => {
 						ele.selected = false;
 					})
 					specificationList[index1].valueList[index2].selected = true;
 				}
 				this.specificationList = specificationList;
-				
+
 				// 实现页面强制刷新
 				this.$forceUpdate();
 				this.checkedSpecText = this.getCheckedSpecValue()
-				this.getCheckedSpecValue()
-				
+				// this.getCheckedSpecValue()
+
 			},
 			// 判断是否漏选规格
 			skuCanSubmit() {
 				const specificationList = this.specificationList;
 				let canSubmit = true;
-				if(specificationList) {
+				if (specificationList) {
 					specificationList.forEach(item => {
 						const selected = item.valueList.find(ele => {
 							return ele.selected
 						})
-						
-						if(!selected) {
+
+						if (!selected) {
 							canSubmit = false;
 						}
 					})
@@ -372,64 +384,55 @@
 			getCheckedSpecValue() {
 				let checkedValues = [];
 				let _specificationList = this.specificationList;
-				
+
 				_specificationList.forEach(item => {
 					let _checkedObj = {
-						nameId : item.specification_id,
+						nameId: item.specification_id,
 						valueId: 0,
 						valueText: ''
 					}
-					
+
 					item.valueList.forEach(ele => {
-						if(ele.selected){
+						if (ele.selected) {
 							_checkedObj.valueId = ele.id;
 							_checkedObj.valueText = ele.value;
 						}
 					})
-					
+
 					checkedValues.push(_checkedObj)
 				})
 				return checkedValues;
-				
+
 			},
 			getCheckedSpecKey() {
-				let checkedValue = this.getCheckedSpecValue().map(function (v) {
-				  return v.valueId;
+				let checkedValue = this.getCheckedSpecValue().map(function(v) {
+					return v.valueId;
 				});
 				return checkedValue.join('_');
 			},
 			// 判断是否有库存
 			getCheckedProductItem(key) {
-				
-				return this.productList.filter( (item) => {
-					if(item.goods_specification_ids == key) {
+
+				return this.productList.filter((item) => {
+					if (item.goods_specification_ids == key) {
 						return true;
-					}else {
+					} else {
 						return false;
 					}
 				})
 			},
-			// 进步器
-			valChange(e) {
-				this.number = e.value;
-				console.log(this.value)
-			},
-			// 关闭规格
-			closeDetail() {
-				this.isShowDetail = false;
-			},
 			// 开启规格
 			openDetail() {
 				this.isShowDetail = true;
-				if(this.specificationList.length <= 0) {
+				if (this.specificationList.length <= 0) {
 					this.checkedSpecText = [{
-						nameId : '',
+						nameId: '',
 						valueId: 0,
 						valueText: '请选择数量'
 					}]
-				}else {
+				} else {
 					this.checkedSpecText = [{
-						nameId : '',
+						nameId: '',
 						valueId: 0,
 						valueText: '请选择规格数量'
 					}]
@@ -437,79 +440,265 @@
 			},
 			// 加入购物车
 			async addToCart() {
-				
+				this.isShowShare = false;  //关闭分享
 				// 判断是否打开规格页面
-				if(!this.isShowDetail) {
+				if (!this.isShowDetail) {
 					this.openDetail()
-					// this.isShowDetail = true;
 					return;
 				}
-				
-				// 判断是否选择完整规格，如果该商品没有规格可选返回true
-				if(!this.skuCanSubmit()) {
+
+				// 判断是否漏选规格，如果该商品没有规格可选返回true
+				if (!this.skuCanSubmit()) {
 					uni.showToast({
-						title:'请选择规格',
-						icon:'none'
+						title: '请选择规格',
+						icon: 'none'
 					})
 					return;
 				}
-				
+
 				// 根据选中规格判断是否有sku信息,如果该商品没有规格可选返回true
 				let checkedProduct = this.getCheckedProductItem(this.getCheckedSpecKey());
-				if(!checkedProduct || checkedProduct.length <= 0) {
+				if (!checkedProduct || checkedProduct.length <= 0) {
 					uni.showToast({
-						title:'库存不足',
-						icon:'none',
+						title: '库存不足',
+						icon: 'none',
 						mask: true
 					})
 					return;
 				}
-				
+
 				// 验证库存
 				if (checkedProduct[0].goods_number < this.number) {
 					//找不到对应的product信息，提示没有库存
 					uni.showToast({
-					  title: '库存不足',
-					  icon: 'none',
-					  mask: true
+						title: '库存不足',
+						icon: 'none',
+						mask: true
 					});
 					return false;
 				}
-				
+
 				const res = await addCart({
 					goodsId: this.goods.id,
 					number: this.number,
 					productId: checkedProduct[0].id
 				})
-				// console.log("加入购物车：",res)
 				if(res.errno == 0) {
 					uni.showToast({
-						title:'加购成功'
+						title: '加购成功'
 					})
-					
 				}else {
 					uni.showToast({
-						title:res.errmsg,
+						title: res.errmsg,
 						icon: 'none'
 					})
 				}
 				this.isShowDetail = !this.isShowDetail;
+				// 刷新购物车数量
 				this.getCartGoodsNumber()
-				// console.log("加入购物车")
-			}
-			
+			},
+			// 点击分享
+			showShare() {
+				this.isShowShare = !this.isShowShare
+				this.isShowDetail = false;
+			},
 
+			// 生成海报
+			eventDraw() {
+				if (this.userInfo === '') {
+					uni.showToast({
+						title: '请先登录',
+						icon: 'none'
+					})
+				} else {
+					this.isShowPoster = true;
+					uni.showLoading({
+						title: '绘制分享图片中',
+						mask: true
+					})
+
+					this.painting = {
+						width: 375,
+						height: 555,
+						clear: true,
+						views: [
+							// 背景图
+							{
+								type: 'image',
+								url: 'https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2446485085,2752527560&fm=26&gp=0.jpg',
+								top: 0,
+								left: 0,
+								width: 375,
+								height: 555
+							},
+
+							// 头像
+							{
+								type: 'image',
+								url: this.userInfo.avatar,
+								top: 38,
+								left: 38.5,
+								width: 42,
+								height: 42
+							},
+							// 头像外层的镂空圆形
+							{
+								type: 'image',
+								url: '../../static/images/cc-dot-o.png',
+								top: 0,
+								left: 0,
+								width: 118,
+								height: 118
+							},
+							// 头像外层的镂空圆形
+							{
+								type: 'image',
+								url: '../../static/images/cc-dot-o.png',
+								top: 0,
+								left: 0,
+								width: 119,
+								height: 119
+							},
+							// 用户名
+							{
+								type: 'text',
+								content: this.userInfo.nickname,
+								fontSize: 16,
+								color: '#000',
+								textAlign: 'left',
+								top: 33,
+								left: 96,
+								bolder: true
+							},
+							{
+								type: 'text',
+								content: '分享给你一件好货',
+								fontSize: 15,
+								color: '#000',
+								textAlign: 'left',
+								top: 59.5,
+								left: 96
+							},
+							// 商品图片
+							{
+								type: 'image',
+								url: this.gallery[0].img_url,
+								top: 136,
+								left: 42.5,
+								width: 290,
+								height: 290
+							},
+
+							// 商品标题
+							{
+								type: 'text',
+								content: this.goods.name,
+								fontSize: 16,
+								lineHeight: 21,
+								color: '#383549',
+								textAlign: 'left',
+								top: 450,
+								left: 29,
+								width: 200,
+								MaxLineNumber: 2,
+								breakWord: true,
+								bolder: true
+							},
+							// 商品价格
+							{
+								type: 'text',
+								content: '￥' + this.goods.retail_price,
+								fontSize: 24,
+								color: '#E62004',
+								textAlign: 'left',
+								top: 490,
+								left: 29,
+								bolder: true
+							},
+
+							// 二维码图片
+							// {
+							// 	type: 'image',
+							// 	url: 'http://yanxuan.nosdn.127.net/767b370d07f3973500db54900bcbd2a7.png',
+							// 	top: 424,
+							// 	left: 270,
+							// 	width: 100,
+							// 	height: 100,
+
+							// },
+							// {
+							// 	type: 'text',
+							// 	content: '长按识别二维码 或者发送给好友',
+							// 	fontSize: 12,
+							// 	color: '#ccc',
+							// 	textAlign: 'left',
+							// 	top: 520,
+							// 	left: 280,
+							// 	lineHeight: 20,
+							// 	MaxLineNumber: 2,
+							// 	breakWord: true,
+							// 	width: 86
+							// }
+						]
+					}
+				}
+			},
+			eventSave() {
+				uni.saveImageToPhotosAlbum({
+					filePath: this.shareImage,
+					success(res) {
+						uni.showToast({
+							title: '保存图片成功',
+							icon: 'success',
+							duration: 2000
+						})
+					}
+				})
+				setTimeout(()=> {
+					this.isShowPoster = false;
+				},1000)
+				
+			},
+			eventGetImage(event) {
+				uni.hideLoading()
+				// const { tempFilePath, errMsg } = event.detail
+				const result = event.detail.__args__
+				const tempFilePath = result[0].tempFilePath
+				const errMsg = result[0].errMsg
+				if (errMsg === 'canvasdrawer:ok') {
+					this.shareImage = tempFilePath
+					this.painting = {}
+				}
+			}
 
 		},
+		// 分享好友
+		onShareAppMessage(res) {
+			console.log(res)
+			if (res.from === 'button') { // 来自页面内分享按钮  
+				console.log(res.target)
+			}
+			return {
+				title: this.goods.name,
+				path: `pages/goods/goods?id=${this.$data.id}`,
+				success(resp) {
+					console.log(resp)
+				}
+			}
+		},
 		onLoad(options) {
-			// console.log(options.id)
 			// 模拟商品id
-			this.$data.id = options.id;
 			// this.$data.id = '1181000';
+			this.$data.id = options.id;
+			
 			this.getGoodsInfo();
 			this.getGoodsRelatedInfo()
 			this.getCartGoodsNumber()
 
+			const users = uni.getStorageSync('userInfo');
+			if (users) {
+				this.userInfo = JSON.parse(users)
+			}
 		}
 	}
 </script>
@@ -839,7 +1028,6 @@
 					align-items: center;
 					width: 375rpx;
 					padding: 15rpx 31.25rpx;
-					// border: 1px solid #f4f4f4;
 					border-right: 1px solid #f4f4f4;
 					border-bottom: 1px solid #f4f4f4;
 
@@ -849,8 +1037,13 @@
 					}
 
 					.name {
+						width: 100%;
 						font-size: 30rpx;
 						color: #333;
+						text-align: center;
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
 					}
 
 					.price {
@@ -927,18 +1120,126 @@
 			}
 		}
 
-		.attr-pop-box {
-			
+		.share {
 			position: fixed;
 			background: rgba(0, 0, 0, .5);
 			z-index: 8;
-			
+
 			top: 0;
 			bottom: 0;
 			left: 0;
 			right: 0;
 			display: none;
+
+			.share_box {
+
+				width: 100%;
+				height: auto;
+				max-height: 780rpx;
+				padding: 31.25rpx;
+				background: #fff;
+				position: fixed;
+				z-index: 9;
+				bottom: 100rpx;
+				display: none;
+
+
+
+				.share_item {
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					background-color: #fff;
+
+					.text {
+						font-size: 24rpx;
+					}
+				}
+
+				.share_item::after {
+					border: none;
+				}
+
+				image {
+					width: 48rpx;
+					height: 48rpx;
+					// margin-bottom: 10rpx;
+				}
+			}
+
+			// 显示规格
+			.share_box_show {
+				display: flex;
+				justify-content: space-around;
+				animation: fadeIn 0.3s linear;
+			}
+		}
+
+		.share_show {
+			display: block;
+		}
+
+		.poster {
+			position: fixed;
+			background: rgba(0, 0, 0, .5);
+			z-index: 8;
+
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			display: none;
+
+			.close {
+				position: absolute;
+				top: 20rpx;
+				right: 35rpx;
+				width: 48rpx;
+				height: 48rpx;
+			}
+			.share-image {
+				margin-top: 80rpx;
+				width: 100%;
+				height: 70%;
+
+			}
 			
+			
+
+			.keep {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 70%;
+				height: 80rpx;
+				margin-top: 20rpx;
+				border-radius: 40rpx;
+				background-color: #b4282d;
+				color: #fff;
+				font-size: 24rpx;
+
+			}
+		}
+
+		.poster_show {
+			display: block;
+			// display: flex;
+			// flex-direction: column;
+			// align-items: center;
+		}
+
+		.attr-pop-box {
+
+			position: fixed;
+			background: rgba(0, 0, 0, .5);
+			z-index: 8;
+
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			display: none;
+
 			// 隐藏规格
 			.attr-pop {
 				width: 100%;
@@ -950,7 +1251,7 @@
 				z-index: 9;
 				bottom: 100rpx;
 				display: none;
-				
+
 				.close {
 					position: absolute;
 					width: 48rpx;
@@ -989,9 +1290,9 @@
 
 						.choose {
 							font-size: 29rpx;
-							
+
 							text {
-								position:inline-block;
+								position: inline-block;
 								margin-right: 16rpx;
 							}
 						}
@@ -1020,7 +1321,7 @@
 								font-size: 25rpx;
 								color: #333;
 							}
-							
+
 							.value_active {
 								color: #b4282d;
 								border: 1px solid #b4282d;
@@ -1035,16 +1336,19 @@
 					}
 				}
 			}
+
 			// 显示规格
 			.attr_pop_show {
 				display: block;
-				animation:fadeIn 0.3s linear;
+				animation: fadeIn 0.3s linear;
 			}
+
 			@keyframes fadeIn {
 				0% {
 					opacity: 0;
 					transform: translateY(100rpx);
 				}
+
 				100% {
 					opacity: 1;
 					transform: translateY(0);
@@ -1052,16 +1356,18 @@
 			}
 
 		}
+
 		// 显示遮盖层
 		.attr-pop-box_show {
 			display: block;
-		}	
+		}
+
 		// @keyframes fadeOut {
 		// 	100% {
 		// 		bottom: -100%;
 		// 		transform: translateY(-400rpx);
 		// 	}
 		// }
-		
+
 	}
 </style>

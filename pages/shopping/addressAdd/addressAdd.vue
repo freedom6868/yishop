@@ -58,7 +58,6 @@
 
 <script>
 	import {getAddressDetailData,addressSaveData,getRegionListData} from '@/api/uncenter/addressAddApi.js';
-	import {getAddressListData} from '@/api/uncenter/addressApi.js';
 	import {getDetailedAddress} from '@/utils/util.js';
 	export default {
 		data() {
@@ -85,8 +84,7 @@
 				],
 				selectRegionDone:false,
 				// 省份列表
-				provinceList:[],
-				addressList:[]
+				provinceList:[]
 			};
 		},
 		methods:{
@@ -162,11 +160,6 @@
 					this.setRegionDoneStatus();
 				};
 			},
-			async getAddressList(){
-				let res = await getAddressListData();
-				console.log(res);
-				this.addressList = res.data;
-			},
 			isDefault(){
 				this.address.is_default = !this.address.is_default;
 				this.$forceUpdate();
@@ -228,24 +221,11 @@
 					address:address.address,
 					is_default : address.is_default
 				}
-				
-				let temp = this.addressList.find( v=>{
-					if( v.is_default || v.is_default== 1 ){
-						return v ;
-					}
-				} );
-				if(temp.id == address.id &&  ( !address.is_default || address.is_default != 1 ) ){
-					uni.showToast({
-						title:'需要一个为默认地址'
-					})
-					return;
-				}
-				
 				let res = await addressSaveData(msg);
 				console.log(res)
 				if(res.errno == 0){
 					uni.navigateTo({
-						url:'/pages/ucenter/address/address'
+						url:'/pages/shopping/address/address'
 					})
 				}
 				
@@ -410,9 +390,7 @@
 			if(options.id){
 				this.addressId = options.id;
 				this.getAddressDetail();
-				this.getAddressList();
 			};
-			
 		}
 	}
 </script>

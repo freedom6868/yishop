@@ -22,7 +22,7 @@
 				</view>
 				<view class="b">
 					<view class="l">
-						实付:￥{{item.actual_price}}
+						实付: <text class="price">￥{{item.actual_price}}</text>
 					</view>
 					<view class="r">
 						<button type="warn" size='mini' @click.stop='payOrder'>去付款</button>
@@ -61,6 +61,11 @@
 		},
 		onLoad() {
 			this.getOrderList();
+		},
+		onUnload() {
+			uni.switchTab({
+				url:'/pages/ucenter/index/index'
+			})
 		}
 	}
 </script>
@@ -134,6 +139,10 @@
 					display: flex;
 					align-items: center;
 					justify-content: space-between;
+					
+					.price{
+						color: #b4282d;
+					}
 				}
 			}
 		}

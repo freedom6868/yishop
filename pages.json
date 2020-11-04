@@ -37,9 +37,18 @@
         ,{
             "path" : "pages/goods/goods",
             "style" : {
-				"navigationBarTitleText": "商品详情"
+				"navigationBarTitleText": "商品详情",
+				"usingComponents": {
+					"canvasdrawer" :"/components/uniapp-canvas-drawer/uniapp-canvas-drawer"
+				}
 			}
-        }
+        },
+		{
+		    "path" : "components/uniapp-canvas-drawer/uniapp-canvas-drawer",
+		    "style" : {
+				
+			}
+		}
         ,{
             "path" : "pages/search/search",
             "style" : {
@@ -130,6 +139,34 @@
             "style" : {
 				"navigationBarTitleText": "付款结果"
 			}
+        },{
+            "path" : "pages/ucenter/accountSecurity/accountSecurity",
+            "style" : {
+				"navigationBarTitleText": "账号安全"
+			}
+        },{
+            "path" : "pages/ucenter/helpCenter/helpCenter",
+            "style" : {
+				"navigationBarTitleText": "帮助中心"
+			}
+        }
+        ,{
+            "path" : "pages/ucenter/feedback/feedback",
+            "style" : {
+				"navigationBarTitleText": "意见反馈"
+			}
+        }
+        ,{
+            "path" : "pages/ucenter/coupon/coupon",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/coupon/coupon",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/shopping/addressAdd/addressAdd",
+            "style" : {}
         }
     ],
 	"globalStyle": {

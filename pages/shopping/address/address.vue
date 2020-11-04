@@ -1,17 +1,17 @@
 <template>
 	<view class="container">
 		<view class="address-list" v-if="addressList.length > 0">
-			<view class="item" v-for="item in addressList" :key='item.id' :data-address-id='item.id' >
-				<view class="l" @tap="navigateBack" >
+			<view class="item" v-for="item in addressList" @click="navigateBack" :key='item.id' :data-address-id='item.id' >
+				<view class="l" >
 					<view class="name">{{item.name}}</view>
 					<view class="default" v-if="item.is_default">默认</view>
 				</view>
-				<view class="c" @tap="navigateBack" >
+				<view class="c" >
 					<view class="mobile">{{item.mobile}}</view>
 					<view class="address">{{item.full_region + item.address}}</view>
 				</view>
 				<view class="r">
-					<image mode=""  @click="addressAddOrUpdate" :data-address-id="item.id" class="del" src="../../../static/images/postcomment.png"></image>
+					<image mode=""  @click.stop="addressAddOrUpdate" :data-address-id="item.id" class="del" src="../../../static/images/postcomment.png"></image>
 				</view>
 			</view>
 		</view>
@@ -33,7 +33,13 @@
 		},
 		methods: {
 			//返回上一页
-			navigateBack(){
+			navigateBack(e){
+				console.log(e)
+				this.checkAddressId = e.currentTarget.dataset.addressId;
+				var pages = getCurrentPages();
+				var prevPages = pages[pages.length-2]; //上一个页面；
+				prevPages.nextPageAddressId = this.checkAddressId;
+				console.log('prevPages.nextPageAddressId',prevPages.nextPageAddressId)
 				uni.navigateBack();
 			},
 			async getAddressList(){
@@ -50,7 +56,7 @@
 			addressAddOrUpdate(e){
 				let addressId = e.currentTarget.dataset.addressId;
 				uni.navigateTo({
-					url:'/pages/ucenter/addressAdd/addressAdd?id='+addressId
+					url:'/pages/shopping/addressAdd/addressAdd?id='+addressId
 				})
 			}
 		},

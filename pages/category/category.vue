@@ -35,7 +35,7 @@
 	import {
 		getCategoryData,
 		getproductList
-	} from '../../api/catalogApi.js'
+	} from '@/api/catalogApi.js'
 	export default {
 		data() {
 			return {
@@ -83,7 +83,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.topmenu {
 		padding: 20rpx 0;
 		font-size: 30rpx;

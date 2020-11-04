@@ -5,7 +5,7 @@
 				<!-- {{item[0]}} -->
 				<view class="day-hd">{{item[0].add_time}}</view>
 				<view class="day-list" >
-					<view class="item" v-for="gitem in item" :key='gitem.id'>
+					<view class="item" v-for="gitem in item" :key='gitem.id' @longpress='delFootprint(gitem.id)'>
 						<image class="img" :src="gitem.list_pic_url" mode=""></image>
 						<view class="info">
 							<view class="name">
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-	import {getFootprintListData} from '@/api/uncenter/footprintApi.js'
+	import {getFootprintListData,deleteFootprintData} from '@/api/uncenter/footprintApi.js'
 	export default {
 		data() {
 			return {
@@ -88,7 +88,41 @@
 				this.$forceUpdate();
 				// console.log(this.productList)
 				
+			},
+			delFootprint(id){
+				let _this = this;
+				uni.showModal({
+					title:'',
+					content:"确定要删除吗?",
+					async success(res) {
+						if(res.confirm){
+							console.log('点击了确定');
+							let res = await deleteFootprintData({footprintId:id});
+							if(res.errno == 0){
+								uni.showToast({
+									title:"删除成功",
+									icon:"success",
+									duration:1000
+								});
+								_this.footprintList.forEach( (v,vIndex) =>{
+									v.forEach( (item,index) =>{
+										if(item.id == id){
+											v.splice(index,1);
+										}
+									});
+									if(v.length == 0){
+										_this.footprintList.splice(vIndex,1);
+									}
+								} )
+								_this.$forceUpdate()
+							}
+						}else{
+							console.log('点击了取消')
+						}
+					}
+				})
 			}
+			
 		},
 		onLoad() {
 			this.getFootprintList();

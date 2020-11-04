@@ -1,7 +1,6 @@
 <template>
 	<view>
 		<!-- 状态栏 -->
-		<view class="status" :style="{position:headerPosition}"></view>
 		<view class="header" :style="{position:headerPosition}">
 			<view class="addr">
 				<view class="icon location"></view>{{city}}
@@ -60,10 +59,10 @@
 	import {
 		getCatalog,
 		getClassifyData
-	} from '../../api/catalogApi.js'
+	} from '@/api/catalogApi.js'
 	import {
 		getGoodsCounts
-	} from '../../api/homeApi.js';
+	} from '@/api/homeApi.js';
 	export default {
 		data() {
 			return {
@@ -124,20 +123,7 @@
 		}
 	}
 </script>
-<style lang="scss">
-	.status {
-		width: 100%;
-		height: 0;
-		position: fixed;
-		z-index: 10;
-		background-color: #fff;
-		top: 0;
-		/*  #ifdef  APP-PLUS  */
-		height: var(--status-bar-height); //覆盖样式
-		/*  #endif  */
-
-	}
-
+<style lang="scss" scoped>
 	.header {
 		width: 92%;
 		padding: 0 4%;
@@ -218,8 +204,8 @@
 
 		.left,
 		.right {
-			position: absolute;
-
+			// position: absolute;
+			display: flex;
 			top: 100upx;
 			/*  #ifdef  APP-PLUS  */
 			top: calc(100upx + var(--status-bar-height));
@@ -314,13 +300,13 @@
 					.box {
 						height: 216rpx;
 						width: 144rpx;
-						margin-bottom: 30upx;
+						margin-bottom: 20upx;
 						display: flex;
 						flex-direction: column;
 						justify-content: center;
 						align-items: center;
-						flex-wrap: wrap;
-						margin-left: 30rpx;
+						flex-wrap: nowrap;
+						margin-left: 20rpx;
 
 						image {
 							height: 144rpx;
